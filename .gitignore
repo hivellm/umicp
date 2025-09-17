@@ -1,0 +1,95 @@
+# UMICP Protocol - Git Ignore File
+
+# Build directories
+build/
+dist/
+target/
+out/
+
+# Dependencies
+node_modules/
+__pycache__/
+*.pyc
+.venv/
+venv/
+
+# IDE files
+.vscode/
+.idea/
+*.swp
+*.swo
+*~
+
+# OS files
+.DS_Store
+Thumbs.db
+*.tmp
+*.temp
+
+# Logs
+*.log
+logs/
+*.out
+
+# Coverage reports
+coverage/
+*.coverage
+htmlcov/
+
+# Documentation build
+docs/_build/
+docs/build/
+
+# Compiled binaries
+*.exe
+*.dll
+*.so
+*.dylib
+*.a
+
+# CMake
+CMakeCache.txt
+CMakeFiles/
+cmake_install.cmake
+CTestTestfile.cmake
+Makefile
+
+# Rust
+Cargo.lock
+target/
+
+# Python
+*.egg-info/
+__pycache__/
+*.pyc
+*.pyo
+*.pyd
+.Python
+.env
+pip-log.txt
+
+# Node.js
+node_modules/
+npm-debug.log*
+yarn-debug.log*
+yarn-error.log*
+package-lock.json
+
+# Go
+*.test
+*.prof
+
+# Test artifacts
+*.test.js
+test-results/
+
+# Security
+*.key
+*.pem
+*.crt
+secrets/
+
+# UMICP specific
+*.umicp
+matrix_data/
+transport_logs/
