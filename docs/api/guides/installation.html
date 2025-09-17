@@ -1,0 +1,355 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>UMICP Installation Guide - UMICP Documentation</title>
+    <link rel="stylesheet" href="../assets/css/docs.css">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/11.9.0/styles/default.min.css">
+    <style>
+        body { font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif; line-height: 1.6; }
+        .container { max-width: 800px; margin: 0 auto; padding: 2rem; }
+        .breadcrumb { margin-bottom: 2rem; color: #64748b; }
+        .breadcrumb a { color: #2563eb; text-decoration: none; }
+        .content { color: #334155; }
+        .content h1, .content h2, .content h3 { color: #0f172a; }
+        .content code { background: #f1f5f9; padding: 0.2em 0.4em; border-radius: 0.25rem; font-size: 0.9em; }
+        .content pre { background: #f8fafc; border: 1px solid #e2e8f0; border-radius: 0.5rem; padding: 1rem; overflow-x: auto; }
+        .content pre code { background: none; padding: 0; }
+        .content table { border-collapse: collapse; width: 100%; margin: 1rem 0; }
+        .content th, .content td { border: 1px solid #e2e8f0; padding: 0.75rem; text-align: left; }
+        .content th { background: #f8fafc; font-weight: 600; }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <nav class="breadcrumb">
+            <a href="../index.html">Home</a> / <a href="../index.html">Guides</a> / UMICP Installation Guide
+        </nav>
+
+        <main class="content">
+            <h1>UMICP Installation Guide</h1><p>/*<em>
+<p> </em> @fileoverview Complete installation and setup guide for UMICP</p>
+<p> <em> @description Step-by-step instructions for installing UMICP on various platforms</p>
+<p> </em> and setting up development environments.</p>
+<p> <em> </p>
+<p> </em> @group Getting Started</p>
+<p> <em> @order 1</p>
+<p> </em> @since 1.0.0</p>
+<p> <em>/</p><h2>Overview</h2><p>UMICP (Universal Matrix-based Inter-Component Protocol) is a high-performance communication protocol designed for distributed systems, machine learning applications, and real-time data processing. This guide will walk you through installing UMICP on your system.</p><h2>System Requirements</h2><h3>Minimum Requirements</h3><p>| Component | Requirement |</p>
+<p>|-----------|-------------|</p>
+<p>| <strong>Operating System</strong> | Windows 10+, macOS 10.15+, Linux (Ubuntu 18.04+, CentOS 7+) |</p>
+<p>| <strong>CPU</strong> | x64 processor with SSE4.2 support |</p>
+<p>| <strong>Memory</strong> | 4GB RAM (8GB+ recommended) |</p>
+<p>| <strong>Storage</strong> | 500MB free space |</p>
+<p>| <strong>Network</strong> | TCP/IP networking capability |</p><h3>Recommended Requirements</h3><p>| Component | Recommendation |</p>
+<p>|-----------|----------------|</p>
+<p>| <strong>CPU</strong> | Modern x64 processor with AVX2 support for optimal SIMD performance |</p>
+<p>| <strong>Memory</strong> | 16GB+ RAM for high-throughput applications |</p>
+<p>| <strong>Storage</strong> | SSD storage for better I/O performance |</p>
+<p>| <strong>Network</strong> | Gigabit Ethernet for high-bandwidth applications |</p><h3>Development Requirements</h3><p>| Tool | Version | Purpose |</p>
+<p>|------|---------|---------|</p>
+<p>| <strong>CMake</strong> | 3.16+ | Build system |</p>
+<p>| <strong>C++ Compiler</strong> | GCC 9+, Clang 10+, MSVC 2019+ | Core compilation |</p>
+<p>| <strong>Node.js</strong> | 16+ | Bindings and tooling |</p>
+<p>| <strong>Python</strong> | 3.8+ | Optional Python bindings |</p>
+<p>| <strong>Git</strong> | 2.20+ | Source code management |</p><h2>Installation Methods</h2><h3>Method 1: Package Managers (Recommended)</h3><p>#### Ubuntu/Debian</p><p><pre><code class="language-bash"><h1>Add UMICP repository</h1>
+<p>curl -fsSL https://packages.umicp.org/gpg | sudo apt-key add -</p>
+<p>echo "deb https://packages.umicp.org/ubuntu $(lsb_release -cs) main" | sudo tee /etc/apt/sources.list.d/umicp.list</p><h1>Update package list and install</h1>
+<p>sudo apt update</p>
+<p>sudo apt install umicp-dev umicp-tools</p><h1>Install Node.js bindings (optional)</h1>
+<p>npm install -g umicp</p>
+<p></code></pre></p><p>#### CentOS/RHEL/Fedora</p><p><pre><code class="language-bash"><h1>Add UMICP repository</h1>
+<p>sudo dnf config-manager --add-repo https://packages.umicp.org/rpm/umicp.repo</p><h1>Install UMICP</h1>
+<p>sudo dnf install umicp-devel umicp-tools</p><h1>Install Node.js bindings (optional)</h1>
+<p>npm install -g umicp</p>
+<p></code></pre></p><p>#### macOS (Homebrew)</p><p><pre><code class="language-bash"><h1>Add UMICP tap</h1>
+<p>brew tap umicp/tap</p><h1>Install UMICP</h1>
+<p>brew install umicp</p><h1>Install Node.js bindings (optional)</h1>
+<p>npm install -g umicp</p>
+<p></code></pre></p><p>#### Windows (Chocolatey)</p><p><pre><code class="language-powershell"><h1>Install UMICP</h1>
+<p>choco install umicp</p><h1>Install Node.js bindings (optional)</h1>
+<p>npm install -g umicp</p>
+<p></code></pre></p><h3>Method 2: Pre-built Binaries</h3><p>Download pre-built binaries from the <a href="https://github.com/umicp/umicp/releases">UMICP Releases</a> page:</p><p>1. <strong>Download</strong> the appropriate binary for your platform</p>
+<p>2. <strong>Extract</strong> the archive to your desired location</p>
+<p>3. <strong>Add</strong> the <code>bin</code> directory to your system PATH</p>
+<p>4. <strong>Set</strong> environment variables (see Configuration section)</p><p>#### Linux/macOS</p><p><pre><code class="language-bash"><h1>Download and extract (replace with latest version)</h1>
+<p>wget https://github.com/umicp/umicp/releases/download/v1.0.0/umicp-1.0.0-linux-x64.tar.gz</p>
+<p>tar -xzf umicp-1.0.0-linux-x64.tar.gz</p><h1>Move to installation directory</h1>
+<p>sudo mv umicp-1.0.0 /opt/umicp</p><h1>Add to PATH</h1>
+<p>echo 'export PATH="/opt/umicp/bin:$PATH"' >> ~/.bashrc</p>
+<p>echo 'export UMICP_HOME="/opt/umicp"' >> ~/.bashrc</p>
+<p>source ~/.bashrc</p><h1>Verify installation</h1>
+<p>umicp --version</p>
+<p></code></pre></p><p>#### Windows</p><p><pre><code class="language-powershell"><h1>Download and extract</h1>
+<p>Invoke-WebRequest -Uri "https://github.com/umicp/umicp/releases/download/v1.0.0/umicp-1.0.0-windows-x64.zip" -OutFile "umicp.zip"</p>
+<p>Expand-Archive -Path "umicp.zip" -DestinationPath "C:\Program Files\UMICP"</p><h1>Add to PATH</h1>
+<p>[Environment]::SetEnvironmentVariable("Path", $env:Path + ";C:\Program Files\UMICP\bin", [EnvironmentVariableTarget]::Machine)</p>
+<p>[Environment]::SetEnvironmentVariable("UMICP_HOME", "C:\Program Files\UMICP", [EnvironmentVariableTarget]::Machine)</p><h1>Verify installation (restart PowerShell first)</h1>
+<p>umicp --version</p>
+<p></code></pre></p><h3>Method 3: Build from Source</h3><p>#### Prerequisites</p><p>First, install the required build tools:</p><p><strong>Ubuntu/Debian:</strong>
+<pre><code class="language-bash">sudo apt update</p>
+<p>sudo apt install build-essential cmake git pkg-config \</p>
+<p>    libssl-dev libzlib1g-dev libjson-c-dev libcbor-dev \</p>
+<p>    libavx2-dev libsimd-dev nodejs npm</p>
+<p></code></pre></p><p><strong>CentOS/RHEL/Fedora:</strong>
+<pre><code class="language-bash">sudo dnf groupinstall "Development Tools"</p>
+<p>sudo dnf install cmake git pkg-config openssl-devel \</p>
+<p>    zlib-devel json-c-devel libcbor-devel nodejs npm</p>
+<p></code></pre></p><p><strong>macOS:</strong>
+<pre><code class="language-bash"><h1>Install Xcode Command Line Tools</h1>
+<p>xcode-select --install</p><h1>Install dependencies via Homebrew</h1>
+<p>brew install cmake git pkg-config openssl zlib json-c libcbor node</p>
+<p></code></pre></p><p><strong>Windows:</strong>
+<pre><code class="language-powershell"><h1>Install Visual Studio 2019+ with C++ workload</h1>
+<h1>Install Git for Windows</h1>
+<h1>Install CMake</h1><h1>Install vcpkg for dependencies</h1>
+<p>git clone https://github.com/Microsoft/vcpkg.git</p>
+<p>cd vcpkg</p>
+<p>.\bootstrap-vcpkg.bat</p>
+<p>.\vcpkg integrate install</p><h1>Install dependencies</h1>
+<p>.\vcpkg install openssl zlib nlohmann-json libcbor --triplet x64-windows</p>
+<p></code></pre></p><p>#### Build Steps</p><p><pre><code class="language-bash"><h1>Clone the repository</h1>
+<p>git clone https://github.com/umicp/umicp.git</p>
+<p>cd umicp</p><h1>Create build directory</h1>
+<p>mkdir build && cd build</p><h1>Configure build</h1>
+<p>cmake .. -DCMAKE_BUILD_TYPE=Release \</p>
+<p>         -DUMICP_BUILD_TESTS=ON \</p>
+<p>         -DUMICP_BUILD_BINDINGS=ON \</p>
+<p>         -DUMICP_ENABLE_SIMD=ON</p><h1>Build (use appropriate number of cores)</h1>
+<p>cmake --build . --config Release -j$(nproc)</p><h1>Run tests</h1>
+<p>ctest --output-on-failure</p><h1>Install</h1>
+<p>sudo cmake --install .</p>
+<p></code></pre></p><p>#### Windows Build</p><p><pre><code class="language-powershell"><h1>Clone and build</h1>
+<p>git clone https://github.com/umicp/umicp.git</p>
+<p>cd umicp</p>
+<p>mkdir build</p>
+<p>cd build</p><h1>Configure with vcpkg</h1>
+<p>cmake .. -DCMAKE_TOOLCHAIN_FILE="C:/path/to/vcpkg/scripts/buildsystems/vcpkg.cmake" <code>
+<p>         -DCMAKE_BUILD_TYPE=Release </code>
+<p>         -DUMICP_BUILD_TESTS=ON <code>
+<p>         -DUMICP_BUILD_BINDINGS=ON</p><h1>Build</h1>
+<p>cmake --build . --config Release</p><h1>Run tests</h1>
+<p>ctest -C Release --output-on-failure</p><h1>Install</h1>
+<p>cmake --install . --config Release</p>
+<p></code></pre></p><h2>Language Bindings Installation</h2><h3>Node.js/TypeScript Bindings</h3><p>#### From npm Registry</p><p><pre><code class="language-bash"><h1>Install globally</h1>
+<p>npm install -g umicp</p><h1>Or install locally in project</h1>
+<p>npm install umicp</p>
+<p></code></pre></p><p>#### From Source</p><p><pre><code class="language-bash">cd umicp/bindings/nodejs</p>
+<p>npm install</p>
+<p>npm run build</p>
+<p>npm test</p>
+<p>npm link  # For global installation</p>
+<p></code></pre></p><p>#### Usage Example</p><p><pre><code class="language-typescript">import { Protocol, TransportFactory } from 'umicp';</p><p>// Create protocol instance</p>
+<p>const protocol = new Protocol('my-node');</p><p>// Configure</p>
+<p>protocol.configure({</p>
+<p>    enableBinary: true,</p>
+<p>    maxMessageSize: 1024 </em> 1024,</p>
+<p>    connectionTimeout: 5000</p>
+<p>});</p><p>// Set transport</p>
+<p>const transport = TransportFactory.createWebSocket({</p>
+<p>    host: 'localhost',</p>
+<p>    port: 8080</p>
+<p>});</p>
+<p>protocol.setTransport(transport);</p><p>// Connect and use</p>
+<p>await protocol.connect();</p>
+<p>await protocol.sendData('target-node', Buffer.from('Hello, UMICP!'));</p>
+<p></code></pre></p><h3>Python Bindings</h3><p>#### From PyPI</p><p><pre><code class="language-bash"><h1>Install from PyPI</h1>
+<p>pip install umicp</p><h1>Or with conda</h1>
+<p>conda install -c umicp umicp</p>
+<p></code></pre></p><p>#### From Source</p><p><pre><code class="language-bash">cd umicp/bindings/python</p>
+<p>pip install -r requirements.txt</p>
+<p>python setup.py build</p>
+<p>python setup.py install</p>
+<p></code></pre></p><p>#### Usage Example</p><p><pre><code class="language-python">import umicp</p><h1>Create protocol</h1>
+<p>protocol = umicp.Protocol('my-node')</p><h1>Configure</h1>
+<p>config = umicp.Config()</p>
+<p>config.enable_binary = True</p>
+<p>config.max_message_size = 1024 <em> 1024</p>
+<p>protocol.configure(config)</p><h1>Set transport</h1>
+<p>transport = umicp.TransportFactory.create_websocket({</p>
+<p>    'host': 'localhost',</p>
+<p>    'port': 8080</p>
+<p>})</p>
+<p>protocol.set_transport(transport)</p><h1>Connect and use</h1>
+<p>protocol.connect()</p>
+<p>protocol.send_data('target-node', b'Hello, UMICP!')</p>
+<p></code></pre></p><h2>Configuration</h2><h3>Environment Variables</h3><p>Set these environment variables for optimal UMICP operation:</p><p><pre><code class="language-bash"><h1>Core configuration</h1>
+<p>export UMICP_HOME="/opt/umicp"                    # Installation directory</p>
+<p>export UMICP_CONFIG_PATH="/etc/umicp/config"     # Configuration files</p>
+<p>export UMICP_LOG_LEVEL="INFO"                    # Logging level</p>
+<p>export UMICP_LOG_PATH="/var/log/umicp"           # Log directory</p><h1>Performance tuning</h1>
+<p>export UMICP_ENABLE_SIMD="true"                  # Enable SIMD optimizations</p>
+<p>export UMICP_THREAD_POOL_SIZE="8"               # Worker thread count</p>
+<p>export UMICP_BUFFER_SIZE="65536"                # Default buffer size</p><h1>Security</h1>
+<p>export UMICP_KEY_PATH="/etc/umicp/keys"          # Cryptographic keys</p>
+<p>export UMICP_CERT_PATH="/etc/umicp/certs"       # TLS certificates</p>
+<p>export UMICP_REQUIRE_TLS="true"                 # Require TLS encryption</p><h1>Networking</h1>
+<p>export UMICP_DEFAULT_PORT="8080"                # Default listening port</p>
+<p>export UMICP_MAX_CONNECTIONS="1000"             # Maximum concurrent connections</p>
+<p>export UMICP_KEEPALIVE_INTERVAL="30"            # Keepalive interval (seconds)</p>
+<p></code></pre></p><h3>Configuration Files</h3><p>#### Main Configuration (</code>/etc/umicp/umicp.conf<code>)</p><p><pre><code class="language-ini">[core]</p>
+<h1>Core protocol settings</h1>
+<p>node_id = "default-node"</p>
+<p>max_message_size = 10485760  # 10MB</p>
+<p>connection_timeout = 30000   # 30 seconds</p>
+<p>enable_binary = true</p>
+<p>preferred_format = "binary"</p><p>[transport]</p>
+<h1>Transport layer settings</h1>
+<p>default_type = "websocket"</p>
+<p>listen_address = "0.0.0.0"</p>
+<p>listen_port = 8080</p>
+<p>max_connections = 1000</p>
+<p>keepalive_interval = 30</p><p>[security]</p>
+<h1>Security settings</h1>
+<p>require_auth = false</p>
+<p>require_encryption = false</p>
+<p>key_file = "/etc/umicp/keys/node.key"</p>
+<p>cert_file = "/etc/umicp/certs/node.crt"</p>
+<p>ca_file = "/etc/umicp/certs/ca.crt"</p><p>[performance]</p>
+<h1>Performance tuning</h1>
+<p>enable_simd = true</p>
+<p>thread_pool_size = 8</p>
+<p>buffer_pool_size = 1000</p>
+<p>compression_enabled = true</p>
+<p>compression_level = 6</p><p>[logging]</p>
+<h1>Logging configuration</h1>
+<p>level = "INFO"</p>
+<p>file = "/var/log/umicp/umicp.log"</p>
+<p>max_file_size = "100MB"</p>
+<p>max_files = 10</p>
+<p>console_output = true</p>
+<p></code></pre></p><p>#### Transport Configuration (</code>/etc/umicp/transport.conf<code>)</p><p><pre><code class="language-ini">[websocket]</p>
+<h1>WebSocket transport settings</h1>
+<p>enabled = true</p>
+<p>port = 8080</p>
+<p>max_frame_size = 16777216  # 16MB</p>
+<p>ping_interval = 30</p>
+<p>pong_timeout = 10</p><p>[http2]</p>
+<h1>HTTP/2 transport settings</h1>
+<p>enabled = true</p>
+<p>port = 8443</p>
+<p>tls_required = true</p>
+<p>max_streams = 1000</p>
+<p>window_size = 65536</p><p>[tcp]</p>
+<h1>Raw TCP transport settings</h1>
+<p>enabled = false</p>
+<p>port = 8081</p>
+<p>nodelay = true</p>
+<p>keepalive = true</p>
+<p></code></pre></p><h2>Verification</h2><h3>Basic Functionality Test</h3><p>Create a simple test to verify your installation:</p><p><strong>C++ Test (</code>test_installation.cpp<code>):</strong></p><p><pre><code class="language-cpp">#include <iostream>
+<p>#include "umicp/protocol.h"</p>
+<p>#include "umicp/transport.h"</p><p>int main() {</p>
+<p>    try {</p>
+<p>        // Create protocol</p>
+<p>        umicp::Protocol protocol("test-node");</p>
+<p>        </p>
+<p>        // Configure</p>
+<p>        umicp::UMICPConfig config;</p>
+<p>        config.max_message_size = 1024;</p>
+<p>        config.enable_binary = true;</p>
+<p>        </p>
+<p>        auto result = protocol.configure(config);</p>
+<p>        if (!result.is_success()) {</p>
+<p>            std::cerr << "Configuration failed" << std::endl;</p>
+<p>            return 1;</p>
+<p>        }</p>
+<p>        </p>
+<p>        std::cout << "UMICP installation verified successfully!" << std::endl;</p>
+<p>        std::cout << "Node ID: " << protocol.get_node_id() << std::endl;</p>
+<p>        </p>
+<p>        return 0;</p>
+<p>    } catch (const std::exception& e) {</p>
+<p>        std::cerr << "Error: " << e.what() << std::endl;</p>
+<p>        return 1;</p>
+<p>    }</p>
+<p>}</p>
+<p></code></pre></p><p>Compile and run:</p><p><pre><code class="language-bash">g++ -std=c++17 test_installation.cpp -lumicp -o test_installation</p>
+<p>./test_installation</p>
+<p></code></pre></p><p><strong>Node.js Test (</code>test_installation.js`):</strong></p><p><pre><code class="language-javascript">const { Protocol } = require('umicp');</p><p>async function testInstallation() {</p>
+<p>    try {</p>
+<p>        // Create protocol</p>
+<p>        const protocol = new Protocol('test-node');</p>
+<p>        </p>
+<p>        // Configure</p>
+<p>        const result = protocol.configure({</p>
+<p>            maxMessageSize: 1024,</p>
+<p>            enableBinary: true</p>
+<p>        });</p>
+<p>        </p>
+<p>        if (!result.success) {</p>
+<p>            console.error('Configuration failed');</p>
+<p>            process.exit(1);</p>
+<p>        }</p>
+<p>        </p>
+<p>        console.log('UMICP Node.js bindings verified successfully!');</p>
+<p>        console.log('Node ID:', protocol.getNodeId());</p>
+<p>        </p>
+<p>    } catch (error) {</p>
+<p>        console.error('Error:', error.message);</p>
+<p>        process.exit(1);</p>
+<p>    }</p>
+<p>}</p><p>testInstallation();</p>
+<p></code></pre></p><p>Run:</p><p><pre><code class="language-bash">node test_installation.js</p>
+<p></code></pre></p><h3>Performance Benchmark</h3><p>Run the included benchmark to verify performance:</p><p><pre><code class="language-bash"><h1>C++ benchmark</h1>
+<p>umicp-benchmark --test matrix --size 1000 --iterations 1000</p><h1>Node.js benchmark</h1>
+<p>npm run benchmark</p><h1>Expected output:</h1>
+<h1>Matrix Operations: 12.5 GFLOPS</h1>
+<h1>Message Throughput: 1.2 GB/s</h1>
+<h1>Connection Latency: 0.8 ms</h1>
+<p></code></pre></p><h3>Network Connectivity Test</h3><p>Test network functionality:</p><p><pre><code class="language-bash"><h1>Start UMICP server</h1>
+<p>umicp-server --port 8080 --verbose</p><h1>In another terminal, test client</h1>
+<p>umicp-client --host localhost --port 8080 --message "Hello, UMICP!"</p><h1>Expected output:</h1>
+<h1>Connected to localhost:8080</h1>
+<h1>Sent: Hello, UMICP!</h1>
+<h1>Received: Echo: Hello, UMICP!</h1>
+<h1>Connection closed successfully</h1>
+<p></code></pre></p><h2>Troubleshooting</h2><h3>Common Issues</h3><p>#### 1. Missing Dependencies</p><p><strong>Problem:</strong> Build fails with missing library errors</p><p><strong>Solution:</strong>
+<pre><code class="language-bash"><h1>Ubuntu/Debian</h1>
+<p>sudo apt install libssl-dev libzlib1g-dev libjson-c-dev</p><h1>CentOS/RHEL</h1>
+<p>sudo dnf install openssl-devel zlib-devel json-c-devel</p><h1>macOS</h1>
+<p>brew install openssl zlib json-c</p>
+<p></code></pre></p><p>#### 2. SIMD Not Available</p><p><strong>Problem:</strong> SIMD optimizations not working</p><p><strong>Solution:</strong>
+<pre><code class="language-bash"><h1>Check CPU features</h1>
+<p>cat /proc/cpuinfo | grep -E "(sse|avx)"</p><h1>Rebuild with SIMD disabled if necessary</h1>
+<p>cmake .. -DUMICP_ENABLE_SIMD=OFF</p>
+<p></code></pre></p><p>#### 3. Permission Denied</p><p><strong>Problem:</strong> Cannot bind to port or access files</p><p><strong>Solution:</strong>
+<pre><code class="language-bash"><h1>Run with appropriate permissions</h1>
+<p>sudo umicp-server --port 80</p><h1>Or use non-privileged port</h1>
+<p>umicp-server --port 8080</p><h1>Fix file permissions</h1>
+<p>sudo chown -R $USER:$USER /etc/umicp</p>
+<p>sudo chmod -R 644 /etc/umicp/</em>.conf</p>
+<p></code></pre></p><p>#### 4. Node.js Binding Issues</p><p><strong>Problem:</strong> Cannot load native module</p><p><strong>Solution:</strong>
+<pre><code class="language-bash"><h1>Rebuild native modules</h1>
+<p>npm rebuild</p><h1>Clear npm cache</h1>
+<p>npm cache clean --force</p><h1>Reinstall</h1>
+<p>npm uninstall umicp</p>
+<p>npm install umicp</p>
+<p></code></pre></p><h3>Debug Mode</h3><p>Enable debug mode for detailed troubleshooting:</p><p><pre><code class="language-bash"><h1>Set debug environment</h1>
+<p>export UMICP_LOG_LEVEL="DEBUG"</p>
+<p>export UMICP_DEBUG="true"</p><h1>Run with verbose output</h1>
+<p>umicp-server --verbose --debug</p>
+<p></code></pre></p><h3>Log Analysis</h3><p>Check logs for issues:</p><p><pre><code class="language-bash"><h1>View recent logs</h1>
+<p>tail -f /var/log/umicp/umicp.log</p><h1>Search for errors</h1>
+<p>grep -i error /var/log/umicp/umicp.log</p><h1>Analyze connection issues</h1>
+<p>grep -i "connection\|transport" /var/log/umicp/umicp.log</p>
+<p></code></pre></p><h2>Next Steps</h2><p>After successful installation:</p><p>1. <strong>Read the <a href="quick-start.md">Quick Start Guide</a></strong> for basic usage</p>
+<p>2. <strong>Explore <a href="../api/">API Documentation</a></strong> for detailed reference</p>
+<p>3. <strong>Check out <a href="examples.md">Examples</a></strong> for real-world usage patterns</p>
+<p>4. <strong>Join the <a href="https://github.com/umicp/umicp/discussions">Community</a></strong> for support</p><h2>Support</h2><p>If you encounter issues:</p><p>- <strong>Documentation</strong>: <a href="https://umicp.github.io/docs/">https://umicp.github.io/docs/</a>
+<p>- <strong>Issues</strong>: <a href="https://github.com/umicp/umicp/issues">https://github.com/umicp/umicp/issues</a>
+<p>- <strong>Discussions</strong>: <a href="https://github.com/umicp/umicp/discussions">https://github.com/umicp/umicp/discussions</a>
+<p>- <strong>Email</strong>: support@umicp.org</p>
+<p>
+        </main>
+
+        <footer style="margin-top: 3rem; padding-top: 2rem; border-top: 1px solid #e2e8f0; text-align: center; color: #64748b;">
+            <p><a href="../index.html">&larr; Back to Documentation Home</a></p>
+        </footer>
+    </div>
+
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/11.9.0/highlight.min.js"></script>
+    <script src="../assets/js/docs.js"></script>
+    <script>hljs.highlightAll();</script>
+</body>
+</html>

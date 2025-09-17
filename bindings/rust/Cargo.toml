@@ -1,0 +1,37 @@
+[package]
+name = "umicp-core"
+version = "1.0.0"
+edition = "2021"
+description = "UMICP Rust bindings for high-performance communication and matrix operations"
+license = "CC0-1.0"
+authors = ["CMMV-Hive AI Collaborative Team"]
+repository = "https://github.com/cmmv-hive/umicp"
+homepage = "https://github.com/cmmv-hive/umicp"
+documentation = "https://docs.rs/umicp-core"
+keywords = ["umicp", "communication", "matrix", "federated-learning", "ai"]
+categories = ["api-bindings", "science", "network-programming"]
+
+[lib]
+name = "umicp_core"
+crate-type = ["cdylib", "lib"]
+
+[dependencies]
+serde = { version = "1.0", features = ["derive"] }
+serde_json = "1.0"
+uuid = { version = "0.8", features = ["v4"] }
+chrono = { version = "0.4", features = ["serde"] }
+thiserror = "1.0"
+anyhow = "1.0"
+ndarray = "0.15"
+base64 = "0.13"
+hex = "0.4"
+sha2 = "0.9"
+rand = "0.7"
+
+[dev-dependencies]
+
+[features]
+default = []
+websocket = []
+http2 = []
+full = ["websocket", "http2"]

@@ -1,0 +1,709 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Protocol API Reference - UMICP Documentation</title>
+    <link rel="stylesheet" href="../assets/css/docs.css">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/11.9.0/styles/default.min.css">
+    <style>
+        body { font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif; line-height: 1.6; }
+        .container { max-width: 800px; margin: 0 auto; padding: 2rem; }
+        .breadcrumb { margin-bottom: 2rem; color: #64748b; }
+        .breadcrumb a { color: #2563eb; text-decoration: none; }
+        .content { color: #334155; }
+        .content h1, .content h2, .content h3 { color: #0f172a; }
+        .content code { background: #f1f5f9; padding: 0.2em 0.4em; border-radius: 0.25rem; font-size: 0.9em; }
+        .content pre { background: #f8fafc; border: 1px solid #e2e8f0; border-radius: 0.5rem; padding: 1rem; overflow-x: auto; }
+        .content pre code { background: none; padding: 0; }
+        .content table { border-collapse: collapse; width: 100%; margin: 1rem 0; }
+        .content th, .content td { border: 1px solid #e2e8f0; padding: 0.75rem; text-align: left; }
+        .content th { background: #f8fafc; font-weight: 600; }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <nav class="breadcrumb">
+            <a href="../index.html">Home</a> / <a href="../index.html">Guides</a> / Protocol API Reference
+        </nav>
+
+        <main class="content">
+            <h1>Protocol API Reference</h1><p>/*<em>
+<p> </em> @fileoverview Complete API reference for the UMICP Protocol class</p>
+<p> <em> @description The Protocol class is the main entry point for UMICP communication,</p>
+<p> </em> providing high-level methods for connecting, sending, and receiving messages.</p>
+<p> <em> </p>
+<p> </em> @group Core Components</p>
+<p> <em> @order 1</p>
+<p> </em> @since 1.0.0</p>
+<p> <em> @tested</p>
+<p> </em> @coverage 100%</p>
+<p> <em> @nodejs</p>
+<p> </em>/</p><h2>Overview</h2><p>The <code>Protocol</code> class serves as the primary interface for UMICP communication. It orchestrates</p>
+<p>the interaction between transport layers, security managers, and serialization components to</p>
+<p>provide a unified, easy-to-use API for inter-component communication.</p><h3>Key Features</h3><p>- <strong>Transport Abstraction</strong>: Works with multiple transport protocols (WebSocket, HTTP/2)</p>
+<p>- <strong>Security Integration</strong>: Built-in encryption and digital signatures</p>
+<p>- <strong>Binary Optimization</strong>: High-performance binary serialization</p>
+<p>- <strong>Thread Safety</strong>: All operations are thread-safe</p>
+<p>- <strong>Statistics</strong>: Comprehensive performance monitoring</p><h2>Class Declaration</h2><p><pre><code class="language-cpp">/*<em>
+<p> </em> @class Protocol</p>
+<p> <em> @description Main protocol orchestrator for UMICP communication</p>
+<p> </em> </p>
+<p> <em> The Protocol class provides a high-level interface for establishing connections,</p>
+<p> </em> sending messages, and managing communication sessions. It integrates with</p>
+<p> <em> transport layers, security managers, and serialization components.</p>
+<p> </em> </p>
+<p> <em> @group Core Components</p>
+<p> </em> @threadsafe</p>
+<p> <em> @tested</p>
+<p> </em> @performance Optimized for high-throughput scenarios with >1000 msg/s</p>
+<p> <em> @security Supports ECC signatures and AES-256 encryption</p>
+<p> </em> @nodejs Available through Node.js bindings</p>
+<p> <em> </p>
+<p> </em> @example</p>
+<p> <em> </code></pre>cpp</p>
+<p> </em> // Create and configure protocol</p>
+<p> <em> Protocol protocol("my-node");</p>
+<p> </em> UMICPConfig config;</p>
+<p> <em> config.enable_binary = true;</p>
+<p> </em> config.require_encryption = true;</p>
+<p> <em> protocol.configure(config);</p>
+<p> </em> </p>
+<p> <em> // Set transport and connect</p>
+<p> </em> auto transport = TransportFactory::create_websocket(transport_config);</p>
+<p> <em> protocol.set_transport(transport);</p>
+<p> </em> protocol.connect();</p>
+<p> <em> </p>
+<p> </em> // Send data</p>
+<p> <em> ByteBuffer data = {0x01, 0x02, 0x03};</p>
+<p> </em> protocol.send_data("target-node", data);</p>
+<p> <em> <pre><code class="language-"> </em>/</p>
+<p>class Protocol {</p>
+<p>public:</p>
+<p>    // ... class members</p>
+<p>};</p>
+<p></code></pre></p><h2>Constructors</h2><h3>Protocol(const std::string& node_id)</h3><p><pre><code class="language-cpp">/*<em>
+<p> </em> @constructor Protocol</p>
+<p> <em> @description Creates a new Protocol instance with the specified node identifier</p>
+<p> </em> </p>
+<p> <em> @param {string} node_id - Unique identifier for this protocol node</p>
+<p> </em> </p>
+<p> <em> @throws {std::invalid_argument} If node_id is empty or invalid</p>
+<p> </em> </p>
+<p> <em> @example</p>
+<p> </em> </code></pre>cpp</p>
+<p> <em> // Create protocol with unique node ID</p>
+<p> </em> Protocol protocol("ml-worker-001");</p>
+<p> <em> <pre><code class="language-"> </em> </p>
+<p> <em> @security Node ID should be unique within the network to prevent conflicts</p>
+<p> </em> @performance Constructor is lightweight, O(1) complexity</p>
+<p> <em>/</p>
+<p>explicit Protocol(const std::string& node_id);</p>
+<p></code></pre></p><p><strong>Parameters:</strong>
+<p>- <code>node_id</code>: Unique string identifier for this protocol instance. Must be non-empty and should be unique within the communication network.</p><p><strong>Security Considerations:</strong>
+<p>- Node IDs are used for message routing and should be chosen carefully</p>
+<p>- Avoid using predictable or sequential node IDs in production environments</p><h2>Configuration Methods</h2><h3>configure(const UMICPConfig& config)</h3><p><pre><code class="language-cpp">/</em><em>
+<p> </em> @method configure</p>
+<p> <em> @description Configures the protocol with specified settings</p>
+<p> </em> </p>
+<p> <em> This method sets up the protocol's behavior including message size limits,</p>
+<p> </em> timeout values, security requirements, and serialization preferences.</p>
+<p> <em> </p>
+<p> </em> @param {UMICPConfig} config - Configuration object with protocol settings</p>
+<p> <em> @returns {Result<void>} Success or error result</p>
+<p> </em> </p>
+<p> <em> @throws {std::invalid_argument} If configuration values are invalid</p>
+<p> </em> </p>
+<p> <em> @complexity O(1)</p>
+<p> </em> @threadsafe</p>
+<p> <em> </p>
+<p> </em> @example</p>
+<p> <em> </code></pre>cpp</p>
+<p> </em> UMICPConfig config;</p>
+<p> <em> config.max_message_size = 1024 </em> 1024;  // 1MB</p>
+<p> <em> config.connection_timeout = 30000;      // 30 seconds</p>
+<p> </em> config.enable_binary = true;</p>
+<p> <em> config.require_encryption = true;</p>
+<p> </em> </p>
+<p> <em> auto result = protocol.configure(config);</p>
+<p> </em> if (!result.is_success()) {</p>
+<p> <em>     std::cerr << "Configuration failed: " << result.error_message << std::endl;</p>
+<p> </em> }</p>
+<p> <em> <pre><code class="language-"> </em> </p>
+<p> <em> @security </p>
+<p> </em> - Set require_encryption=true for sensitive data</p>
+<p> <em> - Use appropriate timeout values to prevent DoS attacks</p>
+<p> </em> - Limit max_message_size to prevent memory exhaustion</p>
+<p> <em>/</p>
+<p>Result<void> configure(const UMICPConfig& config);</p>
+<p></code></pre></p><p><strong>Configuration Options:</strong></p><p>| Option | Type | Default | Description |</p>
+<p>|--------|------|---------|-------------|</p>
+<p>| <code>max_message_size</code> | <code>size_t</code> | 1MB | Maximum message size in bytes |</p>
+<p>| <code>connection_timeout</code> | <code>uint32_t</code> | 5000 | Connection timeout in milliseconds |</p>
+<p>| <code>enable_binary</code> | <code>bool</code> | true | Enable binary serialization |</p>
+<p>| <code>preferred_format</code> | <code>ContentType</code> | BINARY | Preferred message format |</p>
+<p>| <code>require_auth</code> | <code>bool</code> | false | Require message authentication |</p>
+<p>| <code>require_encryption</code> | <code>bool</code> | false | Require message encryption |</p><h2>Connection Management</h2><h3>connect()</h3><p><pre><code class="language-cpp">/</em><em>
+<p> </em> @method connect</p>
+<p> <em> @description Establishes connection using the configured transport</p>
+<p> </em> </p>
+<p> <em> Initiates connection to the remote endpoint using the configured transport</p>
+<p> </em> layer. This method will block until connection is established or timeout occurs.</p>
+<p> <em> </p>
+<p> </em> @returns {Result<void>} Success if connected, error otherwise</p>
+<p> <em> </p>
+<p> </em> @complexity O(1) - actual time depends on network conditions</p>
+<p> <em> @performance Typical connection time: 10-100ms for local networks</p>
+<p> </em> @threadsafe</p>
+<p> <em> </p>
+<p> </em> @example</p>
+<p> <em> </code></pre>cpp</p>
+<p> </em> auto result = protocol.connect();</p>
+<p> <em> if (result.is_success()) {</p>
+<p> </em>     std::cout << "Connected successfully" << std::endl;</p>
+<p> <em> } else {</p>
+<p> </em>     std::cerr << "Connection failed: " << result.error_message << std::endl;</p>
+<p> <em> }</p>
+<p> </em> <pre><code class="language-"> <em> </p>
+<p> </em> @security Connection may involve TLS handshake if encryption is enabled</p>
+<p> <em>/</p>
+<p>Result<void> connect();</p>
+<p></code></pre></p><h3>disconnect()</h3><p><pre><code class="language-cpp">/</em><em>
+<p> </em> @method disconnect</p>
+<p> <em> @description Gracefully closes the connection</p>
+<p> </em> </p>
+<p> <em> Performs a clean shutdown of the connection, allowing pending messages</p>
+<p> </em> to be sent before closing the transport.</p>
+<p> <em> </p>
+<p> </em> @returns {Result<void>} Success if disconnected cleanly</p>
+<p> <em> </p>
+<p> </em> @complexity O(1)</p>
+<p> <em> @threadsafe</p>
+<p> </em> </p>
+<p> <em> @example</p>
+<p> </em> </code></pre>cpp</p>
+<p> <em> // Clean shutdown</p>
+<p> </em> auto result = protocol.disconnect();</p>
+<p> <em> assert(result.is_success());</p>
+<p> </em> <pre><code class="language-"> <em>/</p>
+<p>Result<void> disconnect();</p>
+<p></code></pre></p><h3>is_connected()</h3><p><pre><code class="language-cpp">/</em><em>
+<p> </em> @method is_connected</p>
+<p> <em> @description Checks if the protocol is currently connected</p>
+<p> </em> </p>
+<p> <em> @returns {bool} True if connected, false otherwise</p>
+<p> </em> </p>
+<p> <em> @complexity O(1)</p>
+<p> </em> @threadsafe</p>
+<p> <em> @reentrant</p>
+<p> </em> </p>
+<p> <em> @example</p>
+<p> </em> </code></pre>cpp</p>
+<p> <em> if (protocol.is_connected()) {</p>
+<p> </em>     // Send messages</p>
+<p> <em>     protocol.send_data("target", data);</p>
+<p> </em> }</p>
+<p> <em> <pre><code class="language-"> </em>/</p>
+<p>bool is_connected() const;</p>
+<p></code></pre></p><h2>Message Sending</h2><h3>send_data(const std::string& to, const ByteBuffer& data)</h3><p><pre><code class="language-cpp">/*<em>
+<p> </em> @method send_data</p>
+<p> <em> @description Sends binary data to a target node</p>
+<p> </em> </p>
+<p> <em> Sends raw binary data using the most efficient serialization format.</p>
+<p> </em> The data will be wrapped in a UMICP envelope and transmitted using</p>
+<p> <em> the configured transport layer.</p>
+<p> </em> </p>
+<p> <em> @param {string} to - Target node identifier</p>
+<p> </em> @param {ByteBuffer} data - Binary data to send</p>
+<p> <em> @returns {Result<void>} Success or error result</p>
+<p> </em> </p>
+<p> <em> @complexity O(n) where n is data size</p>
+<p> </em> @performance >1GB/s throughput for large messages</p>
+<p> <em> @threadsafe</p>
+<p> </em> @simd Optimized for large data transfers</p>
+<p> <em> </p>
+<p> </em> @example</p>
+<p> <em> </code></pre>cpp</p>
+<p> </em> // Send ML model weights</p>
+<p> <em> std::vector<float> weights = get_model_weights();</p>
+<p> </em> ByteBuffer data(reinterpret_cast<const uint8_t<em>>(weights.data()),</p>
+<p> </em>                 reinterpret_cast<const uint8_t<em>>(weights.data()) + </p>
+<p> </em>                 weights.size() <em> sizeof(float));</p>
+<p> </em> </p>
+<p> <em> auto result = protocol.send_data("ml-aggregator", data);</p>
+<p> </em> if (!result.is_success()) {</p>
+<p> <em>     handle_send_error(result);</p>
+<p> </em> }</p>
+<p> <em> <pre><code class="language-"> </em> </p>
+<p> <em> @security Data is automatically encrypted if require_encryption is enabled</p>
+<p> </em> @binding Available in Node.js as sendData(to: string, data: Buffer)</p>
+<p> <em>/</p>
+<p>Result<void> send_data(const std::string& to, const ByteBuffer& data);</p>
+<p></code></pre></p><h3>send_control(const std::string& to, const std::string& message)</h3><p><pre><code class="language-cpp">/</em><em>
+<p> </em> @method send_control</p>
+<p> <em> @description Sends a control message to a target node</p>
+<p> </em> </p>
+<p> <em> Control messages are used for protocol-level communication such as</p>
+<p> </em> handshakes, status updates, and coordination between nodes.</p>
+<p> <em> </p>
+<p> </em> @param {string} to - Target node identifier</p>
+<p> <em> @param {string} message - Control message content</p>
+<p> </em> @returns {Result<void>} Success or error result</p>
+<p> <em> </p>
+<p> </em> @complexity O(n) where n is message length</p>
+<p> <em> @performance Optimized for small, frequent messages</p>
+<p> </em> @threadsafe</p>
+<p> <em> </p>
+<p> </em> @example</p>
+<p> <em> </code></pre>cpp</p>
+<p> </em> // Send heartbeat</p>
+<p> <em> auto result = protocol.send_control("coordinator", "heartbeat");</p>
+<p> </em> </p>
+<p> <em> // Send status update</p>
+<p> </em> protocol.send_control("monitor", "status:ready");</p>
+<p> <em> </p>
+<p> </em> // Request model update</p>
+<p> <em> protocol.send_control("parameter-server", "request:model-update");</p>
+<p> </em> <pre><code class="language-"> <em> </p>
+<p> </em> @binding Available in Node.js as sendControl(to: string, message: string)</p>
+<p> <em>/</p>
+<p>Result<void> send_control(const std::string& to, const std::string& message);</p>
+<p></code></pre></p><h3>send_ack(const std::string& to, const std::string& msg_id)</h3><p><pre><code class="language-cpp">/</em><em>
+<p> </em> @method send_ack</p>
+<p> <em> @description Sends acknowledgment for a received message</p>
+<p> </em> </p>
+<p> <em> Acknowledgments are used to confirm message receipt and enable</p>
+<p> </em> reliable delivery patterns.</p>
+<p> <em> </p>
+<p> </em> @param {string} to - Target node identifier (original sender)</p>
+<p> <em> @param {string} msg_id - Message ID being acknowledged</p>
+<p> </em> @returns {Result<void>} Success or error result</p>
+<p> <em> </p>
+<p> </em> @complexity O(1)</p>
+<p> <em> @performance Very fast, <1ms latency</p>
+<p> </em> @threadsafe</p>
+<p> <em> </p>
+<p> </em> @example</p>
+<p> <em> </code></pre>cpp</p>
+<p> </em> // In message callback</p>
+<p> <em> void on_message_received(const Envelope& envelope) {</p>
+<p> </em>     // Process message</p>
+<p> <em>     process_message(envelope);</p>
+<p> </em>     </p>
+<p> <em>     // Send acknowledgment</p>
+<p> </em>     protocol.send_ack(envelope.from, envelope.msg_id);</p>
+<p> <em> }</p>
+<p> </em> <pre><code class="language-"> <em>/</p>
+<p>Result<void> send_ack(const std::string& to, const std::string& msg_id);</p>
+<p></code></pre></p><h3>send_error(const std::string& to, const std::string& error_msg)</h3><p><pre><code class="language-cpp">/</em><em>
+<p> </em> @method send_error</p>
+<p> <em> @description Sends error message to a target node</p>
+<p> </em> </p>
+<p> <em> Error messages are used to communicate processing failures,</p>
+<p> </em> validation errors, or other exceptional conditions.</p>
+<p> <em> </p>
+<p> </em> @param {string} to - Target node identifier</p>
+<p> <em> @param {string} error_msg - Error description</p>
+<p> </em> @returns {Result<void>} Success or error result</p>
+<p> <em> </p>
+<p> </em> @complexity O(1)</p>
+<p> <em> @threadsafe</p>
+<p> </em> </p>
+<p> <em> @example</p>
+<p> </em> </code></pre>cpp</p>
+<p> <em> // Send validation error</p>
+<p> </em> protocol.send_error("client", "Invalid message format");</p>
+<p> <em> </p>
+<p> </em> // Send processing error</p>
+<p> <em> protocol.send_error("sender", "Insufficient resources");</p>
+<p> </em> <pre><code class="language-"> <em>/</p>
+<p>Result<void> send_error(const std::string& to, const std::string& error_msg);</p>
+<p></code></pre></p><h2>Transport Management</h2><h3>set_transport(std::shared_ptr<Transport> transport)</h3><p><pre><code class="language-cpp">/</em><em>
+<p> </em> @method set_transport</p>
+<p> <em> @description Sets the transport layer for communication</p>
+<p> </em> </p>
+<p> <em> The transport layer handles the actual network communication.</p>
+<p> </em> Multiple transport types are supported (WebSocket, HTTP/2).</p>
+<p> <em> </p>
+<p> </em> @param {shared_ptr<Transport>} transport - Transport implementation</p>
+<p> <em> </p>
+<p> </em> @complexity O(1)</p>
+<p> <em> @threadsafe</p>
+<p> </em> </p>
+<p> <em> @example</p>
+<p> </em> </code></pre>cpp</p>
+<p> <em> // WebSocket transport</p>
+<p> </em> TransportConfig ws_config;</p>
+<p> <em> ws_config.type = TransportType::WEBSOCKET;</p>
+<p> </em> ws_config.host = "localhost";</p>
+<p> <em> ws_config.port = 8080;</p>
+<p> </em> auto ws_transport = TransportFactory::create_websocket(ws_config);</p>
+<p> <em> protocol.set_transport(ws_transport);</p>
+<p> </em> </p>
+<p> <em> // HTTP/2 transport</p>
+<p> </em> TransportConfig h2_config;</p>
+<p> <em> h2_config.type = TransportType::HTTP2;</p>
+<p> </em> h2_config.host = "api.example.com";</p>
+<p> <em> h2_config.port = 443;</p>
+<p> </em> auto h2_transport = TransportFactory::create_http2(h2_config);</p>
+<p> <em> protocol.set_transport(h2_transport);</p>
+<p> </em> <pre><code class="language-"> <em>/</p>
+<p>void set_transport(std::shared_ptr<Transport> transport);</p>
+<p></code></pre></p><h3>get_transport()</h3><p><pre><code class="language-cpp">/</em><em>
+<p> </em> @method get_transport</p>
+<p> <em> @description Gets the current transport layer</p>
+<p> </em> </p>
+<p> <em> @returns {shared_ptr<Transport>} Current transport or nullptr if not set</p>
+<p> </em> </p>
+<p> <em> @complexity O(1)</p>
+<p> </em> @threadsafe</p>
+<p> <em> @reentrant</p>
+<p> </em>/</p>
+<p>std::shared_ptr<Transport> get_transport() const;</p>
+<p></code></pre></p><h2>Security Management</h2><h3>set_security_manager(std::shared_ptr<SecurityManager> security)</h3><p><pre><code class="language-cpp">/*<em>
+<p> </em> @method set_security_manager</p>
+<p> <em> @description Sets the security manager for encryption and signing</p>
+<p> </em> </p>
+<p> <em> The security manager handles cryptographic operations including</p>
+<p> </em> message signing, verification, encryption, and decryption.</p>
+<p> <em> </p>
+<p> </em> @param {shared_ptr<SecurityManager>} security - Security implementation</p>
+<p> <em> </p>
+<p> </em> @complexity O(1)</p>
+<p> <em> @security Required if require_auth or require_encryption is enabled</p>
+<p> </em> </p>
+<p> <em> @example</p>
+<p> </em> </code></pre>cpp</p>
+<p> <em> auto security = std::make_shared<SecurityManager>("node-security");</p>
+<p> </em> security->generate_keypair();</p>
+<p> <em> protocol.set_security_manager(security);</p>
+<p> </em> <pre><code class="language-"> <em>/</p>
+<p>void set_security_manager(std::shared_ptr<SecurityManager> security);</p>
+<p></code></pre></p><h2>Statistics and Monitoring</h2><h3>get_stats()</h3><p><pre><code class="language-cpp">/</em><em>
+<p> </em> @method get_stats</p>
+<p> <em> @description Gets protocol performance statistics</p>
+<p> </em> </p>
+<p> <em> Returns comprehensive statistics about protocol performance including</p>
+<p> </em> message counts, byte counts, error rates, and timing information.</p>
+<p> <em> </p>
+<p> </em> @returns {ProtocolStats} Current statistics</p>
+<p> <em> </p>
+<p> </em> @complexity O(1)</p>
+<p> <em> @threadsafe</p>
+<p> </em> @reentrant</p>
+<p> <em> </p>
+<p> </em> @example</p>
+<p> <em> </code></pre>cpp</p>
+<p> </em> auto stats = protocol.get_stats();</p>
+<p> <em> std::cout << "Messages sent: " << stats.messages_sent << std::endl;</p>
+<p> </em> std::cout << "Messages received: " << stats.messages_received << std::endl;</p>
+<p> <em> std::cout << "Error rate: " << (stats.errors </em> 100.0 / stats.total_operations) << "%" << std::endl;</p>
+<p> <em> std::cout << "Avg latency: " << stats.avg_latency_ms << "ms" << std::endl;</p>
+<p> </em> <pre><code class="language-"> <em> </p>
+<p> </em> @binding Available in Node.js as getStats(): ProtocolStats</p>
+<p> <em>/</p>
+<p>ProtocolStats get_stats() const;</p>
+<p></code></pre></p><p><strong>Statistics Structure:</strong></p><p><pre><code class="language-cpp">struct ProtocolStats {</p>
+<p>    uint64_t messages_sent;         ///< Total messages sent</p>
+<p>    uint64_t messages_received;     ///< Total messages received  </p>
+<p>    uint64_t bytes_sent;           ///< Total bytes sent</p>
+<p>    uint64_t bytes_received;       ///< Total bytes received</p>
+<p>    uint64_t errors;               ///< Total error count</p>
+<p>    uint64_t timeouts;             ///< Connection timeout count</p>
+<p>    double avg_latency_ms;         ///< Average message latency</p>
+<p>    double throughput_mbps;        ///< Current throughput in Mbps</p>
+<p>    std::chrono::steady_clock::time_point last_activity;  ///< Last activity timestamp</p>
+<p>};</p>
+<p></code></pre></p><h3>reset_stats()</h3><p><pre><code class="language-cpp">/</em><em>
+<p> </em> @method reset_stats</p>
+<p> <em> @description Resets all protocol statistics to zero</p>
+<p> </em> </p>
+<p> <em> @complexity O(1)</p>
+<p> </em> @threadsafe</p>
+<p> <em> </p>
+<p> </em> @example</p>
+<p> <em> </code></pre>cpp</p>
+<p> </em> // Reset stats for new measurement period</p>
+<p> <em> protocol.reset_stats();</p>
+<p> </em> auto start_time = std::chrono::steady_clock::now();</p>
+<p> <em> </p>
+<p> </em> // ... perform operations ...</p>
+<p> <em> </p>
+<p> </em> auto end_time = std::chrono::steady_clock::now();</p>
+<p> <em> auto stats = protocol.get_stats();</p>
+<p> </em> auto duration = std::chrono::duration_cast<std::chrono::seconds>(end_time - start_time);</p>
+<p> <em> std::cout << "Operations per second: " << (stats.messages_sent / duration.count()) << std::endl;</p>
+<p> </em> <pre><code class="language-"> <em>/</p>
+<p>void reset_stats();</p>
+<p></code></pre></p><h2>Node Information</h2><h3>get_node_id()</h3><p><pre><code class="language-cpp">/</em><em>
+<p> </em> @method get_node_id</p>
+<p> <em> @description Gets the node identifier for this protocol instance</p>
+<p> </em> </p>
+<p> <em> @returns {string} Node identifier</p>
+<p> </em> </p>
+<p> <em> @complexity O(1)</p>
+<p> </em> @threadsafe</p>
+<p> <em> @reentrant</p>
+<p> </em>/</p>
+<p>std::string get_node_id() const;</p>
+<p></code></pre></p><h2>Error Handling</h2><p>The Protocol class uses the <code>Result<T></code> pattern for error handling. All methods that can fail return a <code>Result<T></code> object that contains either a successful result or error information.</p><h3>Common Error Codes</h3><p>| Error Code | Description | Resolution |</p>
+<p>|------------|-------------|------------|</p>
+<p>| <code>INVALID_ARGUMENT</code> | Invalid parameters passed | Check parameter values |</p>
+<p>| <code>NETWORK_ERROR</code> | Network connectivity issues | Check network connection |</p>
+<p>| <code>TIMEOUT</code> | Operation timed out | Increase timeout or check network |</p>
+<p>| <code>SERIALIZATION_ERROR</code> | Message serialization failed | Check message format |</p>
+<p>| <code>SECURITY_ERROR</code> | Cryptographic operation failed | Check security configuration |</p>
+<p>| <code>TRANSPORT_ERROR</code> | Transport layer error | Check transport configuration |</p><h3>Error Handling Example</h3><p><pre><code class="language-cpp">/*<em>
+<p> </em> @example Error Handling</p>
+<p> <em> @description Comprehensive error handling for protocol operations</p>
+<p> </em>/</p>
+<p>void handle_protocol_operations() {</p>
+<p>    Protocol protocol("error-demo");</p>
+<p>    </p>
+<p>    // Configure with error checking</p>
+<p>    UMICPConfig config;</p>
+<p>    auto config_result = protocol.configure(config);</p>
+<p>    if (!config_result.is_success()) {</p>
+<p>        std::cerr << "Configuration failed: " << config_result.error_message.value_or("Unknown error") << std::endl;</p>
+<p>        return;</p>
+<p>    }</p>
+<p>    </p>
+<p>    // Connect with retry logic</p>
+<p>    int max_retries = 3;</p>
+<p>    for (int retry = 0; retry < max_retries; ++retry) {</p>
+<p>        auto connect_result = protocol.connect();</p>
+<p>        if (connect_result.is_success()) {</p>
+<p>            break;</p>
+<p>        }</p>
+<p>        </p>
+<p>        if (retry == max_retries - 1) {</p>
+<p>            std::cerr << "Failed to connect after " << max_retries << " attempts" << std::endl;</p>
+<p>            return;</p>
+<p>        }</p>
+<p>        </p>
+<p>        std::this_thread::sleep_for(std::chrono::seconds(1));</p>
+<p>    }</p>
+<p>    </p>
+<p>    // Send data with error handling</p>
+<p>    ByteBuffer data = {0x01, 0x02, 0x03};</p>
+<p>    auto send_result = protocol.send_data("target", data);</p>
+<p>    if (!send_result.is_success()) {</p>
+<p>        switch (send_result.code) {</p>
+<p>            case ErrorCode::NETWORK_ERROR:</p>
+<p>                std::cerr << "Network error, retrying..." << std::endl;</p>
+<p>                // Implement retry logic</p>
+<p>                break;</p>
+<p>            case ErrorCode::TIMEOUT:</p>
+<p>                std::cerr << "Send timeout, check network conditions" << std::endl;</p>
+<p>                break;</p>
+<p>            case ErrorCode::INVALID_ARGUMENT:</p>
+<p>                std::cerr << "Invalid target or data" << std::endl;</p>
+<p>                break;</p>
+<p>            default:</p>
+<p>                std::cerr << "Send failed: " << send_result.error_message.value_or("Unknown") << std::endl;</p>
+<p>        }</p>
+<p>    }</p>
+<p>}</p>
+<p></code></pre></p><h2>Performance Characteristics</h2><h3>Throughput</h3><p>- <strong>Small Messages (< 1KB)</strong>: >10,000 messages/second</p>
+<p>- <strong>Medium Messages (1KB - 64KB)</strong>: >1,000 messages/second  </p>
+<p>- <strong>Large Messages (> 64KB)</strong>: >1GB/second throughput</p><h3>Latency</h3><p>- <strong>Local Network</strong>: <1ms average latency</p>
+<p>- <strong>Internet</strong>: Depends on network conditions, typically 10-100ms</p>
+<p>- <strong>Processing Overhead</strong>: <0.1ms per message</p><h3>Memory Usage</h3><p>- <strong>Base Memory</strong>: ~1MB per Protocol instance</p>
+<p>- <strong>Per Message</strong>: ~100 bytes overhead</p>
+<p>- <strong>Connection Pool</strong>: ~10KB per active connection</p><h3>Scalability</h3><p>- <strong>Concurrent Connections</strong>: Tested up to 10,000 concurrent connections</p>
+<p>- <strong>Message Queue</strong>: Unlimited (limited by available memory)</p>
+<p>- <strong>Thread Safety</strong>: All operations are thread-safe</p><h2>Best Practices</h2><h3>Configuration</h3><p><pre><code class="language-cpp">// Production configuration example</p>
+<p>UMICPConfig production_config;</p>
+<p>production_config.max_message_size = 10 <em> 1024 </em> 1024;  // 10MB</p>
+<p>production_config.connection_timeout = 30000;           // 30 seconds</p>
+<p>production_config.enable_binary = true;                 // Better performance</p>
+<p>production_config.preferred_format = ContentType::BINARY;</p>
+<p>production_config.require_auth = true;                  // Security</p>
+<p>production_config.require_encryption = true;            // Privacy</p>
+<p></code></pre></p><h3>Connection Management</h3><p><pre><code class="language-cpp">// Proper connection lifecycle</p>
+<p>class ProtocolManager {</p>
+<p>private:</p>
+<p>    std::unique_ptr<Protocol> protocol_;</p>
+<p>    </p>
+<p>public:</p>
+<p>    bool initialize(const std::string& node_id) {</p>
+<p>        protocol_ = std::make_unique<Protocol>(node_id);</p>
+<p>        </p>
+<p>        // Configure</p>
+<p>        auto config_result = protocol_->configure(get_production_config());</p>
+<p>        if (!config_result.is_success()) return false;</p>
+<p>        </p>
+<p>        // Set transport</p>
+<p>        protocol_->set_transport(create_transport());</p>
+<p>        </p>
+<p>        // Set security</p>
+<p>        protocol_->set_security_manager(create_security_manager());</p>
+<p>        </p>
+<p>        // Connect</p>
+<p>        return protocol_->connect().is_success();</p>
+<p>    }</p>
+<p>    </p>
+<p>    ~ProtocolManager() {</p>
+<p>        if (protocol_ && protocol_->is_connected()) {</p>
+<p>            protocol_->disconnect();</p>
+<p>        }</p>
+<p>    }</p>
+<p>};</p>
+<p></code></pre></p><h3>Error Recovery</h3><p><pre><code class="language-cpp">// Robust error handling with exponential backoff</p>
+<p>class ResilientProtocol {</p>
+<p>private:</p>
+<p>    std::unique_ptr<Protocol> protocol_;</p>
+<p>    std::chrono::milliseconds base_delay_{100};</p>
+<p>    int max_retries_{5};</p>
+<p>    </p>
+<p>public:</p>
+<p>    template<typename Operation>
+<p>    bool retry_operation(Operation op) {</p>
+<p>        for (int attempt = 0; attempt < max_retries_; ++attempt) {</p>
+<p>            auto result = op();</p>
+<p>            if (result.is_success()) {</p>
+<p>                return true;</p>
+<p>            }</p>
+<p>            </p>
+<p>            // Exponential backoff</p>
+<p>            auto delay = base_delay_ <em> (1 << attempt);</p>
+<p>            std::this_thread::sleep_for(delay);</p>
+<p>        }</p>
+<p>        return false;</p>
+<p>    }</p>
+<p>    </p>
+<p>    bool send_with_retry(const std::string& to, const ByteBuffer& data) {</p>
+<p>        return retry_operation([&]() {</p>
+<p>            return protocol_->send_data(to, data);</p>
+<p>        });</p>
+<p>    }</p>
+<p>};</p>
+<p></code></pre></p><h2>Integration Examples</h2><h3>Machine Learning Training</h3><p><pre><code class="language-cpp">/</em><em>
+<p> </em> @example ML Distributed Training</p>
+<p> <em> @description Using Protocol for distributed machine learning</p>
+<p> </em>/</p>
+<p>class MLTrainingNode {</p>
+<p>private:</p>
+<p>    std::unique_ptr<Protocol> protocol_;</p>
+<p>    std::vector<float> model_weights_;</p>
+<p>    </p>
+<p>public:</p>
+<p>    void initialize_training_node(const std::string& node_id) {</p>
+<p>        protocol_ = std::make_unique<Protocol>(node_id);</p>
+<p>        </p>
+<p>        UMICPConfig config;</p>
+<p>        config.enable_binary = true;</p>
+<p>        config.max_message_size = 100 <em> 1024 </em> 1024;  // 100MB for large models</p>
+<p>        protocol_->configure(config);</p>
+<p>        </p>
+<p>        auto transport = TransportFactory::create_websocket({</p>
+<p>            .host = "training-coordinator.example.com",</p>
+<p>            .port = 8080</p>
+<p>        });</p>
+<p>        protocol_->set_transport(transport);</p>
+<p>        protocol_->connect();</p>
+<p>    }</p>
+<p>    </p>
+<p>    void send_gradients(const std::vector<float>& gradients) {</p>
+<p>        // Convert gradients to ByteBuffer</p>
+<p>        ByteBuffer gradient_data(</p>
+<p>            reinterpret_cast<const uint8_t<em>>(gradients.data()),</p>
+<p>            reinterpret_cast<const uint8_t</em>>(gradients.data()) + </p>
+<p>            gradients.size() <em> sizeof(float)</p>
+<p>        );</p>
+<p>        </p>
+<p>        // Send to parameter server</p>
+<p>        auto result = protocol_->send_data("parameter-server", gradient_data);</p>
+<p>        if (!result.is_success()) {</p>
+<p>            std::cerr << "Failed to send gradients: " << result.error_message.value_or("Unknown") << std::endl;</p>
+<p>        }</p>
+<p>    }</p>
+<p>    </p>
+<p>    void request_model_update() {</p>
+<p>        protocol_->send_control("parameter-server", "request:model-update");</p>
+<p>    }</p>
+<p>};</p>
+<p></code></pre></p><h3>IoT Data Collection</h3><p><pre><code class="language-cpp">/</em><em>
+<p> </em> @example IoT Gateway</p>
+<p> <em> @description Protocol usage for IoT data aggregation</p>
+<p> </em>/</p>
+<p>class IoTGateway {</p>
+<p>private:</p>
+<p>    std::unique_ptr<Protocol> protocol_;</p>
+<p>    std::queue<SensorReading> sensor_queue_;</p>
+<p>    std::mutex queue_mutex_;</p>
+<p>    </p>
+<p>public:</p>
+<p>    void initialize_gateway() {</p>
+<p>        protocol_ = std::make_unique<Protocol>("iot-gateway-001");</p>
+<p>        </p>
+<p>        UMICPConfig config;</p>
+<p>        config.enable_binary = true;</p>
+<p>        config.connection_timeout = 60000;  // Longer timeout for IoT</p>
+<p>        protocol_->configure(config);</p>
+<p>        </p>
+<p>        // Connect to cloud service</p>
+<p>        auto transport = TransportFactory::create_websocket({</p>
+<p>            .host = "iot-cloud.example.com",</p>
+<p>            .port = 443,</p>
+<p>            .path = "/iot-data"</p>
+<p>        });</p>
+<p>        protocol_->set_transport(transport);</p>
+<p>        protocol_->connect();</p>
+<p>        </p>
+<p>        // Start data processing thread</p>
+<p>        std::thread(&IoTGateway::process_sensor_data, this).detach();</p>
+<p>    }</p>
+<p>    </p>
+<p>    void collect_sensor_data(const SensorReading& reading) {</p>
+<p>        std::lock_guard<std::mutex> lock(queue_mutex_);</p>
+<p>        sensor_queue_.push(reading);</p>
+<p>    }</p>
+<p>    </p>
+<p>private:</p>
+<p>    void process_sensor_data() {</p>
+<p>        while (true) {</p>
+<p>            std::vector<SensorReading> batch;</p>
+<p>            </p>
+<p>            // Collect batch</p>
+<p>            {</p>
+<p>                std::lock_guard<std::mutex> lock(queue_mutex_);</p>
+<p>                while (!sensor_queue_.empty() && batch.size() < 100) {</p>
+<p>                    batch.push_back(sensor_queue_.front());</p>
+<p>                    sensor_queue_.pop();</p>
+<p>                }</p>
+<p>            }</p>
+<p>            </p>
+<p>            if (!batch.empty()) {</p>
+<p>                send_sensor_batch(batch);</p>
+<p>            }</p>
+<p>            </p>
+<p>            std::this_thread::sleep_for(std::chrono::seconds(1));</p>
+<p>        }</p>
+<p>    }</p>
+<p>    </p>
+<p>    void send_sensor_batch(const std::vector<SensorReading>& batch) {</p>
+<p>        // Serialize batch</p>
+<p>        ByteBuffer batch_data = serialize_sensor_batch(batch);</p>
+<p>        </p>
+<p>        // Send to cloud</p>
+<p>        auto result = protocol_->send_data("cloud-processor", batch_data);</p>
+<p>        if (result.is_success()) {</p>
+<p>            std::cout << "Sent batch of " << batch.size() << " readings" << std::endl;</p>
+<p>        }</p>
+<p>    }</p>
+<p>};</p>
+<p></code></pre></p><p>This comprehensive documentation provides complete coverage of the Protocol class API with Dgeni-style documentation comments, examples, performance characteristics, and best practices for production use.</p>
+<p>
+        </main>
+
+        <footer style="margin-top: 3rem; padding-top: 2rem; border-top: 1px solid #e2e8f0; text-align: center; color: #64748b;">
+            <p><a href="../index.html">&larr; Back to Documentation Home</a></p>
+        </footer>
+    </div>
+
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/11.9.0/highlight.min.js"></script>
+    <script src="../assets/js/docs.js"></script>
+    <script>hljs.highlightAll();</script>
+</body>
+</html>

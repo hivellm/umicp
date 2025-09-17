@@ -1,0 +1,1 @@
+/usr/bin/c++ -O3 -DNDEBUG CMakeFiles/basic_example.dir/basic_example.cpp.o -o basic_example  ../libumicp.a -ljson-c -lz -lssl -lcrypto -luuid -lwebsockets -lcap -lnghttp2 -lcbor 

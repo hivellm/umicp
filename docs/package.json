@@ -1,0 +1,63 @@
+{
+  "name": "umicp-documentation",
+  "version": "1.0.0",
+  "description": "UMICP Documentation generated with Dgeni",
+  "main": "dgeni.config.js",
+  "scripts": {
+    "build": "dgeni dgeni.config.js",
+    "serve": "http-server ./api -p 8080 -o",
+    "dev": "npm run build && npm run serve",
+    "clean": "rimraf ./api",
+    "rebuild": "npm run clean && npm run build",
+    "watch": "nodemon --watch '../cpp/include' --watch '../cpp/src' --watch '../bindings' --watch './guides' --ext 'h,cpp,ts,md' --exec 'npm run build'",
+    "lint": "eslint dgeni.config.js",
+    "test": "echo \"No tests specified\" && exit 0"
+  },
+  "keywords": [
+    "umicp",
+    "documentation",
+    "dgeni",
+    "api-reference",
+    "protocol",
+    "matrix-operations",
+    "inter-component-communication"
+  ],
+  "author": "UMICP Development Team",
+  "license": "MIT",
+  "dependencies": {
+    "dgeni": "^0.4.14",
+    "dgeni-packages": "^0.28.4"
+  },
+  "devDependencies": {
+    "eslint": "^8.56.0",
+    "http-server": "^14.1.1",
+    "nodemon": "^3.0.2",
+    "rimraf": "^5.0.5"
+  },
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/umicp/umicp.git",
+    "directory": "docs"
+  },
+  "bugs": {
+    "url": "https://github.com/umicp/umicp/issues"
+  },
+  "homepage": "https://umicp.github.io/docs/",
+  "engines": {
+    "node": ">=16.0.0",
+    "npm": ">=8.0.0"
+  },
+  "dgeni": {
+    "configFile": "dgeni.config.js"
+  },
+  "documentation": {
+    "source": {
+      "cpp": "../cpp/include",
+      "bindings": "../bindings",
+      "guides": "./guides"
+    },
+    "output": "./api",
+    "templates": "./templates",
+    "assets": "./assets"
+  }
+}

@@ -1,0 +1,403 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>{{ doc.name }} Class - UMICP API Reference</title>
+    <link rel="stylesheet" href="../assets/css/docs.css">
+    <link rel="stylesheet" href="../assets/css/highlight.css">
+    <link rel="icon" type="image/x-icon" href="../assets/images/favicon.ico">
+</head>
+<body>
+    <!-- Navigation Header -->
+    <header class="docs-header">
+        <nav class="docs-nav">
+            <div class="nav-brand">
+                <a href="../index.html">
+                    <img src="../assets/images/umicp-logo.svg" alt="UMICP" class="logo">
+                    <span class="brand-text">UMICP Documentation</span>
+                </a>
+            </div>
+            <div class="nav-links">
+                <a href="../index.html" class="nav-link">Home</a>
+                <a href="../index.html#api" class="nav-link">API Reference</a>
+                <a href="../guides/" class="nav-link">Guides</a>
+                <a href="../examples/" class="nav-link">Examples</a>
+            </div>
+        </nav>
+    </header>
+
+    <main class="docs-main">
+        <!-- Breadcrumb -->
+        <nav class="breadcrumb">
+            <a href="../index.html">Home</a>
+            <span class="breadcrumb-separator">/</span>
+            <a href="../index.html#classes">Classes</a>
+            <span class="breadcrumb-separator">/</span>
+            <span class="breadcrumb-current">{{ doc.name }}</span>
+        </nav>
+
+        <!-- Class Header -->
+        <header class="class-header">
+            <div class="class-title-section">
+                <h1 class="class-name">
+                    <span class="class-keyword">class</span>
+                    {{ doc.name }}
+                </h1>
+                {% if doc.namespace %}
+                <div class="class-namespace">
+                    <span class="namespace-label">namespace:</span>
+                    <code class="namespace-name">{{ doc.namespace }}</code>
+                </div>
+                {% endif %}
+            </div>
+
+            <!-- Class Metadata -->
+            <div class="class-metadata">
+                {% if doc.documentation.tags.group %}
+                <span class="meta-tag group">{{ doc.documentation.tags.group }}</span>
+                {% endif %}
+                {% if doc.documentation.tags.threadsafe %}
+                <span class="meta-tag thread-safe">Thread Safe</span>
+                {% endif %}
+                {% if doc.documentation.tags.simd %}
+                <span class="meta-tag simd">SIMD Optimized</span>
+                {% endif %}
+                {% if doc.documentation.tags.tested %}
+                <span class="meta-tag tested">Tested</span>
+                {% endif %}
+                {% if doc.documentation.tags.nodejs %}
+                <span class="meta-tag nodejs">Node.js Binding</span>
+                {% endif %}
+            </div>
+
+            <!-- Class Description -->
+            {% if doc.documentation.description %}
+            <div class="class-description">
+                <p>{{ doc.documentation.description }}</p>
+            </div>
+            {% endif %}
+
+            <!-- Performance Information -->
+            {% if doc.documentation.tags.performance or doc.documentation.tags.complexity %}
+            <div class="performance-info">
+                <h3>Performance Characteristics</h3>
+                {% if doc.documentation.tags.complexity %}
+                <div class="perf-metric">
+                    <span class="perf-label">Time Complexity:</span>
+                    <code class="perf-value">O({{ doc.documentation.tags.complexity }})</code>
+                </div>
+                {% endif %}
+                {% if doc.documentation.tags.performance %}
+                <div class="perf-notes">
+                    {{ doc.documentation.tags.performance }}
+                </div>
+                {% endif %}
+            </div>
+            {% endif %}
+        </header>
+
+        <div class="class-content">
+            <!-- Table of Contents -->
+            <nav class="class-toc">
+                <h3>Contents</h3>
+                <ul class="toc-list">
+                    {% if doc.constructors %}
+                    <li><a href="#constructors">Constructors</a></li>
+                    {% endif %}
+                    {% if doc.methods %}
+                    <li><a href="#methods">Methods</a></li>
+                    {% endif %}
+                    {% if doc.properties %}
+                    <li><a href="#properties">Properties</a></li>
+                    {% endif %}
+                    {% if doc.examples %}
+                    <li><a href="#examples">Examples</a></li>
+                    {% endif %}
+                    {% if doc.documentation.tags.security %}
+                    <li><a href="#security">Security Notes</a></li>
+                    {% endif %}
+                </ul>
+            </nav>
+
+            <!-- Class Declaration -->
+            <section class="class-declaration">
+                <h2>Declaration</h2>
+                <div class="code-block">
+                    <pre><code class="language-cpp">
+{% if doc.template %}template&lt;{{ doc.template }}&gt;
+{% endif %}class {{ doc.name }}{% if doc.inheritance %} : {{ doc.inheritance }}{% endif %} {
+public:
+    // Constructors
+    {% for constructor in doc.constructors %}
+    {{ constructor.signature }};
+    {% endfor %}
+
+    // Methods
+    {% for method in doc.methods %}
+    {{ method.signature }};
+    {% endfor %}
+
+    // Properties
+    {% for property in doc.properties %}
+    {{ property.type }} {{ property.name }};
+    {% endfor %}
+};
+                    </code></pre>
+                </div>
+            </section>
+
+            <!-- Constructors -->
+            {% if doc.constructors %}
+            <section id="constructors" class="constructors-section">
+                <h2>Constructors</h2>
+                {% for constructor in doc.constructors %}
+                <div class="member-item constructor">
+                    <div class="member-header">
+                        <h3 class="member-name">{{ constructor.name }}</h3>
+                        <div class="member-signature">
+                            <code>{{ constructor.signature }}</code>
+                        </div>
+                    </div>
+
+                    {% if constructor.documentation.description %}
+                    <div class="member-description">
+                        <p>{{ constructor.documentation.description }}</p>
+                    </div>
+                    {% endif %}
+
+                    {% if constructor.parameters %}
+                    <div class="member-parameters">
+                        <h4>Parameters</h4>
+                        <table class="params-table">
+                            <thead>
+                                <tr>
+                                    <th>Name</th>
+                                    <th>Type</th>
+                                    <th>Description</th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                {% for param in constructor.parameters %}
+                                <tr>
+                                    <td><code>{{ param.name }}</code></td>
+                                    <td><code>{{ param.type }}</code></td>
+                                    <td>{{ param.description }}</td>
+                                </tr>
+                                {% endfor %}
+                            </tbody>
+                        </table>
+                    </div>
+                    {% endif %}
+
+                    {% if constructor.example %}
+                    <div class="member-example">
+                        <h4>Example</h4>
+                        <pre><code class="language-cpp">{{ constructor.example }}</code></pre>
+                    </div>
+                    {% endif %}
+                </div>
+                {% endfor %}
+            </section>
+            {% endif %}
+
+            <!-- Methods -->
+            {% if doc.methods %}
+            <section id="methods" class="methods-section">
+                <h2>Methods</h2>
+                {% for method in doc.methods %}
+                <div class="member-item method">
+                    <div class="member-header">
+                        <h3 class="member-name">{{ method.name }}</h3>
+                        <div class="member-modifiers">
+                            {% if method.static %}<span class="modifier">static</span>{% endif %}
+                            {% if method.const %}<span class="modifier">const</span>{% endif %}
+                            {% if method.virtual %}<span class="modifier">virtual</span>{% endif %}
+                            {% if method.override %}<span class="modifier">override</span>{% endif %}
+                        </div>
+                    </div>
+
+                    <div class="member-signature">
+                        <code>{{ method.signature }}</code>
+                    </div>
+
+                    {% if method.documentation.description %}
+                    <div class="member-description">
+                        <p>{{ method.documentation.description }}</p>
+                    </div>
+                    {% endif %}
+
+                    {% if method.parameters %}
+                    <div class="member-parameters">
+                        <h4>Parameters</h4>
+                        <table class="params-table">
+                            <thead>
+                                <tr>
+                                    <th>Name</th>
+                                    <th>Type</th>
+                                    <th>Description</th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                {% for param in method.parameters %}
+                                <tr>
+                                    <td><code>{{ param.name }}</code></td>
+                                    <td><code>{{ param.type }}</code></td>
+                                    <td>{{ param.description }}</td>
+                                </tr>
+                                {% endfor %}
+                            </tbody>
+                        </table>
+                    </div>
+                    {% endif %}
+
+                    {% if method.returns %}
+                    <div class="member-returns">
+                        <h4>Returns</h4>
+                        <div class="returns-info">
+                            <code class="return-type">{{ method.returns.type }}</code>
+                            <p class="return-description">{{ method.returns.description }}</p>
+                        </div>
+                    </div>
+                    {% endif %}
+
+                    {% if method.throws %}
+                    <div class="member-throws">
+                        <h4>Throws</h4>
+                        <ul class="throws-list">
+                            {% for exception in method.throws %}
+                            <li>
+                                <code class="exception-type">{{ exception.type }}</code>
+                                - {{ exception.description }}
+                            </li>
+                            {% endfor %}
+                        </ul>
+                    </div>
+                    {% endif %}
+
+                    {% if method.documentation.tags.complexity %}
+                    <div class="member-complexity">
+                        <h4>Complexity</h4>
+                        <p><code>O({{ method.documentation.tags.complexity }})</code></p>
+                    </div>
+                    {% endif %}
+
+                    {% if method.documentation.tags.threadsafe %}
+                    <div class="member-thread-safety">
+                        <h4>Thread Safety</h4>
+                        <p class="thread-safe-note">✅ This method is thread-safe</p>
+                    </div>
+                    {% endif %}
+
+                    {% if method.example %}
+                    <div class="member-example">
+                        <h4>Example</h4>
+                        <pre><code class="language-cpp">{{ method.example }}</code></pre>
+                    </div>
+                    {% endif %}
+                </div>
+                {% endfor %}
+            </section>
+            {% endif %}
+
+            <!-- Properties -->
+            {% if doc.properties %}
+            <section id="properties" class="properties-section">
+                <h2>Properties</h2>
+                {% for property in doc.properties %}
+                <div class="member-item property">
+                    <div class="member-header">
+                        <h3 class="member-name">{{ property.name }}</h3>
+                        <div class="member-modifiers">
+                            {% if property.static %}<span class="modifier">static</span>{% endif %}
+                            {% if property.const %}<span class="modifier">const</span>{% endif %}
+                            {% if property.readonly %}<span class="modifier">readonly</span>{% endif %}
+                        </div>
+                    </div>
+
+                    <div class="member-signature">
+                        <code>{{ property.type }} {{ property.name }};</code>
+                    </div>
+
+                    {% if property.documentation.description %}
+                    <div class="member-description">
+                        <p>{{ property.documentation.description }}</p>
+                    </div>
+                    {% endif %}
+
+                    {% if property.defaultValue %}
+                    <div class="member-default">
+                        <h4>Default Value</h4>
+                        <code>{{ property.defaultValue }}</code>
+                    </div>
+                    {% endif %}
+                </div>
+                {% endfor %}
+            </section>
+            {% endif %}
+
+            <!-- Examples -->
+            {% if doc.examples %}
+            <section id="examples" class="examples-section">
+                <h2>Examples</h2>
+                {% for example in doc.examples %}
+                <div class="example-item">
+                    <h3>{{ example.title }}</h3>
+                    {% if example.description %}
+                    <p class="example-description">{{ example.description }}</p>
+                    {% endif %}
+                    <div class="example-code">
+                        <pre><code class="language-{{ example.language | default('cpp') }}">{{ example.code }}</code></pre>
+                    </div>
+                </div>
+                {% endfor %}
+            </section>
+            {% endif %}
+
+            <!-- Security Notes -->
+            {% if doc.documentation.tags.security %}
+            <section id="security" class="security-section">
+                <h2>Security Considerations</h2>
+                <div class="security-content">
+                    {% for securityNote in doc.documentation.tags.security %}
+                    <div class="security-note">
+                        <div class="security-icon">🔒</div>
+                        <p>{{ securityNote }}</p>
+                    </div>
+                    {% endfor %}
+                </div>
+            </section>
+            {% endif %}
+
+            <!-- Related Classes -->
+            {% if doc.related %}
+            <section class="related-section">
+                <h2>Related</h2>
+                <div class="related-grid">
+                    {% for related in doc.related %}
+                    <div class="related-item">
+                        <a href="{{ related.link }}" class="related-link">
+                            <h4>{{ related.name }}</h4>
+                            <p>{{ related.description }}</p>
+                        </a>
+                    </div>
+                    {% endfor %}
+                </div>
+            </section>
+            {% endif %}
+        </div>
+    </main>
+
+    <!-- Footer -->
+    <footer class="docs-footer">
+        <div class="footer-content">
+            <p>&copy; 2025 UMICP Project. Licensed under MIT License.</p>
+            <p>Documentation generated with Dgeni on {{ "now" | date("YYYY-MM-DD HH:mm:ss") }}</p>
+        </div>
+    </footer>
+
+    <script src="../assets/js/docs.js"></script>
+    <script src="../assets/js/highlight.min.js"></script>
+    <script>hljs.highlightAll();</script>
+</body>
+</html>

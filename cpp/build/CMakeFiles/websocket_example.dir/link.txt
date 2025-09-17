@@ -1,0 +1,1 @@
+/usr/bin/c++ -O3 -DNDEBUG CMakeFiles/websocket_example.dir/examples/websocket_example.cpp.o -o websocket_example  libumicp.a -ljson-c -lz -lssl -lcrypto -lwebsockets -lcap -lnghttp2 -lcbor 

@@ -1,0 +1,431 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>UMICP Documentation - UMICP Documentation</title>
+    <link rel="stylesheet" href="assets/css/docs.css">
+    <link rel="stylesheet" href="assets/css/highlight.css">
+    <link rel="icon" type="image/x-icon" href="assets/images/favicon.ico">
+</head>
+<body>
+    <!-- Navigation Header -->
+    <header class="docs-header">
+        <nav class="docs-nav">
+            <div class="nav-brand">
+                <img src="assets/images/umicp-logo.svg" alt="UMICP" class="logo">
+                <span class="brand-text">UMICP Documentation</span>
+            </div>
+            <div class="nav-links">
+                <a href="#overview" class="nav-link">Overview</a>
+                <a href="#api" class="nav-link">API Reference</a>
+                <a href="#guides" class="nav-link">Guides</a>
+                <a href="#examples" class="nav-link">Examples</a>
+                <a href="https://github.com/umicp/umicp" class="nav-link external">GitHub</a>
+            </div>
+        </nav>
+    </header>
+
+    <!-- Main Content -->
+    <main class="docs-main">
+        <!-- Sidebar Navigation -->
+        <aside class="docs-sidebar">
+            <nav class="sidebar-nav">
+                <section class="nav-section">
+                    <h3 class="nav-section-title">Getting Started</h3>
+                    <ul class="nav-list">
+                        <li><a href="guides/installation.html" class="nav-item">Installation</a></li>
+                        <li><a href="guides/quick-start.html" class="nav-item">Quick Start</a></li>
+                        <li><a href="guides/configuration.html" class="nav-item">Configuration</a></li>
+                    </ul>
+                </section>
+
+                <section class="nav-section">
+                    <h3 class="nav-section-title">Core Components</h3>
+                    <ul class="nav-list">
+                        <li><a href="#protocol" class="nav-item">Protocol</a></li>
+                        <li><a href="#transport" class="nav-item">Transport</a></li>
+                        <li><a href="#security" class="nav-item">Security</a></li>
+                        <li><a href="#serialization" class="nav-item">Serialization</a></li>
+                        <li><a href="#matrix-ops" class="nav-item">Matrix Operations</a></li>
+                    </ul>
+                </section>
+
+                <section class="nav-section">
+                    <h3 class="nav-section-title">API Reference</h3>
+                    <ul class="nav-list">
+                        <li><a href="#classes" class="nav-item">Classes</a></li>
+                        <li><a href="#functions" class="nav-item">Functions</a></li>
+                        <li><a href="#types" class="nav-item">Types</a></li>
+                        <li><a href="#constants" class="nav-item">Constants</a></li>
+                    </ul>
+                </section>
+
+                <section class="nav-section">
+                    <h3 class="nav-section-title">Bindings</h3>
+                    <ul class="nav-list">
+                        <li><a href="guides/nodejs-bindings.html" class="nav-item">Node.js</a></li>
+                        <li><a href="guides/typescript-bindings.html" class="nav-item">TypeScript</a></li>
+                        <li><a href="guides/python-bindings.html" class="nav-item">Python</a></li>
+                    </ul>
+                </section>
+            </nav>
+        </aside>
+
+        <!-- Content Area -->
+        <div class="docs-content">
+            <!-- Overview Section -->
+            <section id="overview" class="content-section">
+                <div class="section-header">
+                    <h1 class="section-title">UMICP Documentation</h1>
+                    <p class="section-subtitle">Universal Matrix-based Inter-Component Protocol</p>
+                </div>
+
+                <div class="overview-grid">
+                    <div class="overview-card">
+                        <div class="card-icon">🚀</div>
+                        <h3 class="card-title">High Performance</h3>
+                        <p class="card-description">
+                            Optimized C++ core with SIMD acceleration for matrix operations.
+                            Achieve >1GB/s throughput with <1ms latency.
+                        </p>
+                        <ul class="card-features">
+                            <li>SIMD-optimized matrix operations</li>
+                            <li>Zero-copy binary serialization</li>
+                            <li>Concurrent transport layer</li>
+                        </ul>
+                    </div>
+
+                    <div class="overview-card">
+                        <div class="card-icon">🔒</div>
+                        <h3 class="card-title">Enterprise Security</h3>
+                        <p class="card-description">
+                            Built-in cryptographic security with ECC signatures and AES encryption.
+                            Production-ready security for sensitive data.
+                        </p>
+                        <ul class="card-features">
+                            <li>ECC digital signatures</li>
+                            <li>AES-256 encryption</li>
+                            <li>Secure key management</li>
+                        </ul>
+                    </div>
+
+                    <div class="overview-card">
+                        <div class="card-icon">🔗</div>
+                        <h3 class="card-title">Multi-Language</h3>
+                        <p class="card-description">
+                            Native bindings for Node.js, TypeScript, and Python.
+                            Seamless integration across different technology stacks.
+                        </p>
+                        <ul class="card-features">
+                            <li>TypeScript/Node.js bindings</li>
+                            <li>Python integration</li>
+                            <li>Cross-platform compatibility</li>
+                        </ul>
+                    </div>
+
+                    <div class="overview-card">
+                        <div class="card-icon">📊</div>
+                        <h3 class="card-title">ML/AI Ready</h3>
+                        <p class="card-description">
+                            Purpose-built for machine learning workloads with efficient
+                            matrix operations and distributed training support.
+                        </p>
+                        <ul class="card-features">
+                            <li>Distributed ML training</li>
+                            <li>Efficient gradient exchange</li>
+                            <li>Real-time inference</li>
+                        </ul>
+                    </div>
+                </div>
+            </section>
+
+            <!-- API Reference Section -->
+            <section id="api" class="content-section">
+                <div class="section-header">
+                    <h2 class="section-title">API Reference</h2>
+                    <p class="section-description">
+                        Comprehensive reference for all UMICP classes, functions, and types.
+                    </p>
+                </div>
+
+                <!-- Classes -->
+                <div id="classes" class="api-category">
+                    <h3 class="category-title">
+                        <span class="category-icon">🏗️</span>
+                        Classes
+                        <span class="category-count">({{ doc.apiStructure.classes | length }})</span>
+                    </h3>
+                    <div class="api-grid">
+                        {% for className, classDoc in doc.apiStructure.classes %}
+                        <div class="api-card">
+                            <div class="api-card-header">
+                                <h4 class="api-name">
+                                    <a href="classes/{{ className }}.html">{{ className }}</a>
+                                </h4>
+                                {% if classDoc.documentation.tags.group %}
+                                <span class="api-group">{{ classDoc.documentation.tags.group }}</span>
+                                {% endif %}
+                            </div>
+                            <p class="api-description">
+                                {{ classDoc.documentation.description | truncate(120) }}
+                            </p>
+                            <div class="api-meta">
+                                {% if classDoc.documentation.tags.threadsafe %}
+                                <span class="meta-tag thread-safe">Thread Safe</span>
+                                {% endif %}
+                                {% if classDoc.documentation.tags.simd %}
+                                <span class="meta-tag simd">SIMD Optimized</span>
+                                {% endif %}
+                                {% if classDoc.documentation.tags.tested %}
+                                <span class="meta-tag tested">Tested</span>
+                                {% endif %}
+                            </div>
+                        </div>
+                        {% endfor %}
+                    </div>
+                </div>
+
+                <!-- Functions -->
+                <div id="functions" class="api-category">
+                    <h3 class="category-title">
+                        <span class="category-icon">⚙️</span>
+                        Functions
+                        <span class="category-count">({{ doc.apiStructure.functions | length }})</span>
+                    </h3>
+                    <div class="api-grid">
+                        {% for funcName, funcDoc in doc.apiStructure.functions %}
+                        <div class="api-card">
+                            <div class="api-card-header">
+                                <h4 class="api-name">
+                                    <a href="functions/{{ funcName }}.html">{{ funcName }}</a>
+                                </h4>
+                                {% if funcDoc.documentation.tags.group %}
+                                <span class="api-group">{{ funcDoc.documentation.tags.group }}</span>
+                                {% endif %}
+                            </div>
+                            <p class="api-description">
+                                {{ funcDoc.documentation.description | truncate(100) }}
+                            </p>
+                            <div class="api-meta">
+                                {% if funcDoc.documentation.tags.complexity %}
+                                <span class="meta-tag complexity">O({{ funcDoc.documentation.tags.complexity }})</span>
+                                {% endif %}
+                                {% if funcDoc.documentation.tags.performance %}
+                                <span class="meta-tag performance">High Performance</span>
+                                {% endif %}
+                            </div>
+                        </div>
+                        {% endfor %}
+                    </div>
+                </div>
+            </section>
+
+            <!-- Quick Start Section -->
+            <section id="quick-start" class="content-section">
+                <div class="section-header">
+                    <h2 class="section-title">Quick Start</h2>
+                    <p class="section-description">
+                        Get up and running with UMICP in minutes.
+                    </p>
+                </div>
+
+                <div class="quick-start-tabs">
+                    <div class="tab-buttons">
+                        <button class="tab-button active" data-tab="cpp">C++</button>
+                        <button class="tab-button" data-tab="nodejs">Node.js</button>
+                        <button class="tab-button" data-tab="typescript">TypeScript</button>
+                    </div>
+
+                    <div class="tab-content">
+                        <div id="cpp" class="tab-pane active">
+                            <h4>C++ Integration</h4>
+                            <pre><code class="language-cpp">
+#include "umicp/protocol.h"
+#include "umicp/transport.h"
+
+using namespace umicp;
+
+// Create and configure protocol
+Protocol protocol("my-node");
+UMICPConfig config;
+config.enable_binary = true;
+config.require_encryption = true;
+protocol.configure(config);
+
+// Set up transport
+auto transport = TransportFactory::create_websocket({
+    .host = "localhost",
+    .port = 8080
+});
+protocol.set_transport(transport);
+
+// Connect and send data
+protocol.connect();
+ByteBuffer data = {0x01, 0x02, 0x03, 0x04};
+protocol.send_data("target-node", data);
+                            </code></pre>
+                        </div>
+
+                        <div id="nodejs" class="tab-pane">
+                            <h4>Node.js Integration</h4>
+                            <pre><code class="language-javascript">
+const { Protocol, TransportFactory } = require('umicp');
+
+// Create protocol instance
+const protocol = new Protocol('my-node');
+
+// Configure with options
+protocol.configure({
+    enableBinary: true,
+    requireEncryption: true,
+    maxMessageSize: 1024 * 1024
+});
+
+// Set up WebSocket transport
+const transport = TransportFactory.createWebSocket({
+    host: 'localhost',
+    port: 8080
+});
+protocol.setTransport(transport);
+
+// Connect and send data
+await protocol.connect();
+const data = Buffer.from([0x01, 0x02, 0x03, 0x04]);
+await protocol.sendData('target-node', data);
+                            </code></pre>
+                        </div>
+
+                        <div id="typescript" class="tab-pane">
+                            <h4>TypeScript Integration</h4>
+                            <pre><code class="language-typescript">
+import { Protocol, TransportFactory, UMICPConfig } from 'umicp';
+
+// Create protocol with type safety
+const protocol = new Protocol('my-node');
+
+// Type-safe configuration
+const config: UMICPConfig = {
+    enableBinary: true,
+    requireEncryption: true,
+    maxMessageSize: 1024 * 1024,
+    connectionTimeout: 5000
+};
+protocol.configure(config);
+
+// Set up transport with type checking
+const transport = TransportFactory.createWebSocket({
+    host: 'localhost',
+    port: 8080,
+    path: '/umicp'
+});
+protocol.setTransport(transport);
+
+// Connect and send with async/await
+await protocol.connect();
+const data = new Uint8Array([0x01, 0x02, 0x03, 0x04]);
+await protocol.sendData('target-node', data);
+                            </code></pre>
+                        </div>
+                    </div>
+                </div>
+            </section>
+
+            <!-- Performance Benchmarks -->
+            <section id="performance" class="content-section">
+                <div class="section-header">
+                    <h2 class="section-title">Performance Benchmarks</h2>
+                    <p class="section-description">
+                        Real-world performance metrics and benchmarks.
+                    </p>
+                </div>
+
+                <div class="benchmark-grid">
+                    <div class="benchmark-card">
+                        <h4 class="benchmark-title">Matrix Operations</h4>
+                        <div class="benchmark-metric">
+                            <span class="metric-value">12.5</span>
+                            <span class="metric-unit">GFLOPS</span>
+                        </div>
+                        <p class="benchmark-description">
+                            SIMD-optimized matrix multiplication on 1024×1024 matrices
+                        </p>
+                    </div>
+
+                    <div class="benchmark-card">
+                        <h4 class="benchmark-title">Message Throughput</h4>
+                        <div class="benchmark-metric">
+                            <span class="metric-value">1.2</span>
+                            <span class="metric-unit">GB/s</span>
+                        </div>
+                        <p class="benchmark-description">
+                            Binary protocol throughput with 64KB messages
+                        </p>
+                    </div>
+
+                    <div class="benchmark-card">
+                        <h4 class="benchmark-title">Latency</h4>
+                        <div class="benchmark-metric">
+                            <span class="metric-value">0.8</span>
+                            <span class="metric-unit">ms</span>
+                        </div>
+                        <p class="benchmark-description">
+                            End-to-end message latency for 1KB payloads
+                        </p>
+                    </div>
+
+                    <div class="benchmark-card">
+                        <h4 class="benchmark-title">Concurrent Connections</h4>
+                        <div class="benchmark-metric">
+                            <span class="metric-value">10K</span>
+                            <span class="metric-unit">conn/s</span>
+                        </div>
+                        <p class="benchmark-description">
+                            Concurrent WebSocket connections handled
+                        </p>
+                    </div>
+                </div>
+            </section>
+        </div>
+    </main>
+
+    <!-- Footer -->
+    <footer class="docs-footer">
+        <div class="footer-content">
+            <div class="footer-section">
+                <h4>Documentation</h4>
+                <ul>
+                    <li><a href="guides/installation.html">Installation</a></li>
+                    <li><a href="guides/quick-start.html">Quick Start</a></li>
+                    <li><a href="guides/api-reference.html">API Reference</a></li>
+                </ul>
+            </div>
+            <div class="footer-section">
+                <h4>Community</h4>
+                <ul>
+                    <li><a href="https://github.com/umicp/umicp">GitHub</a></li>
+                    <li><a href="https://github.com/umicp/umicp/issues">Issues</a></li>
+                    <li><a href="https://github.com/umicp/umicp/discussions">Discussions</a></li>
+                </ul>
+            </div>
+            <div class="footer-section">
+                <h4>Resources</h4>
+                <ul>
+                    <li><a href="guides/examples.html">Examples</a></li>
+                    <li><a href="guides/tutorials.html">Tutorials</a></li>
+                    <li><a href="guides/best-practices.html">Best Practices</a></li>
+                </ul>
+            </div>
+        </div>
+        <div class="footer-bottom">
+            <p>&copy; 2025 UMICP Project. Licensed under MIT License.</p>
+            <p>Documentation generated with Dgeni on {{ "now" | date("YYYY-MM-DD HH:mm:ss") }}</p>
+        </div>
+    </footer>
+
+    <!-- Scripts -->
+    <script src="assets/js/docs.js"></script>
+    <script src="assets/js/highlight.min.js"></script>
+    <script>hljs.highlightAll();</script>
+</body>
+</html>

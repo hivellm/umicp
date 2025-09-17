@@ -1,0 +1,11 @@
+prefix=@CMAKE_INSTALL_PREFIX@
+exec_prefix=${prefix}
+libdir=${exec_prefix}/lib
+includedir=${prefix}/include
+
+Name: UMICP
+Description: Universal Matrix Intelligent Communication Protocol
+Version: @PROJECT_VERSION@
+Requires: json-c openssl zlib
+Libs: -L${libdir} -lumicp
+Cflags: -I${includedir}

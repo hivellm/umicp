@@ -1,0 +1,104 @@
+{
+  "testSuites": {
+    "unit": ["envelope.test.ts", "matrix.test.ts"],
+    "integration": ["integration.test.ts", "e2e.test.ts"],
+    "security": ["security.test.ts"],
+    "regression": ["regression.test.ts"],
+    "load": ["load.test.ts"],
+    "websocket": ["websocket-transport.test.ts"],
+    "s2s": ["s2s.test.ts"]
+  },
+  "performance": {
+    "benchmarks": {
+      "envelopeCreation": {
+        "iterations": 10000,
+        "expectedTimeMs": 5000,
+        "expectedRate": 500
+      },
+      "matrixOperations": {
+        "size": 10000,
+        "iterations": 100,
+        "expectedTimeMs": 2000
+      },
+      "serialization": {
+        "payloadSize": 100000,
+        "iterations": 1000,
+        "expectedTimeMs": 3000
+      }
+    },
+    "loadTests": {
+      "sustainedLoad": {
+        "durationSeconds": 30,
+        "expectedOperations": 10000,
+        "expectedRate": 200
+      },
+      "concurrentOperations": {
+        "workers": 100,
+        "operationsPerWorker": 100,
+        "expectedTimeMs": 5000
+      },
+      "memoryStress": {
+        "maxMemoryDeltaMB": 200,
+        "largePayloadSize": 10000000
+      }
+    }
+  },
+  "security": {
+    "inputValidation": {
+      "maxStringLength": 100000,
+      "maxCapabilityCount": 10000,
+      "maxCapabilityValueLength": 10000
+    },
+    "injectionPrevention": {
+      "testVectors": [
+        "<script>alert('xss')</script>",
+        "{\"injected\": \"value\"}",
+        "../../../etc/passwd",
+        "javascript:alert(1)"
+      ]
+    }
+  },
+  "edgeCases": {
+    "numerical": {
+      "veryLarge": 1e30,
+      "verySmall": 1e-30,
+      "infinity": true,
+      "nan": true,
+      "denormalized": true
+    },
+    "strings": {
+      "unicode": true,
+      "empty": true,
+      "veryLong": true,
+      "specialChars": true
+    },
+    "arrays": {
+      "zeroLength": true,
+      "singleElement": true,
+      "maximumSize": 1000000
+    }
+  },
+  "coverage": {
+    "minimums": {
+      "branches": 70,
+      "functions": 80,
+      "lines": 80,
+      "statements": 80
+    },
+    "exclusions": [
+      "src/**/websocket_wrap.*",
+      "src/**/http2_wrap.*",
+      "examples/**/benchmark.js"
+    ]
+  },
+  "ci": {
+    "timeoutMinutes": 30,
+    "retryCount": 3,
+    "parallelJobs": 4,
+    "cacheStrategy": "npm",
+    "artifacts": {
+      "coverage": "coverage/",
+      "testResults": "test-results/"
+    }
+  }
+}

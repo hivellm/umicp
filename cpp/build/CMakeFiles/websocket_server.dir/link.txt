@@ -1,0 +1,1 @@
+/usr/bin/c++ -O3 -DNDEBUG CMakeFiles/websocket_server.dir/examples/websocket_server.cpp.o -o websocket_server  -lwebsockets -lcap 
