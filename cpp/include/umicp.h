@@ -178,6 +178,10 @@ void umicp_cleanup(void);
 
 #ifdef __cplusplus
 }
+
+// C++ API includes (when using C++)
+#include "service_discovery.h"
+#include "connection_pool.h"
 #endif
 
 #endif // UMICP_H

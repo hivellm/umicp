@@ -113,8 +113,8 @@ pytest
 | Compression (GZIP/LZ4) | ✅ | ✅ | ✅ | ✅ (GZIP/DEFLATE) | ✅ | ❌ | 📋 |
 | Event System | ✅ | ✅ | ✅ | ✅ | ✅ | ✅ | ✅ (async) |
 | Security/Encryption | ✅ | ✅ | ✅ | ✅ | ✅ | ✅ | ✅ |
-| Service Discovery | ❌ | ✅ | ✅ | ❌ | ✅ | ❌ | ✅ |
-| Connection Pooling | ❌ | ✅ | ✅ | ❌ | ✅ | ❌ | ✅ (async) |
+| Service Discovery | ✅ | ✅ | ✅ | ❌ | ✅ | ❌ | ✅ |
+| Connection Pooling | ✅ | ✅ | ✅ | ❌ | ✅ | ❌ | ✅ (async) |
 | FFI/Native Bridge | N/A | ✅ (N-API) | N/A | ✅ (FFI) | N/A | N/A | N/A |
 | **Framework Integration** |
 | Native Language | ✅ | ✅ | ✅ | ✅ | ✅ | ✅ | ✅ |

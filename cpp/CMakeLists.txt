@@ -84,6 +84,8 @@ set(UMICP_SOURCES
     src/websocket_client.cpp
     src/http_server.cpp
     src/http_client.cpp
+    src/service_discovery.cpp
+    src/connection_pool.cpp
 )
 
 # FFI wrapper sources (for language bindings)
@@ -112,6 +114,8 @@ set(UMICP_HEADERS
     include/websocket_client.h
     include/http_server.h
     include/http_client.h
+    include/service_discovery.h
+    include/connection_pool.h
 )
 
 # Create static library

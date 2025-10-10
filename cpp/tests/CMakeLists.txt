@@ -81,6 +81,9 @@ set(TEST_SOURCES
     unit/test_http_client.cpp
     unit/test_http_server.cpp
     integration/test_http_integration.cpp
+    # Service Discovery and Connection Pool tests
+    unit/test_service_discovery.cpp
+    unit/test_connection_pool.cpp
 )
 
 # Create test executable
@@ -307,4 +310,18 @@ add_custom_target(test_http
     COMMAND http_integration_tests
     DEPENDS http_client_tests http_server_tests http_integration_tests
     COMMENT "Running HTTP transport tests"
+)
+
+# Service Discovery and Connection Pool test targets
+add_executable(service_discovery_tests unit/test_service_discovery.cpp)
+target_link_libraries(service_discovery_tests umicp_static ${GTEST_LIBRARIES} ${GTEST_MAIN_LIBRARIES} pthread)
+
+add_executable(connection_pool_tests unit/test_connection_pool.cpp)
+target_link_libraries(connection_pool_tests umicp_static ${GTEST_LIBRARIES} ${GTEST_MAIN_LIBRARIES} websockets uuid pthread)
+
+add_custom_target(test_new_networking
+    COMMAND service_discovery_tests
+    COMMAND connection_pool_tests
+    DEPENDS service_discovery_tests connection_pool_tests
+    COMMENT "Running Service Discovery and Connection Pool tests"
 )
