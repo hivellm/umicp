@@ -13,7 +13,7 @@ import static org.assertj.core.api.Assertions.*;
  */
 class MatrixTest {
 
-    private static final float DELTA = 0.0001f;
+    private static final double DELTA = 0.0001d;
 
     @Test
     @DisplayName("Should add vectors")

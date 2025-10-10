@@ -64,10 +64,12 @@ class PooledConnectionTest {
 
     @Test
     void testClose() {
-        boolean closed = connection.close();
-        assertTrue(closed);
-        assertEquals(PoolConnectionState.CLOSED, connection.getState());
-        verify(mockClient, times(1)).close();
+        assertDoesNotThrow(() -> {
+            boolean closed = connection.close();
+            assertTrue(closed);
+            assertEquals(PoolConnectionState.CLOSED, connection.getState());
+            verify(mockClient, times(1)).close();
+        });
     }
 
     @Test

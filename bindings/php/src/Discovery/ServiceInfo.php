@@ -7,7 +7,7 @@ use DateTimeInterface;
 
 /**
  * Service Information
- * 
+ *
  * Contains metadata about a discovered service including
  * capabilities, address, version, and last seen timestamp.
  */

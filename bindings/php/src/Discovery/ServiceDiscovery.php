@@ -4,7 +4,7 @@ namespace Umicp\Discovery;
 
 /**
  * Service Discovery Manager
- * 
+ *
  * Manages service registration, discovery, and automatic cleanup
  * of stale services in a peer-to-peer network.
  */
@@ -43,7 +43,7 @@ class ServiceDiscovery
     public function registerService(ServiceInfo $service): void
     {
         $serviceId = $service->getServiceId();
-        
+
         if (isset($this->services[$serviceId])) {
             // Update existing service
             $this->services[$serviceId]->updateLastSeen();
@@ -141,19 +141,19 @@ class ServiceDiscovery
     public function cleanupStaleServices(): int
     {
         $removedCount = 0;
-        
+
         foreach ($this->services as $serviceId => $service) {
             // Don't remove local service
             if ($this->localService && $serviceId === $this->localService->getServiceId()) {
                 continue;
             }
-            
+
             if ($service->isStale($this->timeoutSeconds)) {
                 unset($this->services[$serviceId]);
                 $removedCount++;
             }
         }
-        
+
         return $removedCount;
     }
 

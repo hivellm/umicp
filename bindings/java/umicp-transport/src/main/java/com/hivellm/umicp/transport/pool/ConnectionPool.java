@@ -391,15 +391,17 @@ public class ConnectionPool implements AutoCloseable {
     private PooledConnection createConnection() {
         try {
             // Create client options
-            ClientOptions options = new ClientOptions();
-            // Note: ClientOptions would need to be configured based on config
+            ClientOptions options = ClientOptions.builder()
+                .connectTimeout(java.time.Duration.ofMillis(config.getAcquireTimeoutMs()))
+                .autoReconnect(false) // Pool manages reconnection
+                .build();
 
             // Create WebSocket client
-            URI uri = new URI(config.getAddress());
-            UMICPWebSocketClient client = new UMICPWebSocketClient(uri, options);
+            UMICPWebSocketClient client = new UMICPWebSocketClient(config.getAddress(), options);
 
-            // Connect
-            if (!client.connectBlocking(config.getAcquireTimeoutMs(), TimeUnit.MILLISECONDS)) {
+            // Connect synchronously
+            boolean connected = client.connect().get(config.getAcquireTimeoutMs(), TimeUnit.MILLISECONDS);
+            if (!connected) {
                 return null;
             }
 

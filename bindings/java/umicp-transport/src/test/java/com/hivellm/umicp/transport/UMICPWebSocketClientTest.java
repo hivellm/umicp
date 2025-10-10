@@ -1,6 +1,7 @@
 package com.hivellm.umicp.transport;
 
 import com.hivellm.umicp.core.Envelope;
+import com.hivellm.umicp.types.ConnectionException;
 import com.hivellm.umicp.types.OperationType;
 import org.junit.jupiter.api.Test;
 
@@ -14,15 +15,16 @@ class UMICPWebSocketClientTest {
     @Test
     void testConstructor_withUrl() {
         ClientOptions options = ClientOptions.defaults();
-        UMICPWebSocketClient client = new UMICPWebSocketClient("ws://localhost:8080/umicp", options);
-
-        assertNotNull(client);
+        assertDoesNotThrow(() -> {
+            UMICPWebSocketClient client = new UMICPWebSocketClient("ws://localhost:8080/umicp", options);
+            assertNotNull(client);
+        });
     }
 
     @Test
     void testConstructor_withNullUrl_throwsException() {
         ClientOptions options = ClientOptions.defaults();
-        assertThrows(Exception.class, () -> {
+        assertThrows(ConnectionException.class, () -> {
             new UMICPWebSocketClient(null, options);
         });
     }
@@ -30,7 +32,7 @@ class UMICPWebSocketClientTest {
     @Test
     void testConstructor_withEmptyUrl_throwsException() {
         ClientOptions options = ClientOptions.defaults();
-        assertThrows(Exception.class, () -> {
+        assertThrows(ConnectionException.class, () -> {
             new UMICPWebSocketClient("", options);
         });
     }
@@ -38,7 +40,7 @@ class UMICPWebSocketClientTest {
     @Test
     void testConstructor_withInvalidUrl_throwsException() {
         ClientOptions options = ClientOptions.defaults();
-        assertThrows(Exception.class, () -> {
+        assertThrows(ConnectionException.class, () -> {
             new UMICPWebSocketClient("invalid-url", options);
         });
     }
@@ -46,7 +48,8 @@ class UMICPWebSocketClientTest {
     @Test
     void testConstructor_withNullOptions_usesDefaults() {
         assertDoesNotThrow(() -> {
-            new UMICPWebSocketClient("ws://localhost:8080/umicp", null);
+            UMICPWebSocketClient client = new UMICPWebSocketClient("ws://localhost:8080/umicp", null);
+            assertNotNull(client);
         });
     }
 
@@ -56,50 +59,57 @@ class UMICPWebSocketClientTest {
             .autoReconnect(false)
             .build();
 
-        UMICPWebSocketClient client = new UMICPWebSocketClient("ws://localhost:8080/umicp", options);
-
-        assertFalse(client.isConnected());
+        assertDoesNotThrow(() -> {
+            UMICPWebSocketClient client = new UMICPWebSocketClient("ws://localhost:8080/umicp", options);
+            assertFalse(client.isConnected());
+        });
     }
 
     @Test
     void testGetStats_returnsValidStats() {
         ClientOptions options = ClientOptions.defaults();
-        UMICPWebSocketClient client = new UMICPWebSocketClient("ws://localhost:8080/umicp", options);
+        assertDoesNotThrow(() -> {
+            UMICPWebSocketClient client = new UMICPWebSocketClient("ws://localhost:8080/umicp", options);
+            TransportStats stats = client.getStats();
 
-        TransportStats stats = client.getStats();
-
-        assertNotNull(stats);
-        assertEquals(0, stats.getMessagesSent());
-        assertEquals(0, stats.getMessagesReceived());
+            assertNotNull(stats);
+            assertEquals(0, stats.getMessagesSent());
+            assertEquals(0, stats.getMessagesReceived());
+        });
     }
 
     @Test
     void testAddEventListener() {
         ClientOptions options = ClientOptions.defaults();
-        UMICPWebSocketClient client = new UMICPWebSocketClient("ws://localhost:8080/umicp", options);
+        assertDoesNotThrow(() -> {
+            UMICPWebSocketClient client = new UMICPWebSocketClient("ws://localhost:8080/umicp", options);
 
-        TransportEventListener listener = new TransportEventListener() {};
-        assertDoesNotThrow(() -> client.addEventListener(listener));
+            TransportEventListener listener = new TransportEventListener() {};
+            assertDoesNotThrow(() -> client.addEventListener(listener));
+        });
     }
 
     @Test
     void testRemoveEventListener() {
         ClientOptions options = ClientOptions.defaults();
-        UMICPWebSocketClient client = new UMICPWebSocketClient("ws://localhost:8080/umicp", options);
+        assertDoesNotThrow(() -> {
+            UMICPWebSocketClient client = new UMICPWebSocketClient("ws://localhost:8080/umicp", options);
 
-        TransportEventListener listener = new TransportEventListener() {};
-        client.addEventListener(listener);
-        assertDoesNotThrow(() -> client.removeEventListener(listener));
+            TransportEventListener listener = new TransportEventListener() {};
+            client.addEventListener(listener);
+            assertDoesNotThrow(() -> client.removeEventListener(listener));
+        });
     }
 
     @Test
     void testSend_whenNotConnected_queuesMessage() {
         ClientOptions options = ClientOptions.builder()
             .autoReconnect(false)
-            .messageQueueSize(10)
+            .maxMessageQueueSize(10)
             .build();
 
-        UMICPWebSocketClient client = new UMICPWebSocketClient("ws://localhost:8080/umicp", options);
+        assertDoesNotThrow(() -> {
+            UMICPWebSocketClient client = new UMICPWebSocketClient("ws://localhost:8080/umicp", options);
 
         Envelope envelope = new Envelope()
             .setFrom("client")
@@ -107,8 +117,9 @@ class UMICPWebSocketClientTest {
             .setOperation(OperationType.DATA)
             .setMessageId("msg-1");
 
-        // Should not throw, message gets queued
-        assertDoesNotThrow(() -> client.send(envelope));
+            // Should not throw, message gets queued
+            assertDoesNotThrow(() -> client.send(envelope));
+        });
     }
 
     @Test
@@ -117,46 +128,53 @@ class UMICPWebSocketClientTest {
             .autoReconnect(false)
             .build();
 
-        UMICPWebSocketClient client = new UMICPWebSocketClient("ws://localhost:8080/umicp", options);
+        assertDoesNotThrow(() -> {
+            UMICPWebSocketClient client = new UMICPWebSocketClient("ws://localhost:8080/umicp", options);
 
-        // Should not throw
-        assertDoesNotThrow(() -> client.disconnect().get());
+            // Should not throw
+            assertDoesNotThrow(() -> client.disconnect().get());
+        });
     }
 
     @Test
     void testClose_whenNotConnected() {
         ClientOptions options = ClientOptions.defaults();
-        UMICPWebSocketClient client = new UMICPWebSocketClient("ws://localhost:8080/umicp", options);
-
-        assertDoesNotThrow(() -> client.close());
+        assertDoesNotThrow(() -> {
+            UMICPWebSocketClient client = new UMICPWebSocketClient("ws://localhost:8080/umicp", options);
+            assertDoesNotThrow(() -> client.close());
+        });
     }
 
     @Test
     void testMultipleEventListeners() {
         ClientOptions options = ClientOptions.defaults();
-        UMICPWebSocketClient client = new UMICPWebSocketClient("ws://localhost:8080/umicp", options);
+        assertDoesNotThrow(() -> {
+            UMICPWebSocketClient client = new UMICPWebSocketClient("ws://localhost:8080/umicp", options);
 
         TransportEventListener listener1 = new TransportEventListener() {};
         TransportEventListener listener2 = new TransportEventListener() {};
 
-        assertDoesNotThrow(() -> {
-            client.addEventListener(listener1);
-            client.addEventListener(listener2);
+            assertDoesNotThrow(() -> {
+                client.addEventListener(listener1);
+                client.addEventListener(listener2);
+            });
         });
     }
 
     @Test
     void testEventListenerRemoval() {
         ClientOptions options = ClientOptions.defaults();
-        UMICPWebSocketClient client = new UMICPWebSocketClient("ws://localhost:8080/umicp", options);
+        assertDoesNotThrow(() -> {
+            UMICPWebSocketClient client = new UMICPWebSocketClient("ws://localhost:8080/umicp", options);
 
         TransportEventListener listener = new TransportEventListener() {};
 
-        client.addEventListener(listener);
-        client.removeEventListener(listener);
+            client.addEventListener(listener);
+            client.removeEventListener(listener);
 
-        // Removing again should not throw
-        assertDoesNotThrow(() -> client.removeEventListener(listener));
+            // Removing again should not throw
+            assertDoesNotThrow(() -> client.removeEventListener(listener));
+        });
     }
 }
 

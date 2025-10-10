@@ -27,32 +27,32 @@ class TestCompression:
     def test_compress_decompress_gzip(self):
         """Test GZIP compression round-trip"""
         original = b"Hello, UMICP! This is a test message for compression."
-        
+
         compressed = Compression.compress(original, CompressionType.GZIP)
         assert compressed is not None
         assert len(compressed) < len(original)  # Should be smaller
-        
+
         decompressed = Compression.decompress(compressed, CompressionType.GZIP)
         assert decompressed == original
 
     def test_compress_decompress_deflate(self):
         """Test DEFLATE compression round-trip"""
         original = b"Hello, UMICP! This is a test message for deflate compression."
-        
+
         compressed = Compression.compress(original, CompressionType.DEFLATE)
         assert compressed is not None
         assert len(compressed) < len(original)
-        
+
         decompressed = Compression.decompress(compressed, CompressionType.DEFLATE)
         assert decompressed == original
 
     def test_compress_none(self):
         """Test no compression"""
         data = b"Test data"
-        
+
         result = Compression.compress(data, CompressionType.NONE)
         assert result == data
-        
+
         decompressed = Compression.decompress(result, CompressionType.NONE)
         assert decompressed == data
 
@@ -61,20 +61,20 @@ class TestCompression:
         # Create large repetitive data
         line = b"This is line %d of test data.\n"
         data = b"".join([line % i for i in range(1000)])
-        
+
         compressed = Compression.compress(data, CompressionType.GZIP)
         assert len(compressed) < len(data) / 2  # Should compress significantly
-        
+
         decompressed = Compression.decompress(compressed, CompressionType.GZIP)
         assert decompressed == data
 
     def test_compress_empty_data(self):
         """Test compression of empty data"""
         data = b""
-        
+
         compressed = Compression.compress(data, CompressionType.GZIP)
         assert compressed is not None
-        
+
         decompressed = Compression.decompress(compressed, CompressionType.GZIP)
         assert len(decompressed) == 0
 
@@ -92,21 +92,21 @@ class TestCompression:
     def test_decompress_invalid_data(self):
         """Test decompression of invalid data"""
         invalid_data = b"not compressed data"
-        
+
         with pytest.raises(CompressionError):
             Compression.decompress(invalid_data, CompressionType.GZIP)
 
     def test_compress_lz4_not_implemented(self):
         """Test LZ4 raises not implemented error"""
         data = b"test"
-        
+
         with pytest.raises(CompressionError, match="not yet implemented"):
             Compression.compress(data, CompressionType.LZ4)
 
     def test_decompress_lz4_not_implemented(self):
         """Test LZ4 decompression raises not implemented error"""
         data = b"test"
-        
+
         with pytest.raises(CompressionError, match="not yet implemented"):
             Compression.decompress(data, CompressionType.LZ4)
 
@@ -114,10 +114,10 @@ class TestCompression:
         """Test compression ratio calculation"""
         ratio = Compression.get_compression_ratio(1000, 500)
         assert ratio == 2.0
-        
+
         ratio = Compression.get_compression_ratio(1000, 250)
         assert ratio == 4.0
-        
+
         ratio = Compression.get_compression_ratio(1000, 0)
         assert ratio == 0.0
 
@@ -125,16 +125,16 @@ class TestCompression:
         """Test beneficial compression detection"""
         # 50% compression is beneficial
         assert Compression.is_beneficial(1000, 500)
-        
+
         # 15% compression is beneficial
         assert Compression.is_beneficial(1000, 850)
-        
+
         # 5% compression is not beneficial (threshold is 10%)
         assert not Compression.is_beneficial(1000, 950)
-        
+
         # No compression is not beneficial
         assert not Compression.is_beneficial(1000, 1000)
-        
+
         # Expansion is not beneficial
         assert not Compression.is_beneficial(1000, 1100)
 
@@ -147,38 +147,38 @@ class TestCompression:
     def test_round_trip_unicode(self):
         """Test compression with Unicode data"""
         original = "Special chars: 你好世界 🌍 émojis 😀 symbols: @#$%^&*()".encode('utf-8')
-        
+
         compressed = Compression.compress(original, CompressionType.GZIP)
         decompressed = Compression.decompress(compressed, CompressionType.GZIP)
-        
+
         assert decompressed == original
         assert decompressed.decode('utf-8') == "Special chars: 你好世界 🌍 émojis 😀 symbols: @#$%^&*()"
 
     def test_gzip_vs_deflate(self):
         """Test GZIP vs DEFLATE compression"""
         text = b"This is a test message that will be compressed using different algorithms."
-        
+
         gzip_compressed = Compression.compress(text, CompressionType.GZIP)
         deflate_compressed = Compression.compress(text, CompressionType.DEFLATE)
-        
+
         # Both should compress
         assert len(gzip_compressed) < len(text)
         assert len(deflate_compressed) < len(text)
-        
+
         # DEFLATE should be slightly smaller (no headers)
         assert len(deflate_compressed) < len(gzip_compressed)
-        
+
         # Both should decompress correctly
         gzip_decompressed = Compression.decompress(gzip_compressed, CompressionType.GZIP)
         deflate_decompressed = Compression.decompress(deflate_compressed, CompressionType.DEFLATE)
-        
+
         assert gzip_decompressed == text
         assert deflate_decompressed == text
 
     def test_multiple_compression_cycles(self):
         """Test multiple compression/decompression cycles"""
         original = b"Test data for multiple compression cycles"
-        
+
         # Compress and decompress multiple times
         for _ in range(5):
             compressed = Compression.compress(original, CompressionType.GZIP)

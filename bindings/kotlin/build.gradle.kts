@@ -31,9 +31,13 @@ dependencies {
     // HTTP Client
     implementation("com.squareup.okhttp3:okhttp:4.12.0")
     implementation("com.squareup.okhttp3:okhttp-sse:4.12.0")
-    
+
     // Compression
     implementation("org.apache.commons:commons-compress:1.25.0")
+    implementation("org.lz4:lz4-java:1.8.0")
+
+    // HTTP/2 Server
+    implementation("io.undertow:undertow-core:2.3.10.Final")
 
     // Logging
     implementation("io.github.microutils:kotlin-logging-jvm:3.0.5")

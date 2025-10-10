@@ -18,7 +18,7 @@ enum PoolConnectionState: string
 
 /**
  * Pooled Connection
- * 
+ *
  * Wraps a connection with metadata for pool management
  */
 class PooledConnection
@@ -83,12 +83,12 @@ class PooledConnection
     public function close(): bool
     {
         $this->state = PoolConnectionState::CLOSED;
-        
+
         if ($this->client && method_exists($this->client, 'close')) {
             $this->client->close();
             return true;
         }
-        
+
         return false;
     }
 
@@ -128,11 +128,11 @@ class PooledConnection
         if (!$this->client) {
             return false;
         }
-        
+
         if (method_exists($this->client, 'isConnected')) {
             return $this->client->isConnected();
         }
-        
+
         return false;
     }
 

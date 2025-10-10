@@ -54,7 +54,7 @@ class PoolStats
 
 /**
  * Connection Pool Manager
- * 
+ *
  * Manages a pool of reusable connections with automatic
  * lifecycle management, validation, and cleanup.
  */
@@ -304,7 +304,7 @@ class ConnectionPool
             }
 
             // Remove if stale or idle
-            if ($conn->isStale($this->config->maxAgeSeconds) || 
+            if ($conn->isStale($this->config->maxAgeSeconds) ||
                 $conn->isIdle($this->config->idleTimeoutSeconds)) {
 
                 // Keep minimum number of connections
@@ -335,7 +335,7 @@ class ConnectionPool
             // Placeholder - actual client creation would go here
             // In a real implementation, this would create a WebSocket client
             $client = null; // Would be actual client instance
-            
+
             return new PooledConnection($this->config->address, $client);
         } catch (\Exception $e) {
             return null;

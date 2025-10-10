@@ -27,7 +27,7 @@ class CompressionError(Exception):
 class Compression:
     """
     Compression utilities for UMICP
-    
+
     Supports GZIP and DEFLATE compression algorithms for efficient
     data transmission over the network.
     """
@@ -36,21 +36,21 @@ class Compression:
     def compress(data: bytes, compression_type: CompressionType = CompressionType.GZIP) -> bytes:
         """
         Compress data using specified algorithm
-        
+
         Args:
             data: Data to compress
             compression_type: Compression algorithm to use
-            
+
         Returns:
             Compressed data as bytes
-            
+
         Raises:
             CompressionError: If compression fails
             ValueError: If data or compression_type is invalid
         """
         if not isinstance(data, bytes):
             raise ValueError("Data must be bytes")
-        
+
         if not isinstance(compression_type, CompressionType):
             raise ValueError("compression_type must be CompressionType enum")
 
@@ -75,21 +75,21 @@ class Compression:
     def decompress(data: bytes, compression_type: CompressionType = CompressionType.GZIP) -> bytes:
         """
         Decompress data using specified algorithm
-        
+
         Args:
             data: Compressed data
             compression_type: Compression algorithm used
-            
+
         Returns:
             Decompressed data as bytes
-            
+
         Raises:
             CompressionError: If decompression fails
             ValueError: If data or compression_type is invalid
         """
         if not isinstance(data, bytes):
             raise ValueError("Data must be bytes")
-        
+
         if not isinstance(compression_type, CompressionType):
             raise ValueError("compression_type must be CompressionType enum")
 
@@ -114,11 +114,11 @@ class Compression:
     def get_compression_ratio(original_size: int, compressed_size: int) -> float:
         """
         Calculate compression ratio
-        
+
         Args:
             original_size: Original data size in bytes
             compressed_size: Compressed data size in bytes
-            
+
         Returns:
             Compression ratio (e.g., 2.5 means 2.5x reduction)
         """
@@ -130,12 +130,12 @@ class Compression:
     def is_beneficial(original_size: int, compressed_size: int, threshold: float = 0.9) -> bool:
         """
         Check if compression is beneficial
-        
+
         Args:
             original_size: Original data size
             compressed_size: Compressed data size
             threshold: Threshold ratio (default 0.9 = 10% savings minimum)
-            
+
         Returns:
             True if compressed size is smaller than threshold * original size
         """

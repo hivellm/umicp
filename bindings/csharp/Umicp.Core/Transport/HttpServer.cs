@@ -259,7 +259,7 @@ public class HttpServer : IDisposable
     /// <summary>
     /// Send JSON response
     /// </summary>
-    public async Task SendJsonAsync(HttpListenerContext context, object data, int statusCode = 200)
+    public async Task SendJsonAsync(HttpListenerContext context, object data, int statusCode = 200, CancellationToken cancellationToken = default)
     {
         try
         {
@@ -276,7 +276,7 @@ public class HttpServer : IDisposable
             context.Response.ContentLength64 = bytes.Length;
             context.Response.Headers.Add("Access-Control-Allow-Origin", "*");
 
-            await context.Response.OutputStream.WriteAsync(bytes, 0, bytes.Length);
+            await context.Response.OutputStream.WriteAsync(bytes, 0, bytes.Length, cancellationToken).ConfigureAwait(false);
             context.Response.Close();
 
             _stats.MessagesSent++;
@@ -292,7 +292,7 @@ public class HttpServer : IDisposable
     /// <summary>
     /// Send error response
     /// </summary>
-    public async Task SendErrorAsync(HttpListenerContext context, int statusCode, string message)
+    public async Task SendErrorAsync(HttpListenerContext context, int statusCode, string message, CancellationToken cancellationToken = default)
     {
         try
         {
@@ -303,7 +303,7 @@ public class HttpServer : IDisposable
                 timestamp = DateTime.UtcNow
             };
 
-            await SendJsonAsync(context, error, statusCode);
+            await SendJsonAsync(context, error, statusCode, cancellationToken).ConfigureAwait(false);
         }
         catch (Exception ex)
         {
@@ -315,7 +315,7 @@ public class HttpServer : IDisposable
     /// <summary>
     /// Send binary response
     /// </summary>
-    public async Task SendBinaryAsync(HttpListenerContext context, byte[] data, string contentType = "application/octet-stream")
+    public async Task SendBinaryAsync(HttpListenerContext context, byte[] data, string contentType = "application/octet-stream", CancellationToken cancellationToken = default)
     {
         try
         {
@@ -323,7 +323,7 @@ public class HttpServer : IDisposable
             context.Response.ContentType = contentType;
             context.Response.ContentLength64 = data.Length;
 
-            await context.Response.OutputStream.WriteAsync(data, 0, data.Length);
+            await context.Response.OutputStream.WriteAsync(data, 0, data.Length, cancellationToken).ConfigureAwait(false);
             context.Response.Close();
 
             _stats.MessagesSent++;
