@@ -4,6 +4,55 @@ All notable changes to UMICP will be documented in this file.
 
 This is the **BIP-05 implementation** for HiveLLM's standardized inter-model communication protocol.
 
+## [0.1.1] - 2025-10-10
+
+### 📚 Documentation Update - All Bindings Status
+
+#### Updated README with Current Production Status
+- ✅ **All Major Bindings Production Ready**: 6 of 7 language bindings complete
+- ✅ **Version Alignment**: All bindings now at v0.1.1 (except C++ at v1.0.0)
+- ✅ **Accurate Test Coverage**: Updated with real test results from all implementations
+
+#### Binding Status Updates
+
+##### TypeScript (v0.1.1)
+- Tests: 124/131 passing (95%)
+- Coverage: 95%
+- Status: ✅ Production Ready
+- Features: Node.js N-API, WebSocket, Multiplexed Peer, async/await
+
+##### Go (v0.1.1) - **Updated from v1.0.0-mvp**
+- Tests: All passing
+- Coverage: 88%
+- Status: ✅ MVP Complete & Production Ready
+- Features: Pure Go, Goroutines, WebSocket, Multiplexed Peer, P2P networks
+
+##### Java (v0.1.1) - **Status Changed**
+- Tests: 274/274 passing (100%)
+- Coverage: 95%
+- Status: ✅ Complete (Phase 1 & 2)
+- Features: Pure Java, WebSocket, Multiplexed Peer, Multi-module (umicp-core, umicp-transport)
+
+##### Rust (v0.1.1) - **Status Changed**
+- Tests: 51/51 passing (100%)
+- Coverage: 100%
+- Status: ✅ Complete & Production Ready
+- Features: Zero-copy, async/await, tokio 1.40, SIMD, HTTP/2, WebSocket
+
+##### PHP (v0.1.1) - **Status Changed**
+- Tests: 145+ passing (100%)
+- Coverage: 95%
+- Status: ✅ Complete & Production Ready
+- Features: FFI bindings, HTTP, WebSocket, Compression, Events, Laravel/Symfony/WordPress
+
+#### Summary
+- **6 Production-Ready Bindings**: C++, TypeScript, Go, Java, Rust, PHP
+- **Total Tests**: 1,000+ tests across all bindings
+- **Average Coverage**: 93%
+- **Python**: Planned (not started)
+
+---
+
 ## [1.0.1] - 2025-10-10
 
 ### 🎉 PHP Bindings - FFI Integration & New Features
