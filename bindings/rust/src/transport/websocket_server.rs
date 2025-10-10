@@ -83,6 +83,23 @@ pub struct WebSocketServer {
     disconnection_handler: Option<ConnectionHandler>,
 }
 
+impl Clone for WebSocketServer {
+    fn clone(&self) -> Self {
+        Self {
+            config: self.config.clone(),
+            clients: Arc::clone(&self.clients),
+            client_senders: Arc::clone(&self.client_senders),
+            stats: Arc::clone(&self.stats),
+            started_at: self.started_at,
+            shutdown_tx: self.shutdown_tx.clone(),
+            shutdown_rx: Arc::clone(&self.shutdown_rx),
+            message_handler: self.message_handler.clone(),
+            connection_handler: self.connection_handler.clone(),
+            disconnection_handler: self.disconnection_handler.clone(),
+        }
+    }
+}
+
 impl WebSocketServer {
     /// Create a new WebSocket server
     pub fn new(addr: impl Into<String>) -> Result<Self> {

@@ -60,13 +60,13 @@ async fn run_server() -> Result<(), Box<dyn std::error::Error>> {
                 .from("server")
                 .to(envelope.from())
                 .operation(OperationType::Ack)
-                .message_id(format!("ack-{}", envelope.message_id()))
+                .message_id(format!("ack-{}", envelope.message_id()).as_str())
                 .capability("status", "received")
                 .capability("server_time", &chrono::Utc::now().to_rfc3339())
                 .build().unwrap();
 
             // Send response
-            let _ = server_clone.send(response, &conn_id).await;
+            let _ = server_clone.send_to_client(&conn_id, response).await;
             println!("   ✓ Sent acknowledgment\n");
         });
     }));
@@ -118,7 +118,7 @@ async fn run_client() -> Result<(), Box<dyn std::error::Error>> {
             .from("rust-client")
             .to("server")
             .operation(OperationType::Data)
-            .message_id(format!("test-msg-{}", i))
+            .message_id(format!("test-msg-{}", i).as_str())
             .capability("message_type", "test")
             .capability("sequence", &i.to_string())
             .capability("timestamp", &chrono::Utc::now().to_rfc3339())

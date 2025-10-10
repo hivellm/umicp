@@ -101,3 +101,9 @@ async fn main() -> Result<(), Box<dyn std::error::Error>> {
     Ok(())
 }
 
+#[cfg(not(feature = "http2"))]
+fn main() {
+    println!("This example requires the 'http2' feature.");
+    println!("Run with: cargo run --example http_basic --features http2");
+}
+

@@ -73,13 +73,13 @@ enum CommunicationData {
 
 /// High-performance embedding serializer
 struct EmbeddingSerializer {
-    matrix: Matrix,
+    _matrix: Matrix,
 }
 
 impl EmbeddingSerializer {
     fn new() -> Self {
         Self {
-            matrix: Matrix::new(),
+            _matrix: Matrix::new(),
         }
     }
 
@@ -191,14 +191,14 @@ impl EmbeddingSerializer {
 
 /// Transformer communication handler
 struct TransformerCommunication {
-    serializer: EmbeddingSerializer,
+    _serializer: EmbeddingSerializer,
     matrix: Matrix,
 }
 
 impl TransformerCommunication {
     fn new() -> Self {
         Self {
-            serializer: EmbeddingSerializer::new(),
+            _serializer: EmbeddingSerializer::new(),
             matrix: Matrix::new(),
         }
     }
@@ -338,7 +338,7 @@ fn main() -> Result<(), Box<dyn std::error::Error>> {
     println!("-------------------------------");
 
     let bert_embedding = serializer.create_bert_embedding(128, 768);
-    let bert_envelope = communication.create_embedding_envelope(
+    let _bert_envelope = communication.create_embedding_envelope(
         "bert-encoder",
         "classification-head",
         &bert_embedding
@@ -359,7 +359,7 @@ fn main() -> Result<(), Box<dyn std::error::Error>> {
     let num_heads = 12;
     let attention_weights = serializer.create_gpt_attention(sequence_length, num_heads);
 
-    let attention_envelope = communication.create_attention_envelope(
+    let _attention_envelope = communication.create_attention_envelope(
         "gpt-decoder",
         "attention-aggregator",
         &attention_weights,
@@ -379,7 +379,7 @@ fn main() -> Result<(), Box<dyn std::error::Error>> {
     println!("-----------------------------------------");
 
     let t5_embedding = serializer.create_t5_encoder_output(256, 512);
-    let t5_envelope = communication.create_embedding_envelope(
+    let _t5_envelope = communication.create_embedding_envelope(
         "t5-encoder",
         "t5-decoder",
         &t5_embedding
@@ -487,7 +487,7 @@ fn main() -> Result<(), Box<dyn std::error::Error>> {
     println!("   JSON size: {} bytes", serialized_model.len());
 
     // Deserialize
-    let deserialized_model: ModelCommunication = serde_json::from_str(&serialized_model)?;
+    let _deserialized_model: ModelCommunication = serde_json::from_str(&serialized_model)?;
     println!("✅ Model state deserialized successfully");
 
     println!("\n🎉 Embedding Communication Example Completed!");

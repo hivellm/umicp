@@ -21,7 +21,7 @@ async fn main() -> anyhow::Result<()> {
     println!("================================\n");
 
     // Start server in background
-    let server_handle = tokio::spawn(async move {
+    let _server_handle = tokio::spawn(async move {
         run_server().await
     });
 

@@ -41,7 +41,7 @@ fn main() -> Result<(), Box<dyn std::error::Error>> {
 struct StreamingProcessor {
     buffer: Mutex<VecDeque<Envelope>>,
     batch_size: usize,
-    flush_interval: Duration,
+    _flush_interval: Duration,
     matrix: Matrix,
     processed_count: Mutex<u64>,
 }
@@ -51,7 +51,7 @@ impl StreamingProcessor {
         Self {
             buffer: Mutex::new(VecDeque::new()),
             batch_size: 100,
-            flush_interval: Duration::from_millis(500),
+            _flush_interval: Duration::from_millis(500),
             matrix: Matrix::new(),
             processed_count: Mutex::new(0),
         }
@@ -161,26 +161,26 @@ impl StreamingProcessor {
         let processed_count = self.processed_count.lock().unwrap();
 
         ProcessorStats {
-            buffer_size: buffer.len(),
-            batch_size: self.batch_size,
-            processed_batches: *processed_count,
-            total_processed: *processed_count * self.batch_size as u64,
+            _buffer_size: buffer.len(),
+            _batch_size: self.batch_size,
+            _processed_batches: *processed_count,
+            _total_processed: *processed_count * self.batch_size as u64,
         }
     }
 }
 
 #[derive(Debug)]
 struct ProcessorStats {
-    buffer_size: usize,
-    batch_size: usize,
-    processed_batches: u64,
-    total_processed: u64,
+    _buffer_size: usize,
+    _batch_size: usize,
+    _processed_batches: u64,
+    _total_processed: u64,
 }
 
 /// Real-time analytics engine
 struct AnalyticsEngine {
     metrics: Mutex<HashMap<String, MetricData>>,
-    matrix: Matrix,
+    _matrix: Matrix,
 }
 
 #[derive(Clone)]
@@ -197,7 +197,7 @@ impl AnalyticsEngine {
     fn new() -> Self {
         Self {
             metrics: Mutex::new(HashMap::new()),
-            matrix: Matrix::new(),
+            _matrix: Matrix::new(),
         }
     }
 
@@ -312,13 +312,13 @@ fn demonstrate_load_balancing() -> Result<(), Box<dyn std::error::Error>> {
     }
 
     // Show load balancing results
-    for (i, &tasks) in worker_stats.iter().enumerate() {
-        let percentage = (tasks as f32 / total_tasks as f32) * 100.0;
+    for (_i, &tasks) in worker_stats.iter().enumerate() {
+        let _percentage = (tasks as f32 / total_tasks as f32) * 100.0;
     }
 
     let max_load = worker_stats.iter().max().unwrap();
     let min_load = worker_stats.iter().min().unwrap();
-    let load_imbalance = (*max_load as f32 - *min_load as f32) / *max_load as f32 * 100.0;
+    let _load_imbalance = (*max_load as f32 - *min_load as f32) / *max_load as f32 * 100.0;
 
 
     Ok(())
@@ -365,12 +365,12 @@ impl PerformanceMonitor {
             let p99 = sorted_timings[(timings.len() as f64 * 0.99) as usize];
 
             stats.insert(operation.clone(), PerformanceStats {
-                count: timings.len(),
-                total_time: total,
-                avg_time: avg,
-                p50_time: p50,
-                p95_time: p95,
-                p99_time: p99,
+                _count: timings.len(),
+                _total_time: total,
+                _avg_time: avg,
+                _p50_time: p50,
+                _p95_time: p95,
+                _p99_time: p99,
             });
         }
 
@@ -380,12 +380,12 @@ impl PerformanceMonitor {
 
 #[derive(Debug)]
 struct PerformanceStats {
-    count: usize,
-    total_time: Duration,
-    avg_time: Duration,
-    p50_time: Duration,
-    p95_time: Duration,
-    p99_time: Duration,
+    _count: usize,
+    _total_time: Duration,
+    _avg_time: Duration,
+    _p50_time: Duration,
+    _p95_time: Duration,
+    _p99_time: Duration,
 }
 
 // Demonstration functions
@@ -415,7 +415,7 @@ fn demonstrate_streaming_processor(processor: Arc<StreamingProcessor>) -> Result
     processor.flush_batch();
 
     // Show statistics
-    let stats = processor.get_stats();
+    let _stats = processor.get_stats();
 
     Ok(())
 }
@@ -443,7 +443,7 @@ fn demonstrate_real_time_analytics(analytics: Arc<AnalyticsEngine>) -> Result<()
 
     // Show analytics summary
     let summary = analytics.get_summary();
-    for (key, value) in summary {
+    for (_key, _value) in summary {
     }
 
     Ok(())
@@ -480,7 +480,7 @@ fn demonstrate_performance_monitoring(monitor: PerformanceMonitor) -> Result<(),
     // Show performance statistics
     let stats = monitor.get_stats();
 
-    for (operation, stat) in stats {
+    for (_operation, _stat) in stats {
     }
 
     Ok(())

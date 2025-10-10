@@ -178,7 +178,6 @@ fn demonstrate_custom_errors() -> Result<(), Box<dyn std::error::Error>> {
         Err(CorruptionError::FormatError(msg)) => {
             println!("✅ Format error caught: {}", msg);
         }
-        Err(e) => println!("✅ Other error caught: {:?}", e),
     }
 
     Ok(())
@@ -205,7 +204,7 @@ fn demonstrate_validation() -> Result<(), Box<dyn std::error::Error>> {
 
         match envelope {
             Ok(env) => {
-                let is_valid = validate_envelope(&env)?;
+                let _is_valid = validate_envelope(&env)?;
                 println!("✅ {}: Envelope created and validated", expected);
             }
             Err(e) => {

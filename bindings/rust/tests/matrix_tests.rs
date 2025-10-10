@@ -252,7 +252,7 @@ fn test_large_matrix_operations() {
 
     let mut a = vec![0.0f32; size];
     let mut b = vec![0.0f32; size];
-    let result = vec![0.0f32; size];
+    let _result = vec![0.0f32; size];
 
     for i in 0..size {
         a[i] = (i % 100) as f32 * 0.01;
