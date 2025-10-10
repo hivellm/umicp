@@ -80,6 +80,9 @@ struct ClientState {
     reconnect_attempts: u32,
 }
 
+/// Message handler callback type
+pub type ClientMessageHandler = Arc<dyn Fn(Envelope) + Send + Sync>;
+
 /// WebSocket Client
 pub struct WebSocketClient {
     config: WebSocketClientConfig,
@@ -88,6 +91,7 @@ pub struct WebSocketClient {
     message_rx: Arc<RwLock<Option<mpsc::UnboundedReceiver<Envelope>>>>,
     shutdown_tx: mpsc::UnboundedSender<()>,
     shutdown_rx: Arc<RwLock<Option<mpsc::UnboundedReceiver<()>>>>,
+    message_handler: Arc<RwLock<Option<ClientMessageHandler>>>,
 }
 
 impl WebSocketClient {
@@ -111,7 +115,13 @@ impl WebSocketClient {
             message_rx: Arc::new(RwLock::new(Some(message_rx))),
             shutdown_tx,
             shutdown_rx: Arc::new(RwLock::new(Some(shutdown_rx))),
+            message_handler: Arc::new(RwLock::new(None)),
         }
+    }
+
+    /// Set message handler for received messages
+    pub fn set_message_handler(&self, handler: ClientMessageHandler) {
+        *self.message_handler.write() = Some(handler);
     }
 
     /// Create with custom configuration
@@ -131,6 +141,7 @@ impl WebSocketClient {
             message_rx: Arc::new(RwLock::new(Some(message_rx))),
             shutdown_tx,
             shutdown_rx: Arc::new(RwLock::new(Some(shutdown_rx))),
+            message_handler: Arc::new(RwLock::new(None)),
         }
     }
 
@@ -254,6 +265,7 @@ impl WebSocketClient {
         let state_recv = Arc::clone(&self.state);
         let message_rx = self.message_rx.write().take();
         let shutdown_rx = self.shutdown_rx.write().take();
+        let message_handler = Arc::clone(&self.message_handler);
 
         if message_rx.is_none() || shutdown_rx.is_none() {
             tracing::error!("Message loop already started");
@@ -303,8 +315,12 @@ impl WebSocketClient {
                         // Deserialize envelope
                         match Envelope::deserialize(&text) {
                             Ok(envelope) => {
-                                // TODO: Call message handler here
                                 tracing::debug!("Received envelope from {}", envelope.from());
+
+                                // Call message handler if set
+                                if let Some(handler) = message_handler.read().as_ref() {
+                                    handler(envelope);
+                                }
                             }
                             Err(e) => {
                                 tracing::error!("Failed to deserialize envelope: {}", e);
@@ -368,7 +384,7 @@ mod tests {
     async fn test_stats_tracking() {
         let client = WebSocketClient::new("ws://localhost:8080");
         let stats = client.get_stats();
-        
+
         assert_eq!(stats.messages_sent, 0);
         assert_eq!(stats.messages_received, 0);
         assert_eq!(stats.connect_count, 0);

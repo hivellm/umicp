@@ -5,15 +5,17 @@ Multiplexed peer that can act as both server and client simultaneously.
 */
 
 use crate::error::{Result, UmicpError};
-use crate::peer::{ConnectionState, PeerConnection, PeerInfo};
+use crate::peer::{ConnectionState, PeerConnection, PeerInfo, HandshakeProtocol, HandshakeMessage};
 use crate::transport::{WebSocketClient, WebSocketServer};
 use crate::Envelope;
 use parking_lot::RwLock;
 use std::collections::HashMap;
 use std::net::SocketAddr;
 use std::sync::Arc;
+use std::time::Duration;
 use tokio::sync::mpsc;
 use tokio::task::JoinHandle;
+use tokio::time::timeout;
 
 /// Message handler for peers
 pub type PeerMessageHandler = Arc<dyn Fn(Envelope, String) + Send + Sync>;
@@ -65,6 +67,9 @@ pub struct WebSocketPeer {
     /// Outgoing clients
     clients: Arc<RwLock<HashMap<String, Arc<WebSocketClient>>>>,
 
+    /// Handshake protocol
+    handshake: Arc<HandshakeProtocol>,
+
     /// Message handler
     message_handler: Option<PeerMessageHandler>,
 
@@ -78,6 +83,8 @@ pub struct WebSocketPeer {
 impl WebSocketPeer {
     /// Create new WebSocket peer
     pub fn new(config: WebSocketPeerConfig) -> Self {
+        let handshake = HandshakeProtocol::new(&config.peer_id);
+
         Self {
             config,
             server: None,
@@ -85,6 +92,7 @@ impl WebSocketPeer {
             peers: Arc::new(RwLock::new(HashMap::new())),
             peer_info: Arc::new(RwLock::new(HashMap::new())),
             clients: Arc::new(RwLock::new(HashMap::new())),
+            handshake: Arc::new(handshake),
             message_handler: None,
             connect_handler: None,
             disconnect_handler: None,
@@ -111,6 +119,21 @@ impl WebSocketPeer {
         self.disconnect_handler = Some(handler);
     }
 
+    /// Add capability to handshake
+    pub fn add_capability(&mut self, capability: impl Into<String>) {
+        // Create new handshake with capability
+        let mut new_handshake = HandshakeProtocol::new(&self.config.peer_id);
+        new_handshake.add_capability(capability);
+        self.handshake = Arc::new(new_handshake);
+    }
+
+    /// Add metadata to handshake
+    pub fn add_metadata(&mut self, key: impl Into<String>, value: impl Into<String>) {
+        let mut new_handshake = HandshakeProtocol::new(&self.config.peer_id);
+        new_handshake.add_metadata(key, value);
+        self.handshake = Arc::new(new_handshake);
+    }
+
     /// Start server (if configured)
     pub async fn start_server(&mut self) -> Result<()> {
         let addr = self.config.server_addr.ok_or_else(|| {
@@ -121,12 +144,35 @@ impl WebSocketPeer {
 
         // Set up server handlers
         let peers_msg = Arc::clone(&self.peers);
+        let peer_info_msg = Arc::clone(&self.peer_info);
         let message_handler = self.message_handler.clone();
+        let handshake_msg = Arc::clone(&self.handshake);
 
         server.set_message_handler(Arc::new(move |envelope, client_id| {
             peers_msg.read().get(&client_id).map(|conn| {
                 conn.record_received(envelope.serialize().map(|s| s.len()).unwrap_or(0));
             });
+
+            // Handle handshake messages
+            if HandshakeMessage::is_handshake(&envelope) {
+                if let Ok(Some(_response)) = handshake_msg.handle_handshake(&envelope) {
+                    // Send handshake response (ACK)
+                    tracing::debug!("Sending handshake ACK to {}", client_id);
+                    // TODO: Send response through server
+                }
+
+                // Extract peer info from handshake
+                if let Ok(msg) = HandshakeMessage::from_envelope(&envelope) {
+                    let info = msg.to_peer_info();
+                    peer_info_msg.write().insert(client_id.clone(), info);
+
+                    // Update connection state
+                    if let Some(conn) = peers_msg.read().get(&client_id) {
+                        conn.set_state(ConnectionState::Connected);
+                    }
+                }
+                return;
+            }
 
             if let Some(handler) = &message_handler {
                 handler(envelope, client_id);
@@ -180,7 +226,7 @@ impl WebSocketPeer {
         // Create message channel
         let (tx, mut rx) = mpsc::unbounded_channel();
         let conn = PeerConnection::new(&peer_id, tx);
-        conn.set_state(ConnectionState::Connected);
+        conn.set_state(ConnectionState::Handshaking);
 
         self.peers.write().insert(peer_id.clone(), conn);
         self.clients.write().insert(peer_id.clone(), Arc::clone(&client));
@@ -195,6 +241,43 @@ impl WebSocketPeer {
                 }
             }
         });
+
+        // Send handshake if enabled
+        if self.config.auto_handshake {
+            let hello = self.handshake.create_hello()?;
+            client.send(hello).await?;
+
+            // Wait for ACK with timeout
+            let timeout_duration = Duration::from_secs(self.config.handshake_timeout);
+            let peer_id_clone = peer_id.clone();
+            let peers = Arc::clone(&self.peers);
+
+            tokio::spawn(async move {
+                match timeout(timeout_duration, async {
+                    loop {
+                        if let Some(conn) = peers.read().get(&peer_id_clone) {
+                            if conn.state() == ConnectionState::Connected {
+                                return Ok::<(), ()>(());
+                            }
+                        }
+                        tokio::time::sleep(Duration::from_millis(100)).await;
+                    }
+                }).await {
+                    Ok(_) => tracing::info!("Handshake completed with peer {}", peer_id_clone),
+                    Err(_) => {
+                        tracing::warn!("Handshake timeout for peer {}", peer_id_clone);
+                        if let Some(conn) = peers.read().get(&peer_id_clone) {
+                            conn.set_state(ConnectionState::Disconnected);
+                        }
+                    }
+                }
+            });
+        } else {
+            // No handshake, mark as connected immediately
+            if let Some(conn) = self.peers.read().get(&peer_id) {
+                conn.set_state(ConnectionState::Connected);
+            }
+        }
 
         if let Some(handler) = &self.connect_handler {
             handler(peer_id.clone(), info);

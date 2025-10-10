@@ -1,6 +1,6 @@
 /**
  * Example 4: Request-Response Pattern
- * 
+ *
  * This example demonstrates:
  * - Sending a request and waiting for response
  * - Timeout handling
@@ -8,10 +8,10 @@
  * - Error responses
  */
 
-import { 
-  UMICPWebSocketPeer, 
-  Envelope, 
-  OperationType 
+import {
+  UMICPWebSocketPeer,
+  Envelope,
+  OperationType
 } from '../src/index.js';
 
 async function main() {
@@ -61,7 +61,7 @@ async function main() {
         const num1 = parseInt(envelope.getCapabilities()['num1']);
         const num2 = parseInt(envelope.getCapabilities()['num2']);
         const result = num1 + num2;
-        
+
         response = new Envelope({
           from: 'api-server',
           to: envelope.getFrom(),
@@ -229,7 +229,7 @@ async function main() {
   // Example 5: Multiple concurrent requests
   console.log('\n📤 Request 5: Multiple concurrent requests');
   const concurrentRequests = [];
-  
+
   for (let i = 1; i <= 5; i++) {
     const request = new Envelope({
       from: 'api-client',
@@ -270,7 +270,7 @@ async function main() {
   console.log('\n🧹 Cleaning up...');
   await client.shutdown();
   await server.shutdown();
-  
+
   console.log('✅ Request-Response example completed!\n');
 }
 

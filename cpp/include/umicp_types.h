@@ -103,7 +103,16 @@ enum class ErrorCode {
     BUFFER_OVERFLOW = 10,
     MEMORY_ALLOCATION = 11,
     INVALID_ARGUMENT = 12,
-    NOT_IMPLEMENTED = 13
+    NOT_IMPLEMENTED = 13,
+    // Additional error codes for Phase 3
+    INVALID_STATE = 14,
+    NOT_CONNECTED = 15,
+    NOT_FOUND = 16,
+    TRANSMISSION_ERROR = 17,
+    INVALID_CONFIG = 18,
+    INITIALIZATION_FAILED = 19,
+    CONNECTION_FAILED = 20,
+    PROTOCOL_ERROR = 21
 };
 
 // Forward declarations
@@ -147,6 +156,23 @@ struct Envelope {
     std::optional<std::vector<JsonObject>> payload_refs;
 
     Envelope() : op(OperationType::CONTROL) {}
+
+    // Helper methods for easier access
+    void set_from(const std::string& f) { from = f; }
+    void set_to(const std::string& t) { to = t; }
+    void set_operation(OperationType o) { op = o; }
+    void set_message_id(const std::string& id) { msg_id = id; }
+    void set_capabilities(const StringMap& caps) { capabilities = caps; }
+
+    std::string get_from() const { return from; }
+    std::string get_to() const { return to; }
+    OperationType get_operation() const { return op; }
+    std::string get_message_id() const { return msg_id; }
+    StringMap get_capabilities() const { return capabilities.value_or(StringMap{}); }
+
+    // Serialization helper (requires envelope.h to be included)
+    std::string to_json() const;
+    static Envelope from_json(const std::string& json);
 };
 
 // Frame header (16 bytes)
@@ -276,7 +302,20 @@ struct Result {
         : code(err), error_message(std::move(msg)) {}
 
     bool is_success() const { return code == ErrorCode::SUCCESS; }
+    bool is_ok() const { return is_success(); }
     bool has_value() const { return value.has_value(); }
+
+    ErrorCode error_code() const { return code; }
+    std::string error() const { return error_message.value_or(""); }
+
+    // Static factory methods
+    static Result<T> ok(T val) {
+        return Result<T>(std::move(val));
+    }
+
+    static Result<T> error(ErrorCode err, const std::string& msg) {
+        return Result<T>(err, msg);
+    }
 };
 
 // Specialization for void
@@ -291,7 +330,20 @@ struct Result<void> {
         : code(err), error_message(std::move(msg)) {}
 
     bool is_success() const { return code == ErrorCode::SUCCESS; }
+    bool is_ok() const { return is_success(); }
     bool has_value() const { return is_success(); }
+
+    ErrorCode error_code() const { return code; }
+    std::string error() const { return error_message.value_or(""); }
+
+    // Static factory methods
+    static Result<void> ok() {
+        return Result<void>();
+    }
+
+    static Result<void> error(ErrorCode err, const std::string& msg) {
+        return Result<void>(err, msg);
+    }
 };
 
 } // namespace umicp

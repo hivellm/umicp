@@ -75,6 +75,10 @@ set(UMICP_SOURCES
     src/security.cpp
     src/compression.cpp
     src/c_api.cpp
+    src/event_emitter.cpp
+    src/multiplexed_peer.cpp
+    src/websocket_server.cpp
+    src/websocket_client.cpp
 )
 
 # FFI wrapper sources (for language bindings)
@@ -96,6 +100,10 @@ set(UMICP_HEADERS
     include/serialization.h
     include/security.h
     include/compression.h
+    include/event_emitter.h
+    include/multiplexed_peer.h
+    include/websocket_server.h
+    include/websocket_client.h
 )
 
 # Create static library

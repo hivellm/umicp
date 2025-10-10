@@ -1,0 +1,115 @@
+name: Tests
+
+on:
+  push:
+    branches: [ main, develop ]
+  pull_request:
+    branches: [ main ]
+
+jobs:
+  test:
+    runs-on: ${{ matrix.os }}
+    strategy:
+      matrix:
+        os: [ubuntu-latest, macos-latest]
+        php: ['8.1', '8.2', '8.3']
+
+    name: PHP ${{ matrix.php }} on ${{ matrix.os }}
+
+    steps:
+    - uses: actions/checkout@v3
+      with:
+        submodules: recursive
+
+    - name: Setup PHP
+      uses: shivammathur/setup-php@v2
+      with:
+        php-version: ${{ matrix.php }}
+        extensions: ffi, json
+        ini-values: ffi.enable=1, memory_limit=512M
+        coverage: xdebug
+
+    - name: Check PHP version and FFI
+      run: |
+        php -v
+        php -m | grep FFI
+
+    - name: Validate composer.json
+      run: composer validate --strict
+
+    - name: Install dependencies
+      run: composer install --prefer-dist --no-progress
+
+    - name: Install C++ build tools
+      run: |
+        if [ "$RUNNER_OS" == "Linux" ]; then
+          sudo apt-get update
+          sudo apt-get install -y build-essential cmake libjson-c-dev libssl-dev zlib1g-dev
+        elif [ "$RUNNER_OS" == "macOS" ]; then
+          brew install cmake json-c openssl zlib
+        fi
+      shell: bash
+
+    - name: Build C++ core
+      run: |
+        cd ../../cpp
+        mkdir -p build && cd build
+        cmake .. -DBUILD_SHARED_LIBS=ON -DCMAKE_BUILD_TYPE=Release
+        make -j$(nproc || sysctl -n hw.ncpu) umicp_core
+      shell: bash
+
+    - name: Configure library path
+      run: |
+        cp config/umicp.example.php config/umicp.php
+        # Update lib_path based on OS
+        if [ "$RUNNER_OS" == "Linux" ]; then
+          sed -i "s|libumicp_core.dylib|libumicp_core.so|g" config/umicp.php
+        fi
+      shell: bash
+
+    - name: Validate structure
+      run: php validate-structure.php
+
+    - name: Run tests
+      run: ./vendor/bin/phpunit --coverage-clover coverage.xml
+
+    - name: Run code style check
+      run: composer lint
+
+    - name: Run static analysis
+      run: composer analyse
+
+    - name: Upload coverage
+      uses: codecov/codecov-action@v3
+      with:
+        files: ./coverage.xml
+        flags: unittests
+        name: php-${{ matrix.php }}-${{ matrix.os }}
+
+  benchmark:
+    runs-on: ubuntu-latest
+    needs: test
+
+    steps:
+    - uses: actions/checkout@v3
+
+    - name: Setup PHP
+      uses: shivammathur/setup-php@v2
+      with:
+        php-version: '8.2'
+        extensions: ffi, json
+        ini-values: ffi.enable=1
+
+    - name: Install dependencies
+      run: composer install --prefer-dist --no-progress
+
+    - name: Build C++ core
+      run: |
+        cd ../../cpp
+        mkdir -p build && cd build
+        cmake .. -DBUILD_SHARED_LIBS=ON -DCMAKE_BUILD_TYPE=Release
+        make -j$(nproc) umicp_core
+
+    - name: Run benchmarks
+      run: php benchmark.php
+

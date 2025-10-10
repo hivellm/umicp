@@ -18,7 +18,7 @@ import static org.junit.jupiter.api.Assertions.*;
 
 /**
  * Integration tests for UMICP WebSocket transport.
- * 
+ *
  * <p>These tests verify the complete client-server communication flow.
  */
 @Timeout(10)

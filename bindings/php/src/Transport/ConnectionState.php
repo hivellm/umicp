@@ -22,7 +22,7 @@ class ConnectionState
     public function setConnected(bool $connected): void
     {
         $this->connected = $connected;
-        
+
         if ($connected) {
             $this->connectedAt = microtime(true);
             $this->disconnectedAt = null;

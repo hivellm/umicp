@@ -1,6 +1,6 @@
 /**
  * Example 3: HTTP Transport Communication
- * 
+ *
  * This example demonstrates:
  * - HTTP-based UMICP communication
  * - Request-response pattern
@@ -8,12 +8,12 @@
  * - Health check endpoint
  */
 
-import { 
+import {
   StreamableHTTPServer,
   StreamableHTTPClient,
   StreamableHTTPPeer,
-  Envelope, 
-  OperationType 
+  Envelope,
+  OperationType
 } from '../src/index.js';
 import * as http from 'http';
 
@@ -168,7 +168,7 @@ async function httpPeerExample() {
 
     await clientPeer.connectToPeer('http://localhost:9081/umicp');
     console.log(`✅ Client ${i} connected`);
-    
+
     clients.push(clientPeer);
   }
 

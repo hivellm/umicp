@@ -66,6 +66,10 @@ set(TEST_SOURCES
     performance/test_transport_performance.cpp
     stress/test_stress_comprehensive.cpp
     utils/test_helpers.cpp
+    # New Phase 1-3 tests
+    test_event_emitter.cpp
+    test_multiplexed_peer.cpp
+    test_websocket_components.cpp
 )
 
 # Create test executable
@@ -196,4 +200,22 @@ add_custom_target(test_all
     COMMAND umicp_tests
     DEPENDS umicp_tests
     COMMENT "Running complete test suite"
+)
+
+# New Phase 1-3 test targets
+add_executable(event_emitter_tests test_event_emitter.cpp test_main.cpp)
+target_link_libraries(event_emitter_tests umicp_static ${GTEST_LIBRARIES} ${GTEST_MAIN_LIBRARIES} pthread)
+
+add_executable(multiplexed_peer_tests test_multiplexed_peer.cpp test_main.cpp)
+target_link_libraries(multiplexed_peer_tests umicp_static ${GTEST_LIBRARIES} ${GTEST_MAIN_LIBRARIES} pthread)
+
+add_executable(websocket_tests test_websocket_components.cpp test_main.cpp)
+target_link_libraries(websocket_tests umicp_static ${GTEST_LIBRARIES} ${GTEST_MAIN_LIBRARIES} pthread)
+
+add_custom_target(test_new_features
+    COMMAND event_emitter_tests
+    COMMAND multiplexed_peer_tests
+    COMMAND websocket_tests
+    DEPENDS event_emitter_tests multiplexed_peer_tests websocket_tests
+    COMMENT "Running Phase 1-3 feature tests"
 )

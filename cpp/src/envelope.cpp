@@ -341,4 +341,21 @@ std::string EnvelopeProcessor::hash(const Envelope& envelope) {
     return ss.str();
 }
 
+// Envelope helper method implementations
+std::string Envelope::to_json() const {
+    auto result = EnvelopeProcessor::serialize(*this);
+    if (result.is_success() && result.value.has_value()) {
+        return result.value.value();
+    }
+    return "{}";
+}
+
+Envelope Envelope::from_json(const std::string& json) {
+    auto result = EnvelopeProcessor::deserialize(json);
+    if (result.is_success() && result.value.has_value()) {
+        return result.value.value();
+    }
+    return Envelope{};
+}
+
 } // namespace umicp

@@ -1,0 +1,242 @@
+/*!
+# Event System Integration Tests
+*/
+
+use parking_lot::RwLock;
+use std::sync::Arc;
+use tokio::time::{sleep, Duration};
+use umicp_core::{Envelope, EventData, EventEmitter, EventType, OperationType, PeerInfo};
+
+#[tokio::test]
+async fn test_event_emitter_multiple_listeners() {
+    let emitter = EventEmitter::new();
+    
+    let count1 = Arc::new(RwLock::new(0));
+    let count2 = Arc::new(RwLock::new(0));
+    
+    let c1 = Arc::clone(&count1);
+    let c2 = Arc::clone(&count2);
+    
+    emitter.on(EventType::Message, Arc::new(move |_| {
+        *c1.write() += 1;
+    }));
+    
+    emitter.on(EventType::Message, Arc::new(move |_| {
+        *c2.write() += 1;
+    }));
+    
+    assert_eq!(emitter.listener_count(EventType::Message), 2);
+    
+    // Emit event
+    let envelope = Envelope::builder()
+        .from("test")
+        .to("server")
+        .operation(OperationType::Data)
+        .build()
+        .unwrap();
+    
+    emitter.emit_message(envelope, "peer-1".to_string());
+    
+    // Both listeners should fire
+    assert_eq!(*count1.read(), 1);
+    assert_eq!(*count2.read(), 1);
+}
+
+#[tokio::test]
+async fn test_event_types() {
+    let emitter = EventEmitter::new();
+    
+    let events = Arc::new(RwLock::new(Vec::new()));
+    
+    for event_type in [
+        EventType::Message,
+        EventType::PeerConnect,
+        EventType::PeerDisconnect,
+        EventType::HandshakeComplete,
+        EventType::Error,
+    ] {
+        let events_clone = Arc::clone(&events);
+        emitter.on(event_type, Arc::new(move |_| {
+            events_clone.write().push(event_type);
+        }));
+    }
+    
+    // Emit different events
+    let envelope = Envelope::builder()
+        .from("test")
+        .to("server")
+        .operation(OperationType::Data)
+        .build()
+        .unwrap();
+    
+    emitter.emit_message(envelope, "peer-1".to_string());
+    
+    let peer_info = PeerInfo::client("peer-1", "ws://localhost:8080");
+    emitter.emit_peer_connect("peer-1".to_string(), peer_info.clone());
+    emitter.emit_peer_disconnect("peer-1".to_string(), peer_info.clone());
+    emitter.emit_handshake_complete("peer-1".to_string(), peer_info);
+    emitter.emit_error("test error".to_string(), None);
+    
+    assert_eq!(events.read().len(), 5);
+}
+
+#[tokio::test]
+async fn test_event_once_listener() {
+    let emitter = EventEmitter::new();
+    
+    let count = Arc::new(RwLock::new(0));
+    let count_clone = Arc::clone(&count);
+    
+    emitter.once(EventType::Error, Arc::new(move |_| {
+        *count_clone.write() += 1;
+    }));
+    
+    // First emit
+    emitter.emit_error("error 1".to_string(), None);
+    assert_eq!(*count.read(), 1);
+    
+    // Second emit (should not fire)
+    emitter.emit_error("error 2".to_string(), None);
+    assert_eq!(*count.read(), 1); // Still 1
+}
+
+#[tokio::test]
+async fn test_event_async_emit() {
+    let emitter = EventEmitter::new();
+    
+    let count = Arc::new(RwLock::new(0));
+    let count_clone = Arc::clone(&count);
+    
+    emitter.on(EventType::Message, Arc::new(move |_| {
+        *count_clone.write() += 1;
+    }));
+    
+    let envelope = Envelope::builder()
+        .from("test")
+        .to("server")
+        .operation(OperationType::Data)
+        .build()
+        .unwrap();
+    
+    emitter.emit_async(
+        EventType::Message,
+        EventData::Message {
+            envelope,
+            peer_id: "peer-1".to_string(),
+        }
+    ).await;
+    
+    // Wait for async emit
+    sleep(Duration::from_millis(100)).await;
+    
+    assert_eq!(*count.read(), 1);
+}
+
+#[tokio::test]
+async fn test_event_remove_listeners() {
+    let emitter = EventEmitter::new();
+    
+    emitter.on(EventType::Message, Arc::new(|_| {}));
+    emitter.on(EventType::Message, Arc::new(|_| {}));
+    emitter.on(EventType::PeerConnect, Arc::new(|_| {}));
+    
+    assert_eq!(emitter.listener_count(EventType::Message), 2);
+    assert_eq!(emitter.listener_count(EventType::PeerConnect), 1);
+    
+    // Remove message listeners
+    emitter.off(EventType::Message);
+    
+    assert_eq!(emitter.listener_count(EventType::Message), 0);
+    assert_eq!(emitter.listener_count(EventType::PeerConnect), 1);
+}
+
+#[tokio::test]
+async fn test_event_remove_all_listeners() {
+    let emitter = EventEmitter::new();
+    
+    emitter.on(EventType::Message, Arc::new(|_| {}));
+    emitter.on(EventType::PeerConnect, Arc::new(|_| {}));
+    emitter.on(EventType::Error, Arc::new(|_| {}));
+    
+    assert!(emitter.listener_count(EventType::Message) > 0);
+    
+    emitter.remove_all_listeners();
+    
+    assert_eq!(emitter.listener_count(EventType::Message), 0);
+    assert_eq!(emitter.listener_count(EventType::PeerConnect), 0);
+    assert_eq!(emitter.listener_count(EventType::Error), 0);
+}
+
+#[tokio::test]
+async fn test_event_data_variants() {
+    let envelope = Envelope::builder()
+        .from("test")
+        .to("server")
+        .operation(OperationType::Data)
+        .build()
+        .unwrap();
+    
+    let peer_info = PeerInfo::client("peer-1", "ws://localhost:8080");
+    
+    // Test all EventData variants
+    let _ = EventData::Message {
+        envelope: envelope.clone(),
+        peer_id: "peer-1".to_string(),
+    };
+    
+    let _ = EventData::PeerConnect {
+        peer_id: "peer-1".to_string(),
+        info: peer_info.clone(),
+    };
+    
+    let _ = EventData::PeerDisconnect {
+        peer_id: "peer-1".to_string(),
+        info: peer_info.clone(),
+    };
+    
+    let _ = EventData::HandshakeComplete {
+        peer_id: "peer-1".to_string(),
+        info: peer_info,
+    };
+    
+    let _ = EventData::Error {
+        message: "test".to_string(),
+        peer_id: Some("peer-1".to_string()),
+    };
+    
+    let _ = EventData::StateChange {
+        peer_id: "peer-1".to_string(),
+        from: "Disconnected".to_string(),
+        to: "Connected".to_string(),
+    };
+}
+
+#[tokio::test]
+async fn test_concurrent_event_listeners() {
+    let emitter = EventEmitter::new();
+    
+    let count = Arc::new(RwLock::new(0));
+    
+    // Add 10 listeners
+    for _ in 0..10 {
+        let count_clone = Arc::clone(&count);
+        emitter.on(EventType::Message, Arc::new(move |_| {
+            *count_clone.write() += 1;
+        }));
+    }
+    
+    assert_eq!(emitter.listener_count(EventType::Message), 10);
+    
+    let envelope = Envelope::builder()
+        .from("test")
+        .to("server")
+        .operation(OperationType::Data)
+        .build()
+        .unwrap();
+    
+    emitter.emit_message(envelope, "peer-1".to_string());
+    
+    // All 10 listeners should fire
+    assert_eq!(*count.read(), 10);
+}
+

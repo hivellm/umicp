@@ -19,7 +19,7 @@ import static org.junit.jupiter.api.Assertions.*;
 
 /**
  * Integration tests for UMICPWebSocketPeer.
- * 
+ *
  * <p>These tests verify peer-to-peer communication scenarios.
  */
 @Timeout(15)

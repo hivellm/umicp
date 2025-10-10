@@ -1,8 +1,8 @@
 /**
- * Jest setup file for UMICP TypeScript bindings tests
+ * Vitest setup file for UMICP TypeScript bindings tests
  */
 
-import { jest } from '@jest/globals';
+import { beforeAll, afterAll, beforeEach, afterEach, expect, vi } from 'vitest';
 import { Envelope, UMICP, OperationType } from '../src/index';
 
 // Extend global interface
@@ -21,9 +21,6 @@ declare global {
   };
 }
 
-// Set up global test timeout
-jest.setTimeout(60000); // Increased for complex tests
-
 // Store original console methods
 const originalConsole = { ...console };
 
@@ -32,8 +29,8 @@ let performanceMarks: { [key: string]: number } = {};
 
 // Mock console methods for cleaner test output (but allow errors through)
 beforeAll(() => {
-  console.log = jest.fn();
-  console.warn = jest.fn();
+  console.log = vi.fn();
+  console.warn = vi.fn();
   // Keep console.error for actual errors
 });
 
@@ -156,63 +153,68 @@ afterEach(() => {
 
 // Custom matchers for better test assertions
 expect.extend({
-  toBeValidEnvelope(envelope: any) {
-    if (!envelope) {
+  toBeValidEnvelope(received: any) {
+    const { isNot } = this;
+
+    if (!received) {
       return {
         message: () => 'Expected envelope to be defined',
         pass: false
       };
     }
 
-    if (typeof envelope.validate !== 'function') {
+    if (typeof received.validate !== 'function') {
       return {
         message: () => 'Expected envelope to have validate method',
         pass: false
       };
     }
 
-    const isValid = envelope.validate();
+    const isValid = received.validate();
     return {
-      message: () => `Expected envelope to be valid, but validation returned ${isValid}`,
+      message: () => `Expected envelope to ${isNot ? 'not ' : ''}be valid, but validation returned ${isValid}`,
       pass: isValid
     };
   },
 
-  toBeWithinPerformanceRange(actual: number, expected: number, tolerancePercent: number = 10) {
+  toBeWithinPerformanceRange(received: number, expected: number, tolerancePercent: number = 10) {
+    const { isNot } = this;
     const tolerance = expected * (tolerancePercent / 100);
     const min = expected - tolerance;
     const max = expected + tolerance;
-    const pass = actual >= min && actual <= max;
+    const pass = received >= min && received <= max;
 
     return {
       message: () =>
-        `Expected ${actual}ms to be within ${tolerancePercent}% of ${expected}ms (range: ${min}ms - ${max}ms)`,
+        `Expected ${received}ms to ${isNot ? 'not ' : ''}be within ${tolerancePercent}% of ${expected}ms (range: ${min}ms - ${max}ms)`,
       pass
     };
   },
 
-  toBeValidCapabilityValue(value: any) {
-    const isString = typeof value === 'string';
-    const isNotEmpty = value !== '';
-    const hasNoNullBytes = !value?.includes('\x00');
+  toBeValidCapabilityValue(received: any) {
+    const { isNot } = this;
+    const isString = typeof received === 'string';
+    const isNotEmpty = received !== '';
+    const hasNoNullBytes = !received?.includes('\x00');
 
     const pass = isString && isNotEmpty && hasNoNullBytes;
 
     return {
       message: () =>
-        `Expected capability value to be a non-empty string without null bytes, got: ${typeof value}`,
+        `Expected capability value to ${isNot ? 'not ' : ''}be a non-empty string without null bytes, got: ${typeof received}`,
       pass
     };
   }
 });
 
 // Declare custom matchers for TypeScript
-declare global {
-  namespace jest {
-    interface Matchers<R> {
-      toBeValidEnvelope(): R;
-      toBeWithinPerformanceRange(expected: number, tolerancePercent?: number): R;
-      toBeValidCapabilityValue(): R;
-    }
-  }
+interface CustomMatchers<R = unknown> {
+  toBeValidEnvelope(): R;
+  toBeWithinPerformanceRange(expected: number, tolerancePercent?: number): R;
+  toBeValidCapabilityValue(): R;
+}
+
+declare module 'vitest' {
+  interface Assertion<T = any> extends CustomMatchers<T> {}
+  interface AsymmetricMatchersContaining extends CustomMatchers {}
 }

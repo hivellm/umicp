@@ -1,6 +1,6 @@
 /**
  * Example 5: Broadcast Patterns
- * 
+ *
  * This example demonstrates:
  * - Broadcasting to all peers
  * - Selective broadcast
@@ -8,10 +8,10 @@
  * - Topic-based broadcasting
  */
 
-import { 
-  UMICPWebSocketPeer, 
-  Envelope, 
-  OperationType 
+import {
+  UMICPWebSocketPeer,
+  Envelope,
+  OperationType
 } from '../src/index.js';
 
 async function main() {
@@ -93,7 +93,7 @@ async function main() {
 
   const sentToAll = hub.broadcast(broadcastAll);
   console.log(`📡 Broadcast sent to ${sentToAll} peer(s)\n`);
-  
+
   await new Promise(resolve => setTimeout(resolve, 1000));
 
   // Pattern 2: Broadcast to INCOMING peers only
@@ -111,7 +111,7 @@ async function main() {
 
   const sentToIncoming = hub.broadcastToType(broadcastIncoming, 'incoming');
   console.log(`📡 Broadcast sent to ${sentToIncoming} incoming peer(s)\n`);
-  
+
   await new Promise(resolve => setTimeout(resolve, 1000));
 
   // Pattern 3: Selective broadcast (exclude one peer)
@@ -133,7 +133,7 @@ async function main() {
 
   const sentSelective = hub.broadcast(selectiveBroadcast, excludePeerId);
   console.log(`📡 Broadcast sent to ${sentSelective} peer(s)\n`);
-  
+
   await new Promise(resolve => setTimeout(resolve, 1000));
 
   // Pattern 4: Role-based broadcast (simulated)
@@ -141,7 +141,7 @@ async function main() {
 
   // Broadcast to workers only
   console.log('Broadcasting to WORKERS only:\n');
-  const workerPeers = hub.getPeers().filter((peer, idx) => 
+  const workerPeers = hub.getPeers().filter((peer, idx) =>
     idx < 2 // First two clients are workers
   );
 
@@ -164,12 +164,12 @@ async function main() {
     }
   }
   console.log(`📡 Sent to ${sentToWorkers} worker(s)\n`);
-  
+
   await new Promise(resolve => setTimeout(resolve, 1000));
 
   // Broadcast to monitors only
   console.log('Broadcasting to MONITORS only:\n');
-  const monitorPeers = hub.getPeers().filter((peer, idx) => 
+  const monitorPeers = hub.getPeers().filter((peer, idx) =>
     idx >= 2 && idx < 4 // Third and fourth clients are monitors
   );
 
@@ -192,7 +192,7 @@ async function main() {
     }
   }
   console.log(`📡 Sent to ${sentToMonitors} monitor(s)\n`);
-  
+
   await new Promise(resolve => setTimeout(resolve, 1000));
 
   // Pattern 5: Sequential broadcast (one by one)
@@ -215,7 +215,7 @@ async function main() {
     console.log(`   Sent to peer ${i + 1}`);
     await new Promise(resolve => setTimeout(resolve, 200));
   }
-  
+
   await new Promise(resolve => setTimeout(resolve, 1000));
 
   // Pattern 6: Conditional broadcast
@@ -242,20 +242,20 @@ async function main() {
     }
   }
   console.log(`📡 Sent to ${conditionalCount} matching peer(s)\n`);
-  
+
   await new Promise(resolve => setTimeout(resolve, 1000));
 
   // Final statistics
   console.log('\n📊 Final Statistics:');
   console.log(`Hub: ${hub.getStats().totalPeers} connected peers`);
-  
+
   // Cleanup
   console.log('\n🧹 Cleaning up...');
   for (const client of clients) {
     await client.peer.shutdown();
   }
   await hub.shutdown();
-  
+
   console.log('✅ Broadcast patterns example completed!\n');
 }
 

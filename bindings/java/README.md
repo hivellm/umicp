@@ -51,13 +51,13 @@ See [IMPLEMENTATION_STATUS_UPDATE.md](./docs/IMPLEMENTATION_STATUS_UPDATE.md) fo
 <dependency>
     <groupId>com.hivellm</groupId>
     <artifactId>umicp-core</artifactId>
-    <version>1.0.0-SNAPSHOT</version>
+    <version>0.1.1</version>
 </dependency>
 ```
 
 ### Gradle
 ```gradle
-implementation 'com.hivellm:umicp-core:1.0.0-SNAPSHOT'
+implementation 'com.hivellm:umicp-core:0.1.1'
 ```
 
 ### Prerequisites

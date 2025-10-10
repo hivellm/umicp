@@ -18,50 +18,44 @@ async fn test_create_websocket_client() {
 async fn test_create_websocket_server() {
     let server = WebSocketServer::new("127.0.0.1:20090").expect("Failed to create server");
     let stats = server.get_stats();
-    
+
     assert_eq!(stats.active_connections, 0);
     assert_eq!(stats.total_connections, 0);
 }
 
 #[tokio::test(flavor = "multi_thread")]
-#[ignore] // Ignore for now - server blocks on start()
 async fn test_client_server_connection() {
-    // Start server with timeout
+    // Start server (non-blocking now!)
     let mut server = WebSocketServer::new("127.0.0.1:20091")
         .expect("Failed to create server");
 
-    let server_handle = tokio::spawn(async move {
-        let _ = timeout(Duration::from_secs(10), server.start()).await;
-    });
+    let _server_handle = server.start().await.expect("Failed to start server");
 
     // Give server time to start
     sleep(Duration::from_millis(500)).await;
 
     // Connect client
     let client = WebSocketClient::new("ws://127.0.0.1:20091");
-    
+
     let connect_result = timeout(Duration::from_secs(5), client.connect()).await;
-    
-    if connect_result.is_ok() {
-        assert!(connect_result.unwrap().is_ok(), "Connection failed");
-        assert!(client.is_connected());
-        let _ = client.disconnect().await;
-    }
+
+    assert!(connect_result.is_ok(), "Connection timed out");
+    assert!(connect_result.unwrap().is_ok(), "Connection failed");
+    assert!(client.is_connected());
+
+    let _ = client.disconnect().await;
 
     // Cleanup
-    server_handle.abort();
+    server.shutdown().expect("Failed to shutdown server");
 }
 
 #[tokio::test(flavor = "multi_thread")]
-#[ignore] // Ignore for now - requires refactored server with proper async handling
 async fn test_send_message_client_to_server() {
     // Start server
     let mut server = WebSocketServer::new("127.0.0.1:20092")
         .expect("Failed to create server");
 
-    tokio::spawn(async move {
-        let _ = timeout(Duration::from_secs(10), server.start()).await;
-    });
+    let _handle = server.start().await.expect("Failed to start server");
 
     sleep(Duration::from_millis(500)).await;
 
@@ -90,17 +84,15 @@ async fn test_send_message_client_to_server() {
     assert!(stats.bytes_sent > 0);
 
     client.disconnect().await.expect("Failed to disconnect");
+    server.shutdown().expect("Failed to shutdown server");
 }
 
 #[tokio::test(flavor = "multi_thread")]
-#[ignore] // Ignore for now - requires refactored server
 async fn test_multiple_messages() {
     let mut server = WebSocketServer::new("127.0.0.1:20093")
         .expect("Failed to create server");
 
-    tokio::spawn(async move {
-        let _ = timeout(Duration::from_secs(10), server.start()).await;
-    });
+    let _handle = server.start().await.expect("Failed to start server");
 
     sleep(Duration::from_millis(200)).await;
 
@@ -129,17 +121,15 @@ async fn test_multiple_messages() {
     assert_eq!(stats.messages_sent, 10);
 
     client.disconnect().await.expect("Failed to disconnect");
+    server.shutdown().expect("Failed to shutdown server");
 }
 
 #[tokio::test(flavor = "multi_thread")]
-#[ignore] // Ignore for now - requires refactored server
 async fn test_client_disconnect_and_reconnect() {
     let mut server = WebSocketServer::new("127.0.0.1:20094")
         .expect("Failed to create server");
 
-    tokio::spawn(async move {
-        let _ = timeout(Duration::from_secs(10), server.start()).await;
-    });
+    let _handle = server.start().await.expect("Failed to start server");
 
     sleep(Duration::from_millis(200)).await;
 
@@ -166,12 +156,13 @@ async fn test_client_disconnect_and_reconnect() {
     assert_eq!(stats2.connect_count, 2);
 
     client.disconnect().await.expect("Failed to disconnect");
+    server.shutdown().expect("Failed to shutdown server");
 }
 
 #[tokio::test]
 async fn test_client_stats_tracking() {
     let client = WebSocketClient::new("ws://localhost:20095");
-    
+
     let stats = client.get_stats();
     assert_eq!(stats.messages_sent, 0);
     assert_eq!(stats.messages_received, 0);

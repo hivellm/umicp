@@ -10,19 +10,31 @@ pub mod websocket_client;
 #[cfg(feature = "websocket")]
 pub mod websocket_server;
 
+#[cfg(feature = "http2")]
+pub mod http_client;
+
+#[cfg(feature = "http2")]
+pub mod http_server;
+
 #[cfg(feature = "websocket")]
 pub use websocket_client::WebSocketClient;
 
 #[cfg(feature = "websocket")]
 pub use websocket_server::WebSocketServer;
 
+#[cfg(feature = "http2")]
+pub use http_client::HttpClient;
+
+#[cfg(feature = "http2")]
+pub use http_server::HttpServer;
+
 // Re-export legacy placeholder for backward compatibility
-#[cfg(not(feature = "websocket"))]
+#[cfg(not(any(feature = "websocket", feature = "http2")))]
 pub use crate::transport_legacy::{WebSocketTransport, Http2Transport};
 
 // Module for legacy transport (placeholders)
-#[cfg(not(feature = "websocket"))]
-#[path = "transport_legacy.rs"]
+#[cfg(not(any(feature = "websocket", feature = "http2")))]
+#[path = "../transport_legacy.rs"]
 mod transport_legacy;
 
 /// Connection state for tracking connection lifecycle

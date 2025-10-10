@@ -16,7 +16,7 @@ class PeerConnectionTest {
     void testConstructor_withValidData() {
         Map<String, String> metadata = new HashMap<>();
         metadata.put("key1", "value1");
-        
+
         PeerConnection conn = new PeerConnection(
             "peer-1",
             PeerConnection.PeerType.INCOMING,
@@ -50,7 +50,7 @@ class PeerConnectionTest {
     void testMetadata_isDefensiveCopy() {
         Map<String, String> metadata = new HashMap<>();
         metadata.put("key1", "value1");
-        
+
         PeerConnection conn = new PeerConnection(
             "peer-1",
             PeerConnection.PeerType.INCOMING,
@@ -71,7 +71,7 @@ class PeerConnectionTest {
     void testMetadata_returnedMapIsDefensiveCopy() {
         Map<String, String> metadata = new HashMap<>();
         metadata.put("key1", "value1");
-        
+
         PeerConnection conn = new PeerConnection(
             "peer-1",
             PeerConnection.PeerType.INCOMING,

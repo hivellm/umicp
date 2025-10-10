@@ -13,13 +13,24 @@ let addon: any;
 // Function to load addon - works in both ESM and CJS
 function loadAddon(): any {
   try {
-    // Get the directory of this file
-    // @ts-ignore - import.meta is available in ESM
-    const currentFileUrl = typeof import.meta !== 'undefined' ? import.meta.url : `file://${__filename}`;
-    const currentDir = dirname(fileURLToPath(currentFileUrl));
+    // Get the directory of this file - handle both ESM and CJS contexts
+    let currentFileUrl: string;
+    let currentDir: string;
+    let requireFunc: any;
 
-    // Create require function for ESM
-    const requireFunc = createRequire(currentFileUrl);
+    // Check if we're in CommonJS context
+    if (typeof __filename !== 'undefined') {
+      // CommonJS context
+      currentFileUrl = `file://${__filename}`;
+      currentDir = dirname(__filename);
+      requireFunc = require;
+    } else {
+      // ESM context - use import.meta (TypeScript will handle this in ESM build)
+      // @ts-ignore - import.meta available in ESM
+      currentFileUrl = import.meta.url;
+      currentDir = dirname(fileURLToPath(currentFileUrl));
+      requireFunc = createRequire(currentFileUrl);
+    }
 
     const possiblePaths = [
       resolve(currentDir, '../build/Release/umicp_core.node'),

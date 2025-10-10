@@ -1,6 +1,6 @@
 [package]
 name = "umicp-core"
-version = "1.0.0"
+version = "0.1.1"
 edition = "2021"
 description = "UMICP Rust bindings for high-performance communication and matrix operations"
 license = "MIT"

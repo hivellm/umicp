@@ -20,7 +20,7 @@ TypeScript bindings for the Universal Matrix Inter-Communication Protocol (UMICP
 ## 📦 Installation
 
 ```bash
-npm install @hivellm/umicp
+npm install @hivellm/umicp@0.1.1
 ```
 
 ### Prerequisites

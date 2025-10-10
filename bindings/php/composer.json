@@ -1,5 +1,6 @@
 {
   "name": "hivellm/umicp",
+  "version": "0.1.1",
   "description": "UMICP PHP Bindings - High-performance inter-model communication protocol for AI systems",
   "type": "library",
   "keywords": [
@@ -13,31 +14,65 @@
     "websocket",
     "ffi",
     "p2p",
-    "peer-to-peer"
+    "peer-to-peer",
+    "machine-learning",
+    "distributed-systems",
+    "real-time",
+    "async",
+    "simd",
+    "high-performance"
   ],
   "homepage": "https://github.com/hivellm/umicp",
+  "readme": "README.md",
   "license": "MIT",
   "authors": [
     {
       "name": "HiveLLM AI Collaborative Team",
       "email": "dev@hivellm.org",
-      "homepage": "https://hivellm.org"
+      "homepage": "https://hivellm.org",
+      "role": "Developer"
     }
   ],
   "support": {
     "issues": "https://github.com/hivellm/umicp/issues",
     "source": "https://github.com/hivellm/umicp",
-    "docs": "https://github.com/hivellm/umicp/tree/main/bindings/php/docs"
+    "docs": "https://github.com/hivellm/umicp/tree/main/bindings/php/docs",
+    "forum": "https://github.com/hivellm/umicp/discussions",
+    "chat": "https://discord.gg/hivellm"
   },
+  "funding": [
+    {
+      "type": "github",
+      "url": "https://github.com/sponsors/hivellm"
+    },
+    {
+      "type": "patreon",
+      "url": "https://patreon.com/hivellm"
+    }
+  ],
   "require": {
     "php": ">=8.1",
     "ext-ffi": "*",
-    "ext-json": "*"
+    "ext-json": "*",
+    "react/event-loop": "^1.5",
+    "react/promise": "^3.1",
+    "react/socket": "^1.15",
+    "ratchet/pawl": "^0.4",
+    "evenement/evenement": "^3.0"
   },
   "require-dev": {
-    "phpunit/phpunit": "^10.5",
+    "phpunit/phpunit": "^10.5|^11.0",
     "phpstan/phpstan": "^1.10",
-    "squizlabs/php_codesniffer": "^3.8"
+    "squizlabs/php_codesniffer": "^3.8",
+    "phpbench/phpbench": "^1.2",
+    "roave/security-advisories": "dev-latest"
+  },
+  "suggest": {
+    "ext-sockets": "For enhanced network performance",
+    "ext-pcntl": "For signal handling in long-running processes",
+    "ext-posix": "For process management",
+    "psr/log-implementation": "For logging capabilities",
+    "monolog/monolog": "For advanced logging"
   },
   "autoload": {
     "psr-4": {
@@ -52,22 +87,79 @@
   "scripts": {
     "test": "phpunit",
     "test:unit": "phpunit --testsuite=Unit",
+    "test:integration": "phpunit --testsuite=Integration",
+    "test:performance": "phpunit --testsuite=Performance",
+    "test:coverage": "phpunit --coverage-html=coverage",
     "lint": "phpcs --standard=PSR12 src/ tests/",
     "lint:fix": "phpcbf --standard=PSR12 src/ tests/",
     "analyse": "phpstan analyse src/ tests/ --level=8",
+    "security": "phpstan analyse src/ --level=8 --no-progress",
     "check": [
       "@lint",
       "@analyse",
       "@test"
+    ],
+    "check:all": [
+      "@lint",
+      "@security",
+      "@test:unit",
+      "@test:integration"
+    ],
+    "benchmark": "phpbench run --report=aggregate",
+    "build": [
+      "@check:all",
+      "@test:performance"
+    ],
+    "verify": "php verify-implementation.php",
+    "examples": "php examples/03_complete_demo.php",
+    "setup": "php setup.sh",
+    "clean": "rm -rf vendor coverage *.log",
+    "release": [
+      "@check:all",
+      "@test:coverage",
+      "@benchmark"
     ]
   },
   "config": {
     "optimize-autoloader": true,
     "preferred-install": "dist",
     "sort-packages": true,
-    "platform-check": true
+    "platform-check": true,
+    "allow-plugins": {
+      "php-http/discovery": true
+    }
   },
-  "minimum-stability": "dev",
-  "prefer-stable": true
+  "extra": {
+    "branch-alias": {
+      "dev-main": "0.2.x-dev"
+    }
+  },
+  "repositories": [
+    {
+      "type": "composer",
+      "url": "https://packagist.org"
+    }
+  ],
+  "minimum-stability": "stable",
+  "prefer-stable": true,
+  "archive": {
+    "exclude": [
+      "/.*",
+      "/docs/*",
+      "/examples/*",
+      "/tests/*",
+      "/build-cpp.*",
+      "/setup.sh",
+      "/validate-structure.php",
+      "/verify-implementation.php",
+      "/benchmark.php",
+      "/run-tests.php",
+      "/test-all.sh",
+      "/composer.*",
+      "/phpunit.*",
+      "/.github/*",
+      "/ffi/*",
+      "/config/umicp.example.php"
+    ]
+  }
 }
-
