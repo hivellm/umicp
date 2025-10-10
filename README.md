@@ -70,9 +70,9 @@ cargo build --release
 |----------|--------|------------|----------|---------|------------------|
 | **C++** | ✅ Complete | 206/206 (100%) | 98% | v1.0.0 | ✅ YES |
 | **TypeScript** | ✅ Complete | 124/131 (95%) | 95% | v0.1.1 | ✅ YES |
-| **Go** | ✅ MVP Complete | All passing | 88% | v0.1.1 | ✅ YES |
+| **Go** | ✅ Complete | 50+/50+ (100%) | 85% | v1.0.0 | ✅ YES |
 | **Java** | ✅ Complete | 274/274 (100%) | 95% | v0.1.1 | ✅ YES |
-| **Rust** | ✅ Core Complete | 51/51 (100%) | 100% | v0.1.1 | ✅ YES |
+| **Rust** | ✅ Complete | 81/81 (100%) | 90% | v0.1.1 | ✅ YES |
 | **PHP** | ✅ Complete | 145+/145+ (100%) | 95% | v0.1.1 | ✅ YES |
 | **Python** | 📋 Planned | - | - | - | ❌ NO |
 
@@ -128,11 +128,11 @@ cargo build --release
 - **Use Case**: Node.js backend, real-time applications
 
 #### Go (Cloud-Native)
-- **Status**: ✅ MVP Complete & Production-ready
-- **Tests**: All passing (88% coverage)
-- **Coverage**: 88%
-- **Version**: v0.1.1
-- **Features**: Goroutines, WebSocket transport, Multiplexed Peer, Pure Go
+- **Status**: ✅ Complete & Production-ready
+- **Tests**: 50+ tests (100%)
+- **Coverage**: 85%
+- **Version**: v1.0.0
+- **Features**: Goroutines, WebSocket transport, Multiplexed Peer, HTTP/2, Pure Go
 - **Use Case**: Microservices, cloud deployments, P2P networks
 
 #### PHP (Production Ready)
@@ -144,24 +144,24 @@ cargo build --release
 - **Complete**: Pure PHP classes, HTTP, Compression, Events, Matrix operations
 - **Use Case**: Web applications, Laravel/Symfony/WordPress integration
 
-#### Rust (Production Ready - 80% Feature Parity)
-- **Status**: ✅ Complete & Production-ready (Enterprise features)
-- **Tests**: 60+ tests (100% passing)
-- **Coverage**: 100%
+#### Rust (Production Ready - 90%)
+- **Status**: ✅ Complete & Production-ready
+- **Tests**: 81/81 tests (100%)
+- **Coverage**: 90%
 - **Version**: v0.1.1
-- **Progress**: 80% of TypeScript SDK functionality
 - **Features**: 
   - ✅ Zero-copy operations
   - ✅ Memory-safe (Rust guarantees)
-  - ✅ Async/await with tokio 1.35
+  - ✅ Async/await with tokio 1.40
   - ✅ SIMD matrix operations (via ndarray)
   - ✅ Multiplexed Peer architecture
-  - ✅ EventEmitter pattern (multi-subscriber)
-  - ✅ WebSocket + HTTP/2 transport
-  - ✅ Service Discovery (auto-registration)
-  - ✅ Connection Pooling (lifecycle management)
+  - ✅ EventEmitter pattern (async support)
+  - ✅ WebSocket client/server (non-blocking)
+  - ✅ HTTP/2 Client with `http2_prior_knowledge()`
+  - ✅ Connection Pooling
+  - ⚠️ HTTP/2 Server (disabled - axum 0.7 compatibility)
 - **Use Case**: Systems programming, high-performance services, cloud-native apps
-- **Dependencies**: Compatible with Rust 1.75+
+- **Dependencies**: Latest (tokio 1.40, reqwest 0.12, tokio-tungstenite 0.24)
 
 #### Java (Production Ready)
 - **Status**: ✅ Complete & Production-ready (Phase 1 & 2)
@@ -206,7 +206,7 @@ cargo build --release
 ### ✅ **Production Ready Bindings**
 All major language bindings are now production-ready:
 - **TypeScript**: Node.js/Deno, WebSocket, Multiplexed Peer, HTTP
-- **Go**: Pure Go, Cloud-native, Microservices (MVP complete)
+- **Go**: Pure Go, Cloud-native, Microservices, HTTP/2
 - **Java**: JVM/Spring, Enterprise-grade, Multi-module (Phase 1 & 2)
 - **Rust**: Systems programming, Zero-copy, High-performance, Service Discovery, Connection Pooling
 - **PHP**: Web applications, Laravel/Symfony/WordPress integration
@@ -223,9 +223,9 @@ All major language bindings are now production-ready:
 ### Test Coverage
 - **C++**: 98% coverage (206/206 tests) - Matrix operations, Envelope serialization
 - **TypeScript**: 95% coverage (124/131 tests) - WebSocket transport, Multiplexed peer, E2E scenarios
-- **Go**: 88% coverage (All tests passing) - WebSocket, Multiplexed Peer, Pure Go implementation
+- **Go**: 85% coverage (50+ tests) - WebSocket, Multiplexed Peer, HTTP/2, Pure Go implementation
 - **Java**: 95% coverage (274/274 tests) - Core protocol, WebSocket transport, Multiplexed Peer
-- **Rust**: 100% coverage (60+ tests) - **HTTP/2**, WebSocket, Multiplexed Peer, SIMD matrix, Service Discovery, Connection Pooling
+- **Rust**: 90% coverage (81/81 tests) - **HTTP/2 Client**, WebSocket, Multiplexed Peer, SIMD matrix, Connection Pooling
 - **PHP**: 95% coverage (145+ tests) - HTTP transport, Compression, Events, FFI integration
 
 ### Test Types (TypeScript)

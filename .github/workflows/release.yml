@@ -1,0 +1,313 @@
+name: Release Build
+
+on:
+  push:
+    tags:
+      - 'v*.*.*'  # Triggers on version tags like v0.1.1, v1.0.0, etc.
+
+env:
+  BUILD_TYPE: Release
+
+jobs:
+  # Build on Linux
+  build-linux:
+    runs-on: ubuntu-latest
+    steps:
+    - name: Checkout code
+      uses: actions/checkout@v4
+      with:
+        submodules: recursive
+
+    - name: Install dependencies
+      run: |
+        sudo apt-get update
+        sudo apt-get install -y cmake build-essential libssl-dev \
+          libwebsocketpp-dev libasio-dev libcurl4-openssl-dev \
+          nlohmann-json3-dev pkg-config
+
+    - name: Configure CMake
+      working-directory: cpp
+      run: |
+        cmake -B build -DCMAKE_BUILD_TYPE=$BUILD_TYPE \
+          -DUMICP_BUILD_TESTS=ON \
+          -DUMICP_BUILD_EXAMPLES=ON \
+          -DUMICP_ENABLE_WEBSOCKET=ON \
+          -DUMICP_ENABLE_HTTP=ON
+
+    - name: Build
+      working-directory: cpp
+      run: cmake --build build --config $BUILD_TYPE -j$(nproc)
+
+    - name: Run tests
+      working-directory: cpp
+      run: cd build && ctest -C $BUILD_TYPE --output-on-failure
+
+    - name: Package
+      working-directory: cpp
+      run: |
+        cd build
+        cpack -G "TGZ;DEB" -C $BUILD_TYPE
+        
+    - name: Get version from tag
+      id: get_version
+      run: echo "VERSION=${GITHUB_REF#refs/tags/v}" >> $GITHUB_OUTPUT
+
+    - name: Upload artifacts
+      uses: actions/upload-artifact@v4
+      with:
+        name: umicp-linux-x64-${{ steps.get_version.outputs.VERSION }}
+        path: |
+          cpp/build/*.tar.gz
+          cpp/build/*.deb
+        retention-days: 90
+
+  # Build on macOS
+  build-macos:
+    runs-on: macos-latest
+    steps:
+    - name: Checkout code
+      uses: actions/checkout@v4
+      with:
+        submodules: recursive
+
+    - name: Install dependencies
+      run: |
+        brew update
+        brew install cmake openssl nlohmann-json websocketpp asio curl
+
+    - name: Configure CMake
+      working-directory: cpp
+      run: |
+        cmake -B build -DCMAKE_BUILD_TYPE=$BUILD_TYPE \
+          -DUMICP_BUILD_TESTS=ON \
+          -DUMICP_BUILD_EXAMPLES=ON \
+          -DUMICP_ENABLE_WEBSOCKET=ON \
+          -DUMICP_ENABLE_HTTP=ON \
+          -DOPENSSL_ROOT_DIR=/usr/local/opt/openssl
+
+    - name: Build
+      working-directory: cpp
+      run: cmake --build build --config $BUILD_TYPE -j$(sysctl -n hw.ncpu)
+
+    - name: Run tests
+      working-directory: cpp
+      run: cd build && ctest -C $BUILD_TYPE --output-on-failure
+
+    - name: Package
+      working-directory: cpp
+      run: |
+        cd build
+        cpack -G "TGZ;ZIP" -C $BUILD_TYPE
+
+    - name: Get version from tag
+      id: get_version
+      run: echo "VERSION=${GITHUB_REF#refs/tags/v}" >> $GITHUB_OUTPUT
+
+    - name: Upload artifacts
+      uses: actions/upload-artifact@v4
+      with:
+        name: umicp-macos-x64-${{ steps.get_version.outputs.VERSION }}
+        path: |
+          cpp/build/*.tar.gz
+          cpp/build/*.zip
+        retention-days: 90
+
+  # Build on Windows
+  build-windows:
+    runs-on: windows-latest
+    steps:
+    - name: Checkout code
+      uses: actions/checkout@v4
+      with:
+        submodules: recursive
+
+    - name: Setup vcpkg
+      uses: lukka/run-vcpkg@v11
+      with:
+        vcpkgGitCommitId: 'master'
+        
+    - name: Install dependencies with vcpkg
+      run: |
+        vcpkg install nlohmann-json:x64-windows
+        vcpkg install openssl:x64-windows
+        vcpkg install websocketpp:x64-windows
+        vcpkg install asio:x64-windows
+        vcpkg install curl:x64-windows
+
+    - name: Configure CMake
+      working-directory: cpp
+      run: |
+        cmake -B build -G "Visual Studio 17 2022" -A x64 `
+          -DCMAKE_BUILD_TYPE=$env:BUILD_TYPE `
+          -DCMAKE_TOOLCHAIN_FILE="$env:VCPKG_ROOT/scripts/buildsystems/vcpkg.cmake" `
+          -DUMICP_BUILD_TESTS=ON `
+          -DUMICP_BUILD_EXAMPLES=ON `
+          -DUMICP_ENABLE_WEBSOCKET=ON `
+          -DUMICP_ENABLE_HTTP=ON
+
+    - name: Build
+      working-directory: cpp
+      run: cmake --build build --config $env:BUILD_TYPE -j $env:NUMBER_OF_PROCESSORS
+
+    - name: Run tests
+      working-directory: cpp
+      run: cd build; ctest -C $env:BUILD_TYPE --output-on-failure
+
+    - name: Package
+      working-directory: cpp
+      run: |
+        cd build
+        cpack -G "ZIP;NSIS" -C $env:BUILD_TYPE
+
+    - name: Get version from tag
+      id: get_version
+      run: |
+        $version = "$env:GITHUB_REF" -replace 'refs/tags/v', ''
+        echo "VERSION=$version" >> $env:GITHUB_OUTPUT
+
+    - name: Upload artifacts
+      uses: actions/upload-artifact@v4
+      with:
+        name: umicp-windows-x64-${{ steps.get_version.outputs.VERSION }}
+        path: |
+          cpp/build/*.zip
+          cpp/build/*.exe
+        retention-days: 90
+
+  # Create GitHub Release
+  create-release:
+    needs: [build-linux, build-macos, build-windows]
+    runs-on: ubuntu-latest
+    permissions:
+      contents: write
+    steps:
+    - name: Checkout code
+      uses: actions/checkout@v4
+
+    - name: Get version from tag
+      id: get_version
+      run: echo "VERSION=${GITHUB_REF#refs/tags/v}" >> $GITHUB_OUTPUT
+
+    - name: Download all artifacts
+      uses: actions/download-artifact@v4
+      with:
+        path: artifacts
+
+    - name: Display structure of downloaded files
+      run: ls -R artifacts
+
+    - name: Create Release
+      uses: softprops/action-gh-release@v1
+      with:
+        name: UMICP v${{ steps.get_version.outputs.VERSION }}
+        body: |
+          # UMICP v${{ steps.get_version.outputs.VERSION }}
+          
+          ## 🚀 Release Notes
+          
+          Universal Matrix Intelligent Communication Protocol - High-performance communication protocol for AI model interoperability.
+          
+          ## 📦 Available Packages
+          
+          ### Linux (x64)
+          - `umicp-${{ steps.get_version.outputs.VERSION }}-Linux.tar.gz` - Binary tarball
+          - `umicp-${{ steps.get_version.outputs.VERSION }}-Linux.deb` - Debian package
+          
+          ### macOS (x64)
+          - `umicp-${{ steps.get_version.outputs.VERSION }}-Darwin.tar.gz` - Binary tarball
+          - `umicp-${{ steps.get_version.outputs.VERSION }}-Darwin.zip` - ZIP archive
+          
+          ### Windows (x64)
+          - `umicp-${{ steps.get_version.outputs.VERSION }}-win64.zip` - ZIP archive
+          - `umicp-${{ steps.get_version.outputs.VERSION }}-win64.exe` - NSIS installer
+          
+          ## 📚 Documentation
+          
+          - [C++ Documentation](https://github.com/hivellm/umicp/tree/main/cpp/docs)
+          - [API Reference](https://github.com/hivellm/umicp/tree/main/docs/api)
+          - [Examples](https://github.com/hivellm/umicp/tree/main/cpp/examples)
+          
+          ## 🔧 Installation
+          
+          ### Using Package Managers
+          
+          ```bash
+          # Conan
+          conan install --requires=umicp/${{ steps.get_version.outputs.VERSION }}
+          
+          # vcpkg
+          vcpkg install umicp
+          ```
+          
+          ### From Source
+          
+          ```bash
+          # Extract tarball
+          tar -xzf umicp-${{ steps.get_version.outputs.VERSION }}-Linux.tar.gz
+          cd umicp-${{ steps.get_version.outputs.VERSION }}
+          
+          # Install
+          sudo make install
+          ```
+          
+          ## ✨ Features
+          
+          - ✅ Core Protocol (Envelope, Frame, Matrix)
+          - ✅ WebSocket Transport
+          - ✅ HTTP/HTTP2 Support
+          - ✅ SIMD Matrix Operations
+          - ✅ Cross-platform (Linux, macOS, Windows)
+          - ✅ C++17 Standard
+          
+          ## 📋 Requirements
+          
+          - C++17 compatible compiler
+          - CMake 3.15+
+          - OpenSSL 1.1.1+
+          
+          ## 🐛 Bug Reports
+          
+          Report issues at: https://github.com/hivellm/umicp/issues
+          
+          ---
+          
+          **Full Changelog**: https://github.com/hivellm/umicp/compare/v${{ steps.get_version.outputs.VERSION }}...main
+        files: |
+          artifacts/**/*
+        draft: false
+        prerelease: false
+      env:
+        GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+
+  # Publish to Conan (optional - requires Conan credentials)
+  publish-conan:
+    needs: [build-linux, build-macos, build-windows]
+    runs-on: ubuntu-latest
+    if: github.event_name == 'push' && startsWith(github.ref, 'refs/tags/v')
+    steps:
+    - name: Checkout code
+      uses: actions/checkout@v4
+
+    - name: Setup Python
+      uses: actions/setup-python@v5
+      with:
+        python-version: '3.11'
+
+    - name: Install Conan
+      run: |
+        pip install conan
+        conan profile detect
+
+    - name: Create Conan package
+      working-directory: cpp
+      run: |
+        conan create . --build=missing
+        
+    # Uncomment when ready to publish to Conan Center
+    # - name: Upload to Conan Center
+    #   run: |
+    #     conan upload umicp/${{ steps.get_version.outputs.VERSION }} --all -r conancenter
+    #   env:
+    #     CONAN_LOGIN_USERNAME: ${{ secrets.CONAN_LOGIN_USERNAME }}
+    #     CONAN_PASSWORD: ${{ secrets.CONAN_PASSWORD }}
+

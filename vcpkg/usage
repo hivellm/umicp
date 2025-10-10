@@ -1,0 +1,21 @@
+The package umicp provides CMake targets:
+
+    find_package(UMICP CONFIG REQUIRED)
+    target_link_libraries(main PRIVATE UMICP::UMICP)
+
+Features:
+  - websocket: Enable WebSocket transport (default: ON)
+  - http: Enable HTTP transport (default: ON)
+  - tests: Build tests (default: OFF)
+
+Example usage:
+
+    #include <umicp/envelope.hpp>
+    
+    umicp::Envelope envelope;
+    envelope.setFrom("sender");
+    envelope.setTo("receiver");
+    envelope.setOperation(umicp::OperationType::DATA);
+    
+For more information, see: https://github.com/hivellm/umicp
+
