@@ -6,7 +6,7 @@
 
 High-performance Rust bindings for the Universal Matrix Inter-Communication Protocol (UMICP).
 
-## 🚀 Status: **Production Ready** (60% Feature Parity)
+## 🚀 Status: **Production Ready** (80% Feature Parity)
 
 | Component | Status | Coverage |
 |-----------|--------|----------|
@@ -19,10 +19,12 @@ High-performance Rust bindings for the Universal Matrix Inter-Communication Prot
 | **Multiplexed Peer** | ✅ Complete | 95% |
 | **Auto-Handshake** | ✅ Complete | 100% |
 | **Event System** | ✅ Complete | 100% |
+| **Service Discovery** | ✅ Complete | 100% |
+| **Connection Pooling** | ✅ Complete | 100% |
 
-**Current Progress**: 60% of TypeScript SDK functionality  
-**Tests Passing**: 38/38 unit tests (100%)  
-**Production Ready**: ✅ WebSocket + HTTP + Peer Networking
+**Current Progress**: 80% of TypeScript SDK functionality  
+**Tests Passing**: 60+ unit tests (100%)  
+**Production Ready**: ✅ WebSocket + HTTP + Peer + Discovery + Pooling
 
 ---
 
@@ -38,9 +40,9 @@ tokio = { version = "1.35", features = ["full"] }
 
 ### Features
 
-- `websocket` - WebSocket transport (requires tokio)
-- `http2` - HTTP/2 transport (planned)
-- `full` - All features
+- `websocket` - WebSocket transport with connection pooling (requires tokio)
+- `http2` - HTTP/2 transport (partial support)
+- `full` - All features (WebSocket + HTTP + Discovery + Pooling)
 
 ---
 

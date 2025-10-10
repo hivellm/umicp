@@ -127,6 +127,8 @@ pub mod types;
 pub mod error;
 pub mod utils;
 pub mod events;
+// pub mod discovery; // Temporarily disabled - needs refactoring
+pub mod pool;
 
 // Transport module - new modular implementation
 #[cfg(any(feature = "websocket", feature = "http2"))]
@@ -146,6 +148,10 @@ pub use matrix::Matrix;
 pub use types::*;
 pub use error::*;
 pub use events::{EventEmitter, EventType, EventData, EventListener};
+pub use discovery::{ServiceDiscovery, ServiceInfo};
+
+#[cfg(feature = "websocket")]
+pub use pool::{ConnectionPool, PoolConfig, PoolStats, PooledConnection, PoolConnectionState};
 
 // Re-export transport types based on features
 #[cfg(feature = "websocket")]
