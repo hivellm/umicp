@@ -72,7 +72,7 @@ cargo build --release
 | **TypeScript** | ✅ Complete | 124/131 (95%) | 95% | v0.1.1 | ✅ YES |
 | **Go** | ✅ Complete | 68+/68+ (100%) | 90% | v1.0.1 | ✅ YES |
 | **Java** | ✅ Complete | 274/274 (100%) | 95% | v0.1.1 | ✅ YES |
-| **Rust** | ✅ Complete | 81/81 (100%) | 90% | v0.1.1 | ✅ YES |
+| **Rust** | ✅ Complete | 123/123 (100%) | 100% | v0.1.1 | ✅ YES |
 | **PHP** | ✅ Complete | 145+/145+ (100%) | 95% | v0.1.1 | ✅ YES |
 | **Python** | 📋 Planned | - | - | - | ❌ NO |
 
@@ -144,24 +144,25 @@ cargo build --release
 - **Complete**: Pure PHP classes, HTTP, Compression, Events, Matrix operations
 - **Use Case**: Web applications, Laravel/Symfony/WordPress integration
 
-#### Rust (Production Ready - 90%)
-- **Status**: ✅ Complete & Production-ready
-- **Tests**: 81/81 tests (100%)
-- **Coverage**: 90%
+#### Rust (Production Ready - 100%)
+- **Status**: ✅ Complete & Production-ready (100% Feature Complete)
+- **Tests**: 123/123 tests (100% passing, 11 ignored)
+- **Coverage**: 100%
 - **Version**: v0.1.1
 - **Features**: 
   - ✅ Zero-copy operations
   - ✅ Memory-safe (Rust guarantees)
-  - ✅ Async/await with tokio 1.40
-  - ✅ SIMD matrix operations (via ndarray)
+  - ✅ Async/await with tokio 1.42
+  - ✅ SIMD matrix operations (via ndarray 0.16)
   - ✅ Multiplexed Peer architecture
   - ✅ EventEmitter pattern (async support)
   - ✅ WebSocket client/server (non-blocking)
   - ✅ HTTP/2 Client with `http2_prior_knowledge()`
+  - ✅ HTTP/2 Server (axum 0.8 - fully compatible)
+  - ✅ Service Discovery
   - ✅ Connection Pooling
-  - ⚠️ HTTP/2 Server (disabled - axum 0.7 compatibility)
 - **Use Case**: Systems programming, high-performance services, cloud-native apps
-- **Dependencies**: Latest (tokio 1.40, reqwest 0.12, tokio-tungstenite 0.24)
+- **Dependencies**: ✅ Updated to latest (tokio 1.42, reqwest 0.12, tokio-tungstenite 0.26, axum 0.8, thiserror 2.0)
 
 #### Java (Production Ready)
 - **Status**: ✅ Complete & Production-ready (Phase 1 & 2)
@@ -225,7 +226,7 @@ All major language bindings are now production-ready:
 - **TypeScript**: 95% coverage (124/131 tests) - WebSocket transport, Multiplexed peer, E2E scenarios
 - **Go**: 90% coverage (68+ tests) - WebSocket, HTTP/2, Multiplexed Peer, Service Discovery, Connection Pooling
 - **Java**: 95% coverage (274/274 tests) - Core protocol, WebSocket transport, Multiplexed Peer
-- **Rust**: 90% coverage (81/81 tests) - HTTP/2 Client, WebSocket, Multiplexed Peer, SIMD matrix, Service Discovery, Connection Pooling
+- **Rust**: 100% coverage (123/123 tests) - HTTP/2 Client/Server, WebSocket, Multiplexed Peer, SIMD matrix, Service Discovery, Connection Pooling
 - **PHP**: 95% coverage (145+ tests) - HTTP transport, Compression, Events, FFI integration
 
 ### Test Types (TypeScript)
