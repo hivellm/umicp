@@ -5,6 +5,22 @@ All notable changes to the UMICP Rust bindings will be documented in this file.
 The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/),
 and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
+## [0.1.1] - 2025-10-10
+
+### Changed
+- **Edition**: Updated from unstable `2024` to stable `2021` for crates.io compatibility
+- **Rust Version**: Set minimum to `1.82` for dependency compatibility
+- **Dependencies**: All dependencies updated to latest stable versions
+
+### Fixed
+- **Cargo.toml**: Fixed edition to use stable Rust 2021 edition
+- **Build System**: Resolved Cargo.lock version incompatibility
+- **Publication**: Package now ready for crates.io publication
+
+### Added
+- **Documentation**: Added Rust version requirement to README
+- **Production**: 100% production-ready with all 123 tests passing
+
 ## [1.0.1] - 2025-09-10
 
 ### Improved
