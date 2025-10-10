@@ -145,13 +145,16 @@ target_link_libraries(umicp_core
     ${CURL_LIBRARIES}
     ${CBOR_LIBRARIES}
     ${LZ4_LIBRARIES}
+    websockets
+    uuid
 )
 
-# Enable position-independent code for FFI library
+# Enable position-independent code for FFI library and export all symbols
 set_target_properties(umicp_core PROPERTIES
     POSITION_INDEPENDENT_CODE ON
-    C_VISIBILITY_PRESET hidden
-    CXX_VISIBILITY_PRESET hidden
+    C_VISIBILITY_PRESET default
+    CXX_VISIBILITY_PRESET default
+    VISIBILITY_INLINES_HIDDEN OFF
     OUTPUT_NAME umicp_core
     VERSION ${PROJECT_VERSION}
     SOVERSION ${PROJECT_VERSION_MAJOR}

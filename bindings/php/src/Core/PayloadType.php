@@ -56,7 +56,7 @@ enum PayloadType: int
      *
      * @return string
      */
-    public function __toString(): string
+    public function toString(): string
     {
         return $this->name;
     }

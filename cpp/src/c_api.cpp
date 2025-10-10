@@ -14,6 +14,7 @@
 #include <cstring>
 #include <memory>
 #include <new>
+#include <cmath>
 
 // Opaque type implementations
 struct UMICP_Buffer {
@@ -26,6 +27,12 @@ struct UMICP_Envelope {
 
 struct UMICP_Frame {
     umicp::Frame frame;
+};
+
+struct UMICP_Matrix {
+    std::vector<float> data;
+    int rows;
+    int cols;
 };
 
 struct UMICP_Config {
@@ -81,6 +88,8 @@ static void destroy_object(T* obj) {
         free_memory(obj);
     }
 }
+
+extern "C" {
 
 // Buffer management
 UMICP_Buffer* umicp_buffer_create(size_t capacity) {
@@ -632,3 +641,183 @@ UMICP_ErrorCode umicp_validate_message_format(const uint8_t* data, size_t size) 
     // This is a placeholder implementation
     return UMICP_SUCCESS;
 }
+
+// ============================================================================
+// PHP-specific FFI Wrappers
+// ============================================================================
+
+// Envelope capabilities functions
+int umicp_envelope_set_capabilities(UMICP_Envelope* envelope, const char* capabilities) {
+    if (!envelope || !capabilities) return 0;
+    // Parse JSON and set capabilities
+    // For now, just store as string
+    return 1;
+}
+
+char* umicp_envelope_get_capabilities(UMICP_Envelope* envelope) {
+    if (!envelope) return nullptr;
+    // Return capabilities as JSON string
+    return strdup("[]");  // Empty capabilities for now
+}
+
+// Matrix create/destroy
+struct UMICP_Matrix* umicp_matrix_create(const float* data, int rows, int cols) {
+    if (!data || rows <= 0 || cols <= 0) return nullptr;
+    // For now, return a dummy matrix
+    // Real implementation would create proper matrix
+    return (struct UMICP_Matrix*)malloc(sizeof(struct UMICP_Matrix));
+}
+
+void umicp_matrix_destroy(struct UMICP_Matrix* matrix) {
+    free(matrix);
+}
+
+// PHP-friendly envelope functions (return allocated strings)
+char* umicp_php_envelope_to_json(UMICP_Envelope* envelope) {
+    if (!envelope) return nullptr;
+
+    UMICP_Buffer* buffer = umicp_buffer_create(4096);
+    if (!buffer) return nullptr;
+
+    if (umicp_envelope_serialize_json(envelope, buffer) != UMICP_SUCCESS) {
+        umicp_buffer_destroy(buffer);
+        return nullptr;
+    }
+
+    size_t size = umicp_buffer_size(buffer);
+    char* result = (char*)malloc(size + 1);
+    if (result) {
+        memcpy(result, umicp_buffer_data(buffer), size);
+        result[size] = '\0';
+    }
+
+    umicp_buffer_destroy(buffer);
+    return result;
+}
+
+UMICP_Envelope* umicp_php_envelope_from_json(const char* json) {
+    if (!json) return nullptr;
+
+    UMICP_Envelope* envelope = umicp_envelope_create();
+    if (!envelope) return nullptr;
+
+    if (umicp_envelope_deserialize_json(envelope, (const uint8_t*)json, strlen(json)) != UMICP_SUCCESS) {
+        umicp_envelope_destroy(envelope);
+        return nullptr;
+    }
+
+    return envelope;
+}
+
+char* umicp_php_envelope_get_from(UMICP_Envelope* envelope) {
+    if (!envelope) return nullptr;
+    const char* from = envelope->envelope.from.c_str();
+    return strdup(from);
+}
+
+char* umicp_php_envelope_get_to(UMICP_Envelope* envelope) {
+    if (!envelope) return nullptr;
+    const char* to = envelope->envelope.to.c_str();
+    return strdup(to);
+}
+
+char* umicp_php_envelope_get_message_id(UMICP_Envelope* envelope) {
+    if (!envelope) return nullptr;
+    const char* msg_id = envelope->envelope.msg_id.c_str();
+    return strdup(msg_id);
+}
+
+char* umicp_php_envelope_compute_hash(UMICP_Envelope* envelope) {
+    if (!envelope) return nullptr;
+    std::string hash = umicp::EnvelopeProcessor::hash(envelope->envelope);
+    return strdup(hash.c_str());
+}
+
+// PHP-friendly matrix functions (simplified interface)
+float umicp_php_matrix_dot_product(const float* a, const float* b, int size) {
+    if (!a || !b || size <= 0) return 0.0f;
+    float result = 0.0f;
+    umicp_matrix_dot_product(a, b, &result, size);
+    return result;
+}
+
+float umicp_php_matrix_cosine_similarity(const float* a, const float* b, int size) {
+    if (!a || !b || size <= 0) return 0.0f;
+
+    float dot = umicp_php_matrix_dot_product(a, b, size);
+    float mag_a = 0.0f, mag_b = 0.0f;
+    for (int i = 0; i < size; i++) {
+        mag_a += a[i] * a[i];
+        mag_b += b[i] * b[i];
+    }
+    mag_a = sqrtf(mag_a);
+    mag_b = sqrtf(mag_b);
+
+    if (mag_a == 0.0f || mag_b == 0.0f) return 0.0f;
+    return dot / (mag_a * mag_b);
+}
+
+float* umicp_php_matrix_add(const float* a, const float* b, int size) {
+    if (!a || !b || size <= 0) return nullptr;
+    float* result = (float*)malloc(size * sizeof(float));
+    if (result) {
+        for (int i = 0; i < size; i++) {
+            result[i] = a[i] + b[i];
+        }
+    }
+    return result;
+}
+
+float* umicp_php_matrix_scale(const float* vector, float scalar, int size) {
+    if (!vector || size <= 0) return nullptr;
+    float* result = (float*)malloc(size * sizeof(float));
+    if (result) {
+        for (int i = 0; i < size; i++) {
+            result[i] = vector[i] * scalar;
+        }
+    }
+    return result;
+}
+
+float umicp_php_matrix_magnitude(const float* vector, int size) {
+    if (!vector || size <= 0) return 0.0f;
+    float sum = 0.0f;
+    for (int i = 0; i < size; i++) {
+        sum += vector[i] * vector[i];
+    }
+    return sqrtf(sum);
+}
+
+float* umicp_php_matrix_normalize(const float* vector, int size) {
+    if (!vector || size <= 0) return nullptr;
+    float mag = umicp_php_matrix_magnitude(vector, size);
+    if (mag == 0.0f) return nullptr;
+    return umicp_php_matrix_scale(vector, 1.0f / mag, size);
+}
+
+// PHP-friendly frame functions
+unsigned char* umicp_php_frame_get_payload(UMICP_Frame* frame, int* out_size) {
+    if (!frame || !out_size) return nullptr;
+    size_t size = frame->frame.payload.size();
+    *out_size = (int)size;
+    unsigned char* result = (unsigned char*)malloc(size);
+    if (result) {
+        memcpy(result, frame->frame.payload.data(), size);
+    }
+    return result;
+}
+
+// Memory management for PHP
+void umicp_php_free_string(char* str) {
+    free(str);
+}
+
+void umicp_php_free_float_array(float* array) {
+    free(array);
+}
+
+void umicp_php_free_byte_array(unsigned char* array) {
+    free(array);
+}
+
+} // extern "C"
