@@ -1,0 +1,48 @@
+# Gradle
+.gradle/
+build/
+!gradle-wrapper.jar
+*.log
+
+# IntelliJ IDEA
+.idea/
+*.iml
+*.ipr
+*.iws
+out/
+
+# Eclipse
+.classpath
+.project
+.settings/
+bin/
+
+# NetBeans
+nbproject/
+nbbuild/
+dist/
+nbdist/
+
+# VS Code
+.vscode/
+
+# macOS
+.DS_Store
+
+# Windows
+Thumbs.db
+
+# Kotlin
+*.kotlin_module
+
+# Test
+test-results/
+test-output/
+
+# Coverage
+*.exec
+jacoco.xml
+
+# Local config
+local.properties
+

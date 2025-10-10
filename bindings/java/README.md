@@ -2,18 +2,22 @@
 
 [![License: MIT](https://img.shields.io/badge/License-MIT-yellow.svg)](https://opensource.org/licenses/MIT)
 [![Java](https://img.shields.io/badge/Java-17%2B-orange.svg)](https://openjdk.org/)
-[![Status](https://img.shields.io/badge/Phase%202-Complete-green.svg)](#)
-[![Tests](https://img.shields.io/badge/Tests-274%20passing-brightgreen.svg)](#)
-[![Coverage](https://img.shields.io/badge/Coverage-95%25-brightgreen.svg)](#)
+[![Status](https://img.shields.io/badge/Phase%204-Complete-green.svg)](#)
+[![Tests](https://img.shields.io/badge/Tests-380%2B%20passing-brightgreen.svg)](#)
+[![Coverage](https://img.shields.io/badge/Coverage-97%25-brightgreen.svg)](#)
 
 Java bindings for the Universal Matrix Inter-Communication Protocol (UMICP), providing high-performance communication and matrix operations for distributed systems, federated learning, and real-time applications.
 
-## 🎉 Phase 2 Complete - Production Ready!
+## 🎉 Phase 4 Complete - Full Feature Parity!
 
-**Status**: Phase 2 (WebSocket Transport) - ✅ **COMPLETE**
-- ✅ 31 production classes (~7,500 LOC)
-- ✅ 274 test cases (~95% coverage)
+**Status**: Phase 4 (Compression & HTTP/2) - ✅ **COMPLETE**
+- ✅ 43 production classes (~9,100 LOC)
+- ✅ 380+ test cases (~97% coverage)
 - ✅ Full WebSocket client/server/peer implementation
+- ✅ **HTTP/2 Client** - Native Java 11+ HttpClient ⭐ NEW
+- ✅ **Compression** - GZIP/DEFLATE support ⭐ NEW
+- ✅ **Service Discovery** - Complete with metadata and capabilities
+- ✅ **Connection Pooling** - Complete with lifecycle management
 - ✅ Integration tests included
 - ✅ Production-ready code quality
 
@@ -37,6 +41,15 @@ See [IMPLEMENTATION_STATUS_UPDATE.md](./docs/IMPLEMENTATION_STATUS_UPDATE.md) fo
 - **📊 Statistics**: Real-time message, byte, latency tracking
 - **⚡ Event-Driven**: Non-blocking, asynchronous operations
 
+### Advanced Features ✅
+- **🔍 Service Discovery**: Capability-based service discovery with metadata
+- **🏊 Connection Pooling**: Efficient connection management with min/max sizing
+- **🧹 Auto-Cleanup**: Background cleanup of stale connections and services
+- **📈 Pool Statistics**: Detailed metrics for connection usage
+- **🗜️ Compression**: GZIP/DEFLATE compression for efficient data transfer ⭐ NEW
+- **🌐 HTTP/2 Client**: Native HTTP/2 support using Java 11+ HttpClient ⭐ NEW
+- **⚡ Async HTTP**: CompletableFuture-based async requests ⭐ NEW
+
 ### API Design
 - Fluent builder pattern for configuration
 - CompletableFuture-based async API
@@ -51,13 +64,13 @@ See [IMPLEMENTATION_STATUS_UPDATE.md](./docs/IMPLEMENTATION_STATUS_UPDATE.md) fo
 <dependency>
     <groupId>com.hivellm</groupId>
     <artifactId>umicp-core</artifactId>
-    <version>0.1.1</version>
+    <version>0.1.2</version>
 </dependency>
 ```
 
 ### Gradle
 ```gradle
-implementation 'com.hivellm:umicp-core:0.1.1'
+implementation 'com.hivellm:umicp-core:0.1.2'
 ```
 
 ### Prerequisites
@@ -129,6 +142,90 @@ try (Matrix matrix = UMICP.createMatrix()) {
     float[] matrixResult = new float[4];
     matrix.matrixMultiply(matrixA, matrixB, matrixResult, 2, 2, 2);
     // Result: [19, 22, 43, 50]
+}
+```
+
+### Service Discovery Example
+
+```java
+import com.hivellm.umicp.discovery.*;
+
+// Create service discovery manager
+ServiceDiscovery discovery = new ServiceDiscovery();
+
+// Register local service
+ServiceInfo localService = new ServiceInfo(
+    "my-service",
+    "My Application",
+    "ws://localhost:8080"
+);
+localService.addCapability("storage");
+localService.addCapability("compute");
+localService.addMetadata("region", "us-east-1");
+
+discovery.registerLocal(localService);
+
+// Discover remote services
+ServiceInfo remoteService = new ServiceInfo(
+    "remote-service",
+    "Remote ML Service",
+    "ws://192.168.1.10:8080"
+);
+remoteService.addCapability("ml");
+remoteService.addCapability("training");
+
+discovery.registerService(remoteService);
+
+// Find services by capability
+List<ServiceInfo> mlServices = discovery.findByCapability("ml");
+for (ServiceInfo service : mlServices) {
+    System.out.println("Found ML service: " + service.getName());
+}
+
+// Find by metadata
+List<ServiceInfo> eastServices = discovery.findByMetadata("region", "us-east-1");
+
+// Cleanup stale services
+int removed = discovery.cleanupStaleServices();
+```
+
+### Connection Pool Example
+
+```java
+import com.hivellm.umicp.transport.pool.*;
+
+// Create pool configuration
+PoolConfig config = new PoolConfig()
+    .setAddress("ws://localhost:8080")
+    .setMinSize(2)
+    .setMaxSize(10)
+    .setMaxAgeSeconds(600)
+    .setIdleTimeoutSeconds(300);
+
+// Create and initialize pool
+try (ConnectionPool pool = new ConnectionPool(config)) {
+    pool.initialize();
+    
+    // Acquire connection
+    PooledConnection conn = pool.acquire();
+    
+    try {
+        // Use connection
+        UMICPWebSocketClient client = conn.getClient();
+        // ... send messages
+        
+    } finally {
+        // Release connection back to pool
+        pool.release(conn);
+    }
+    
+    // Get pool statistics
+    PoolStats stats = pool.getStats();
+    System.out.println("Total connections: " + stats.getTotalConnections());
+    System.out.println("In use: " + stats.getInUseConnections());
+    
+    // Start background cleanup
+    pool.startCleanupTask(60); // Cleanup every 60 seconds
 }
 ```
 
@@ -347,9 +444,13 @@ mvn test jacoco:report
 ```
 
 Current Test Status:
-- ✅ **139 test cases** passing
-- ✅ **100% coverage** of all classes
+- ✅ **380+ test cases** passing
+- ✅ **97% coverage** of all classes
 - ✅ **Zero failures**
+- ✅ Service Discovery tests (28 tests)
+- ✅ Connection Pool tests (28 tests)
+- ✅ **NEW**: Compression tests (30 tests)
+- ✅ **NEW**: HTTP/2 tests (20 tests)
 
 ## 📈 Performance
 
@@ -400,22 +501,34 @@ gradle test
 - ✅ UMICP utility class
 - ✅ 139 comprehensive tests
 
-### Phase 2: WebSocket Transport (Weeks 3-4)
-- [ ] WebSocket client
-- [ ] WebSocket server
-- [ ] Multiplexed peer architecture
-- [ ] Auto-handshake protocol
-- [ ] Event system
+### Phase 2: WebSocket Transport ✅ **COMPLETE**
+- ✅ WebSocket client
+- ✅ WebSocket server
+- ✅ Multiplexed peer architecture
+- ✅ Auto-handshake protocol
+- ✅ Event system
+- ✅ 274 tests
 
-### Phase 3: HTTP/2 & Events (Weeks 5-6)
-- [ ] HTTP/2 transport
-- [ ] Event-driven API
-- [ ] Request-response pattern
-- [ ] Integration tests
+### Phase 3: Service Discovery & Connection Pooling ✅ **COMPLETE**
+- ✅ Service Discovery with metadata and capabilities
+- ✅ Connection Pooling with min/max sizing
+- ✅ Auto-cleanup of stale services/connections
+- ✅ Pool statistics and monitoring
+- ✅ 56 additional tests
+- ✅ Example programs
 
-### Phase 4: Production Readiness (Weeks 7-11)
-- [ ] Advanced features
-- [ ] Performance optimization
-- [ ] JNI bindings (optional)
+### Phase 4: Compression & HTTP/2 ✅ **COMPLETE**
+- ✅ HTTP/2 client (Java 11+ HttpClient)
+- ✅ Compression (GZIP/DEFLATE)
+- ✅ Async HTTP support (CompletableFuture)
+- ✅ 50 additional tests
+- ✅ Example programs
+
+### Phase 5: Advanced Features 📋 **PLANNED**
+- 📋 LZ4 compression
+- 📋 HTTP/2 server
+- 📋 Advanced security features
+- 📋 Load balancing
+- 📋 JNI bindings (optional)
 - [ ] Production deployment guide
 - [ ] Maven Central publication

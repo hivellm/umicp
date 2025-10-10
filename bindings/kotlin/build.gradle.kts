@@ -1,0 +1,116 @@
+import org.jetbrains.kotlin.gradle.tasks.KotlinCompile
+
+plugins {
+    kotlin("jvm") version "1.9.21"
+    kotlin("plugin.serialization") version "1.9.21"
+    id("org.jetbrains.dokka") version "1.9.10"
+    id("maven-publish")
+    id("signing")
+    jacoco
+}
+
+group = "com.hivellm"
+version = "0.1.2"
+
+repositories {
+    mavenCentral()
+}
+
+dependencies {
+    // Kotlin Standard Library
+    implementation(kotlin("stdlib"))
+    implementation("org.jetbrains.kotlinx:kotlinx-coroutines-core:1.7.3")
+
+    // Serialization
+    implementation("org.jetbrains.kotlinx:kotlinx-serialization-json:1.6.2")
+    implementation("com.google.code.gson:gson:2.10.1")
+
+    // WebSocket
+    implementation("org.java-websocket:Java-WebSocket:1.5.5")
+
+    // HTTP Client
+    implementation("com.squareup.okhttp3:okhttp:4.12.0")
+    implementation("com.squareup.okhttp3:okhttp-sse:4.12.0")
+    
+    // Compression
+    implementation("org.apache.commons:commons-compress:1.25.0")
+
+    // Logging
+    implementation("io.github.microutils:kotlin-logging-jvm:3.0.5")
+    implementation("ch.qos.logback:logback-classic:1.4.14")
+
+    // Testing
+    testImplementation(kotlin("test"))
+    testImplementation("org.jetbrains.kotlinx:kotlinx-coroutines-test:1.7.3")
+    testImplementation("io.kotest:kotest-runner-junit5:5.8.0")
+    testImplementation("io.kotest:kotest-assertions-core:5.8.0")
+    testImplementation("io.mockk:mockk:1.13.9")
+    testImplementation("org.junit.jupiter:junit-jupiter:5.10.1")
+}
+
+tasks.test {
+    useJUnitPlatform()
+    finalizedBy(tasks.jacocoTestReport)
+}
+
+tasks.jacocoTestReport {
+    dependsOn(tasks.test)
+    reports {
+        xml.required.set(true)
+        html.required.set(true)
+    }
+}
+
+tasks.withType<KotlinCompile> {
+    kotlinOptions {
+        freeCompilerArgs = listOf("-Xjsr305=strict")
+        jvmTarget = "17"
+    }
+}
+
+java {
+    sourceCompatibility = JavaVersion.VERSION_17
+    targetCompatibility = JavaVersion.VERSION_17
+    withSourcesJar()
+    withJavadocJar()
+}
+
+publishing {
+    publications {
+        create<MavenPublication>("maven") {
+            from(components["java"])
+
+            pom {
+                name.set("UMICP Kotlin SDK")
+                description.set("Kotlin SDK for Universal Matrix Intelligent Communication Protocol")
+                url.set("https://github.com/hivellm/umicp")
+
+                licenses {
+                    license {
+                        name.set("MIT License")
+                        url.set("https://opensource.org/licenses/MIT")
+                    }
+                }
+
+                developers {
+                    developer {
+                        name.set("HiveLLM Team")
+                        organization.set("HiveLLM")
+                        organizationUrl.set("https://github.com/hivellm")
+                    }
+                }
+
+                scm {
+                    connection.set("scm:git:git://github.com/hivellm/umicp.git")
+                    developerConnection.set("scm:git:ssh://github.com:hivellm/umicp.git")
+                    url.set("https://github.com/hivellm/umicp/tree/main")
+                }
+            }
+        }
+    }
+}
+
+tasks.dokkaHtml {
+    outputDirectory.set(layout.buildDirectory.dir("docs"))
+}
+
