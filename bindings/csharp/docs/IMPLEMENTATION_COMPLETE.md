@@ -5,8 +5,8 @@
 All critical gaps identified in the three-pass review have been successfully addressed. The UMICP C# SDK is now **production-ready** and **NuGet-ready**.
 
 **Date**: October 10, 2025
-**Version**: 1.0.0
-**Status**: ✅ **READY FOR PUBLIC RELEASE**
+**Version**: 0.1.2
+**Status**: ✅ **READY FOR BETA RELEASE**
 
 ---
 
@@ -162,7 +162,7 @@ Status: ✅ ALL PASSED
 ### NuGet Package Details
 
 **Package ID**: `HiveLLM.Umicp`
-**Version**: `1.0.0`
+**Version**: `0.1.2`
 **Framework**: `.NET 8.0` (LTS)
 **License**: MIT
 **Repository**: https://github.com/hivellm/umicp
@@ -377,7 +377,7 @@ The UMICP C# SDK has successfully addressed all critical gaps identified during 
 - **CI/CD Enabled**: Automated build, test, security, and release pipeline
 - **Quality Assured**: Roslyn analyzers, EditorConfig, and best practices enforced
 
-**Recommendation**: **APPROVED FOR 1.0.0 GA RELEASE**
+**Recommendation**: **APPROVED FOR 0.1.2 BETA RELEASE**
 
 ---
 

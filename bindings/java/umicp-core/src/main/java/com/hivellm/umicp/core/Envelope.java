@@ -401,6 +401,7 @@ public class Envelope implements AutoCloseable {
      * @return the hex-encoded hash string
      * @throws SerializationException if serialization fails
      */
+    @com.fasterxml.jackson.annotation.JsonIgnore
     @NotNull
     public String getHash() throws SerializationException {
         if (cachedHash == null || dirty) {

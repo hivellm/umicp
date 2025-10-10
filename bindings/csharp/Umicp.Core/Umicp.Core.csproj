@@ -7,7 +7,7 @@
 
     <!-- Package Metadata -->
     <PackageId>HiveLLM.Umicp</PackageId>
-    <Version>1.0.0</Version>
+    <Version>0.1.2</Version>
     <Authors>HiveLLM Team</Authors>
     <Company>HiveLLM</Company>
     <Product>UMICP C# SDK</Product>
@@ -20,7 +20,7 @@
     <PackageTags>umicp;ai;communication;protocol;websocket;matrix;simd;compression;p2p;hivellm;machine-learning;interoperability</PackageTags>
     <PackageReadmeFile>README.md</PackageReadmeFile>
     <PackageIcon>icon.png</PackageIcon>
-    <PackageReleaseNotes>Initial release with full BIP-05 compliance. Features: Envelope system, SIMD matrix operations, WebSocket/HTTP client/server, compression (Gzip/Deflate), peer-to-peer communication, service discovery, connection pooling.</PackageReleaseNotes>
+    <PackageReleaseNotes>Beta release v0.1.2 with full BIP-05 compliance. Features: Envelope system, SIMD matrix operations, WebSocket/HTTP client/server, compression (Gzip/Deflate), peer-to-peer communication, service discovery, connection pooling. Production testing in progress.</PackageReleaseNotes>
 
     <!-- Documentation -->
     <GenerateDocumentationFile>true</GenerateDocumentationFile>

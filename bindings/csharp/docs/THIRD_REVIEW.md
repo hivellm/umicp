@@ -27,8 +27,8 @@ All metadata now implemented in `Umicp.Core.csproj`:
 - ✅ `<GenerateDocumentationFile>true</GenerateDocumentationFile>`
 
 **Result**: NuGet packages successfully created:
-- `HiveLLM.Umicp.1.0.0.nupkg`
-- `HiveLLM.Umicp.1.0.0.snupkg` (symbols)
+- `HiveLLM.Umicp.0.1.2.nupkg`
+- `HiveLLM.Umicp.0.1.2.snupkg` (symbols)
 
 ### 2. XML Documentation Coverage Incomplete
 **Impact**: Poor IntelliSense experience, no API docs generation
@@ -125,7 +125,7 @@ All async methods now have `CancellationToken` parameters:
 <SymbolPackageFormat>snupkg</SymbolPackageFormat>
 ```
 
-**Result**: Symbol package `HiveLLM.Umicp.1.0.0.snupkg` successfully created.
+**Result**: Symbol package `HiveLLM.Umicp.0.1.2.snupkg` successfully created.
 
 ### PKG-4: No Multi-Targeting
 **Current**: Only `net8.0`
@@ -337,12 +337,12 @@ All async methods now have `CancellationToken` parameters:
 - ✅ **Security: Documented and enforced**
 - ✅ **Tooling: Complete (EditorConfig, Analyzers, SourceLink)**
 
-### Release Approval: ✅ **APPROVED FOR v1.0.0 GA**
-**Reason**: All critical gaps resolved. SDK is production-ready.
+### Release Approval: ✅ **APPROVED FOR v0.1.2 BETA**
+**Reason**: All critical gaps resolved. SDK is ready for beta testing.
 
 ### Timeline Achieved
 - ~~**Week 1**: Address MUST items~~ ✅ **COMPLETED IN 1 DAY**
-- Week 2-4: SHOULD items → **Deferred to v1.1.0**
+- Week 2-4: SHOULD items → **Deferred to v1.0.0**
 
 ---
 
@@ -374,7 +374,7 @@ Warnings: 338 (analyzer suggestions)
 Tests: 114/114 passed
 Coverage: 98%
 Duration: 57ms
-Packages: HiveLLM.Umicp.1.0.0.nupkg + .snupkg
+Packages: HiveLLM.Umicp.0.1.2.nupkg + .snupkg
 ```
 
 ---
@@ -399,5 +399,5 @@ All critical gaps have been **RESOLVED**. The SDK is **ready for immediate publi
 **Update Date**: October 10, 2025
 **Focus**: Developer Experience, Packaging, Maintainability
 **Original Recommendation**: ~~Address MUST items → 1.0.0 GA in ~4 weeks~~
-**Updated Recommendation**: ✅ **SHIP v1.0.0 NOW** 🚀
+**Updated Recommendation**: ✅ **SHIP v0.1.2 BETA NOW** 🚀
 
