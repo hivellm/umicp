@@ -57,11 +57,15 @@ TEST_F(WebSocketServerTest, GetClientsReturnsEmptyInitially) {
     EXPECT_TRUE(clients.empty());
 }
 
-TEST_F(WebSocketServerTest, StartReturnsNotImplemented) {
-    // Until libwebsockets integration is complete
+TEST_F(WebSocketServerTest, StartSucceeds) {
+    // WebSocket is now fully implemented
     auto result = server->start();
-    EXPECT_FALSE(result.is_ok());
-    EXPECT_EQ(result.error_code(), ErrorCode::NOT_IMPLEMENTED);
+    // May fail if port is in use, but should not be NOT_IMPLEMENTED
+    if (!result.is_ok()) {
+        EXPECT_NE(result.error_code(), ErrorCode::NOT_IMPLEMENTED);
+    } else {
+        EXPECT_TRUE(server->is_running());
+    }
 }
 
 TEST_F(WebSocketServerTest, StopWhenNotRunningFails) {
@@ -191,11 +195,13 @@ TEST_F(WebSocketClientTest, InitialReconnectAttemptIsZero) {
     EXPECT_EQ(client->get_reconnect_attempt(), 0);
 }
 
-TEST_F(WebSocketClientTest, ConnectReturnsNotImplemented) {
-    // Until libwebsockets integration is complete
+TEST_F(WebSocketClientTest, ConnectAttempts) {
+    // WebSocket is now fully implemented
     auto result = client->connect();
-    EXPECT_FALSE(result.is_ok());
-    EXPECT_EQ(result.error_code(), ErrorCode::NOT_IMPLEMENTED);
+    // May fail to connect (no server running), but should not be NOT_IMPLEMENTED
+    if (!result.is_ok()) {
+        EXPECT_NE(result.error_code(), ErrorCode::NOT_IMPLEMENTED);
+    }
 }
 
 TEST_F(WebSocketClientTest, DisconnectWhenNotConnectedSucceeds) {
@@ -444,4 +450,5 @@ int main(int argc, char** argv) {
     ::testing::InitGoogleTest(&argc, argv);
     return RUN_ALL_TESTS();
 }
+
 

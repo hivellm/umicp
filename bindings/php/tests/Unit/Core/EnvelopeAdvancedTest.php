@@ -20,7 +20,7 @@ class EnvelopeAdvancedTest extends TestCase
     public function testEmptyEnvelope(): void
     {
         $envelope = new Envelope();
-        
+
         $this->assertNull($envelope->getFrom());
         $this->assertNull($envelope->getTo());
         $this->assertEquals(OperationType::DATA, $envelope->getOperation());
@@ -50,7 +50,7 @@ class EnvelopeAdvancedTest extends TestCase
     public function testEnvelopeWithLargePayload(): void
     {
         $largeData = str_repeat('A', 10000);
-        
+
         $envelope = new Envelope(
             from: 'sender',
             to: 'receiver',
@@ -87,10 +87,10 @@ class EnvelopeAdvancedTest extends TestCase
     public function testCapabilityOverwrite(): void
     {
         $envelope = new Envelope();
-        
+
         $envelope->setCapability('key', 'value1');
         $this->assertEquals('value1', $envelope->getCapability('key'));
-        
+
         $envelope->setCapability('key', 'value2');
         $this->assertEquals('value2', $envelope->getCapability('key'));
     }
@@ -148,7 +148,7 @@ class EnvelopeAdvancedTest extends TestCase
         // Same data should produce same hash (via serialization)
         $json1 = $envelope1->serialize();
         $json2 = $envelope2->serialize();
-        
+
         $this->assertEquals($json1, $json2);
     }
 
@@ -179,7 +179,7 @@ class EnvelopeAdvancedTest extends TestCase
         );
 
         $string = (string) $envelope;
-        
+
         $this->assertIsString($string);
         $this->assertNotEmpty($string);
         $this->assertJson($string);

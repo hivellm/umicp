@@ -54,7 +54,7 @@ echo "━━━━━━━━━━━━━━━━━━━━━━━━�
 composer lint || FAILED=1
 echo
 
-# Static analysis  
+# Static analysis
 echo -e "${BLUE}Step 7: Static Analysis${NC}"
 echo "━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━"
 composer analyse || FAILED=1

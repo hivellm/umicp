@@ -7,6 +7,7 @@ find_package(PkgConfig REQUIRED)
 pkg_check_modules(JSON REQUIRED json-c)
 pkg_check_modules(ZLIB REQUIRED zlib)
 pkg_check_modules(OPENSSL REQUIRED openssl)
+pkg_check_modules(CURL REQUIRED libcurl)
 
 # Include directories
 include_directories(
@@ -14,6 +15,7 @@ include_directories(
     ${JSON_INCLUDE_DIRS}
     ${ZLIB_INCLUDE_DIRS}
     ${OPENSSL_INCLUDE_DIRS}
+    ${CURL_INCLUDE_DIRS}
 )
 
 # Link directories
@@ -21,34 +23,41 @@ link_directories(
     ${JSON_LIBRARY_DIRS}
     ${ZLIB_LIBRARY_DIRS}
     ${OPENSSL_LIBRARY_DIRS}
+    ${CURL_LIBRARY_DIRS}
 )
 
-# Basic example executable
-add_executable(basic_example basic_example.cpp)
+# Helper function to create example executable
+function(add_umicp_example target_name source_file)
+    add_executable(${target_name} ${source_file})
 
-target_link_libraries(basic_example
-    umicp_static
-    ${JSON_LIBRARIES}
-    ${ZLIB_LIBRARIES}
-    ${OPENSSL_LIBRARIES}
-    uuid
-)
+    target_link_libraries(${target_name}
+        umicp_static
+        ${JSON_LIBRARIES}
+        ${ZLIB_LIBRARIES}
+        ${OPENSSL_LIBRARIES}
+        ${CURL_LIBRARIES}
+        uuid
+        websockets  # libwebsockets
+    )
 
-# Set C++ standard
-set_target_properties(basic_example PROPERTIES
-    CXX_STANDARD 17
-    CXX_STANDARD_REQUIRED ON
-    CXX_EXTENSIONS OFF
-)
+    set_target_properties(${target_name} PROPERTIES
+        CXX_STANDARD 17
+        CXX_STANDARD_REQUIRED ON
+        CXX_EXTENSIONS OFF
+    )
 
-# Compiler flags
-if(MSVC)
-    target_compile_options(basic_example PRIVATE /W4 /permissive-)
-else()
-    target_compile_options(basic_example PRIVATE -Wall -Wextra -Wpedantic -Werror)
-endif()
+    if(MSVC)
+        target_compile_options(${target_name} PRIVATE /W4 /permissive-)
+    else()
+        target_compile_options(${target_name} PRIVATE -Wall -Wextra -Wpedantic -Wno-unused-parameter)
+    endif()
 
-# Installation
-install(TARGETS basic_example
-    RUNTIME DESTINATION bin
-)
+    install(TARGETS ${target_name} RUNTIME DESTINATION bin)
+endfunction()
+
+# Create examples
+add_umicp_example(basic_example basic_example.cpp)
+add_umicp_example(event_system_example event_system_example.cpp)
+add_umicp_example(multiplexed_peer_example multiplexed_peer_example.cpp)
+add_umicp_example(websocket_peer_example websocket_peer_example.cpp)
+add_umicp_example(http_example http_example.cpp)

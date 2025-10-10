@@ -142,14 +142,55 @@ ValidationResult SchemaRegistry::validate_message(const std::string& schema_id,
 ValidationResult SchemaRegistry::validate_envelope(const Envelope& envelope) {
     std::lock_guard<std::mutex> lock(registry_mutex_);
 
+    // Basic validation without schema
     if (!envelope.schema_uri) {
-        return ValidationResult(true); // No schema specified, validation passes
+        // Validate basic envelope structure
+        if (envelope.protocol_version.empty()) {
+            return ValidationResult(false, "Protocol version is required");
+        }
+
+        if (envelope.operation == Operation::UNKNOWN) {
+            return ValidationResult(false, "Valid operation is required");
+        }
+
+        if (envelope.message_id.empty()) {
+            return ValidationResult(false, "Message ID is required");
+        }
+
+        stats_.total_validations++;
+        stats_.last_validation = std::chrono::steady_clock::now();
+
+        return ValidationResult(true); // Basic validation passed
     }
 
+    // Schema-based validation
+    auto schema_it = schemas_.find(envelope.schema_uri.value());
+    if (schema_it == schemas_.end()) {
+        return ValidationResult(false, "Schema not found: " + envelope.schema_uri.value());
+    }
+
+    const auto& schema = schema_it->second;
+
+    // Validate required fields based on schema
+    if (envelope.protocol_version.empty()) {
+        return ValidationResult(false, "Protocol version is required by schema");
+    }
+
+    // Check version compatibility
+    if (schema->compatible_versions.find(envelope.protocol_version) == schema->compatible_versions.end()) {
+        return ValidationResult(false, "Protocol version " + envelope.protocol_version +
+                               " not compatible with schema");
+    }
+
+    // Validate payload if specified in schema
+    // Note: Full JSON Schema validation would require a JSON Schema library
+    // For now, we do basic checks
+
     stats_.total_validations++;
+    stats_.successful_validations++;
     stats_.last_validation = std::chrono::steady_clock::now();
 
-    return ValidationResult(false, "Envelope schema validation not implemented yet");
+    return ValidationResult(true);
 }
 
 // ============================================================================

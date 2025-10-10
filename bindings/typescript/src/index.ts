@@ -42,7 +42,7 @@ function loadAddon(): any {
     for (const addonPath of possiblePaths) {
       try {
         const addon = requireFunc(addonPath);
-        console.log(`✅ Native addon loaded from: ${addonPath}`);
+        //console.log(`✅ Native addon loaded from: ${addonPath}`);
         return addon;
       } catch (error: any) {
         lastError = error;
@@ -74,8 +74,6 @@ if (!addon) {
     createEnvelope: function() { throw new Error('Native addon not available'); },
     createMatrix: function() { throw new Error('Native addon not available'); }
   };
-} else {
-  console.log('✅ Native addon loaded successfully');
 }
 
 // Check if WebSocket transport is available

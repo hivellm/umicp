@@ -16,6 +16,7 @@
 #include <any>
 #include <string>
 #include <atomic>
+#include <stdexcept>
 
 namespace umicp {
 
@@ -31,17 +32,21 @@ public:
     Event() = default;
     explicit Event(const std::string& name) : event_name_(name) {}
 
+    // Default copy/move constructors
+    Event(const Event&) = default;
+    Event& operator=(const Event&) = default;
+    Event(Event&&) noexcept = default;
+    Event& operator=(Event&&) noexcept = default;
+
     // Set data with key
     template<typename T>
     void set(const std::string& key, const T& value) {
-        std::lock_guard<std::mutex> lock(mutex_);
         data_[key] = value;
     }
 
     // Get data by key
     template<typename T>
     T get(const std::string& key) const {
-        std::lock_guard<std::mutex> lock(mutex_);
         auto it = data_.find(key);
         if (it != data_.end()) {
             try {
@@ -55,7 +60,6 @@ public:
 
     // Check if key exists
     bool has(const std::string& key) const {
-        std::lock_guard<std::mutex> lock(mutex_);
         return data_.find(key) != data_.end();
     }
 
@@ -67,7 +71,6 @@ public:
 
 private:
     std::string event_name_;
-    mutable std::mutex mutex_;
     std::unordered_map<std::string, std::any> data_;
 };
 
@@ -124,6 +127,10 @@ protected:
         emit_impl(event_name, event);
     }
 
+protected:
+    // Internal emit implementation (protected for AsyncEventEmitter)
+    void emit_impl(const std::string& event_name, const Event& event);
+
 private:
     struct EventHandler {
         size_t id;
@@ -137,9 +144,6 @@ private:
     mutable std::mutex mutex_;
     std::unordered_map<std::string, std::vector<std::shared_ptr<EventHandler>>> handlers_;
     std::atomic<size_t> next_handler_id_;
-
-    // Internal emit implementation
-    void emit_impl(const std::string& event_name, const Event& event);
 };
 
 /**
@@ -175,9 +179,7 @@ private:
  */
 class EventBuilder {
 public:
-    explicit EventBuilder(const std::string& event_name) {
-        event_.set_name(event_name);
-    }
+    explicit EventBuilder(const std::string& event_name) : event_(event_name) {}
 
     template<typename T>
     EventBuilder& set(const std::string& key, const T& value) {
@@ -185,12 +187,12 @@ public:
         return *this;
     }
 
-    Event build() const {
-        return event_;
+    Event build() {
+        return std::move(event_);
     }
 
-    operator Event() const {
-        return event_;
+    operator Event() {
+        return std::move(event_);
     }
 
 private:
@@ -200,4 +202,5 @@ private:
 } // namespace umicp
 
 #endif // UMICP_EVENT_EMITTER_H
+
 

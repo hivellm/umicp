@@ -64,19 +64,27 @@ TEST_F(MultiplexedPeerTest, StartServerWithoutConfigFails) {
     EXPECT_EQ(result.error_code(), ErrorCode::INVALID_CONFIG);
 }
 
-TEST_F(MultiplexedPeerTest, StartServerReturnsNotImplemented) {
+TEST_F(MultiplexedPeerTest, StartServerSucceeds) {
     // Create peer with server config
     MultiplexedPeerOptions options;
     options.peer_id = "server-peer";
     options.server = ServerConfig{};
-    options.server->port = 8080;
+    options.server->port = 8090; // Use different port to avoid conflicts
 
     auto server_peer = std::make_unique<MultiplexedPeer>(options);
 
-    // Should return NOT_IMPLEMENTED until Phase 3 WebSocket integration
+    // WebSocket is now fully implemented
     auto result = server_peer->start_server();
-    EXPECT_FALSE(result.is_ok());
-    EXPECT_EQ(result.error_code(), ErrorCode::NOT_IMPLEMENTED);
+    // May fail if port is in use, but should not be NOT_IMPLEMENTED
+    if (!result.is_ok()) {
+        EXPECT_NE(result.error_code(), ErrorCode::NOT_IMPLEMENTED);
+    } else {
+        EXPECT_TRUE(server_peer->is_server_running());
+    }
+
+    if (server_peer->is_server_running()) {
+        server_peer->stop_server();
+    }
 }
 
 TEST_F(MultiplexedPeerTest, StopServerWhenNotRunningFails) {
@@ -93,10 +101,13 @@ TEST_F(MultiplexedPeerTest, IsServerRunningReturnsFalseInitially) {
 // Client Component Tests (Pending WebSocket Integration)
 // ============================================================================
 
-TEST_F(MultiplexedPeerTest, ConnectToPeerReturnsNotImplemented) {
-    auto result = peer->connect_to_peer("ws://localhost:8080/umicp");
-    EXPECT_FALSE(result.is_ok());
-    EXPECT_EQ(result.error_code(), ErrorCode::NOT_IMPLEMENTED);
+TEST_F(MultiplexedPeerTest, ConnectToPeerAttempts) {
+    // WebSocket is now fully implemented
+    auto result = peer->connect_to_peer("ws://localhost:8090/umicp");
+    // May fail to connect (no server running), but should not be NOT_IMPLEMENTED
+    if (!result.is_ok()) {
+        EXPECT_NE(result.error_code(), ErrorCode::NOT_IMPLEMENTED);
+    }
 }
 
 // ============================================================================

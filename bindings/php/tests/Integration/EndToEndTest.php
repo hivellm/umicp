@@ -61,7 +61,7 @@ class EndToEndTest extends TestCase
         $gradients = array_fill(0, 128, 0.1);
 
         $updated = $matrix->vectorAdd($weights, $gradients);
-        
+
         // 7. Verify result
         $this->assertCount(128, $updated);
         $this->assertEqualsWithDelta(0.6, $updated[0], 0.0001);
@@ -106,7 +106,7 @@ class EndToEndTest extends TestCase
         $responses = [];
         foreach ($envelopes as $agentId => $envelope) {
             $this->assertTrue($envelope->validate());
-            
+
             $responses[$agentId] = new Envelope(
                 from: 'coordinator',
                 to: $envelope->getFrom(),
@@ -167,7 +167,7 @@ class EndToEndTest extends TestCase
         try {
             // Access configuration
             Config::load();
-            
+
             $libPath = Config::get('ffi.lib_path');
             $this->assertNotNull($libPath);
 

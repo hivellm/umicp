@@ -4,7 +4,7 @@ declare(strict_types=1);
 
 /**
  * Validate UMICP PHP Bindings Structure
- * 
+ *
  * This script validates that all required files and classes are in place
  */
 
@@ -21,7 +21,7 @@ $requiredFiles = [
     'composer.json' => 'Composer configuration',
     'config/umicp.example.php' => 'Configuration template',
     'ffi/umicp_core.h' => 'FFI header',
-    
+
     // Core classes
     'src/Core/Envelope.php' => 'Envelope class',
     'src/Core/Matrix.php' => 'Matrix class',
@@ -29,13 +29,13 @@ $requiredFiles = [
     'src/Core/PayloadType.php' => 'PayloadType enum',
     'src/Core/EncodingType.php' => 'EncodingType enum',
     'src/Core/PayloadHint.php' => 'PayloadHint class',
-    
+
     // FFI layer
     'src/FFI/FFIBridge.php' => 'FFI Bridge',
     'src/FFI/Config.php' => 'Config class',
     'src/FFI/TypeConverter.php' => 'Type converter',
     'src/FFI/Traits/AutoCleanup.php' => 'AutoCleanup trait',
-    
+
     // Exceptions
     'src/Exception/UMICPException.php' => 'Base exception',
     'src/Exception/FFIException.php' => 'FFI exception',
@@ -44,14 +44,14 @@ $requiredFiles = [
     'src/Exception/ValidationException.php' => 'Validation exception',
     'src/Exception/ConnectionException.php' => 'Connection exception',
     'src/Exception/TimeoutException.php' => 'Timeout exception',
-    
+
     // Documentation
     'README.md' => 'Main README',
     'docs/ARCHITECTURE.md' => 'Architecture documentation',
     'docs/IMPLEMENTATION_ROADMAP.md' => 'Implementation roadmap',
     'docs/API_SPECIFICATION.md' => 'API specification',
     'docs/FFI_INTEGRATION_GUIDE.md' => 'FFI integration guide',
-    
+
     // Examples
     'examples/01_basic_envelope.php' => 'Basic envelope example',
     'examples/02_matrix_operations.php' => 'Matrix operations example',
@@ -104,7 +104,7 @@ foreach (array_unique($phpFiles) as $file) {
     $output = [];
     $returnVar = 0;
     exec("php -l " . escapeshellarg($file) . " 2>&1", $output, $returnVar);
-    
+
     if ($returnVar === 0) {
         // Syntax OK
     } else {
@@ -136,13 +136,13 @@ $classes = [
 foreach ($classes as $class) {
     $file = str_replace('UMICP\\', 'src/', $class) . '.php';
     $file = str_replace('\\', '/', $file);
-    
+
     if (file_exists(__DIR__ . '/' . $file)) {
         // Check if class/enum/trait is defined
         $content = file_get_contents(__DIR__ . '/' . $file);
         $basename = basename($class);
-        
-        if (str_contains($content, "class $basename") || 
+
+        if (str_contains($content, "class $basename") ||
             str_contains($content, "enum $basename") ||
             str_contains($content, "trait $basename")) {
             echo "   ✓ $class\n";
@@ -191,21 +191,21 @@ if (count($errors) === 0 && $syntaxErrors === 0) {
     exit(0);
 } else {
     echo "\n❌ Structure validation FAILED!\n";
-    
+
     if (!empty($errors)) {
         echo "\nErrors:\n";
         foreach ($errors as $error) {
             echo "  - $error\n";
         }
     }
-    
+
     if (!empty($warnings)) {
         echo "\nWarnings:\n";
         foreach ($warnings as $warning) {
             echo "  - $warning\n";
         }
     }
-    
+
     exit(1);
 }
 

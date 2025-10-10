@@ -62,33 +62,33 @@ $allPassed = ($unitResult === 0 && $integrationResult === 0);
 
 if ($allPassed) {
     echo "✅ ALL TESTS PASSED!\n\n";
-    
+
     echo "Test Suites:\n";
     echo "  ✓ Unit Tests\n";
     echo "  ✓ Integration Tests\n";
     echo "  ✓ Performance Tests\n\n";
-    
+
     echo "Code Quality:\n";
     echo "  " . ($lintResult === 0 ? '✓' : '⚠') . " Code Style (PSR-12)\n";
     echo "  " . ($analyseResult === 0 ? '✓' : '⚠') . " Static Analysis\n\n";
-    
+
     echo "Next steps:\n";
     echo "  • Run examples: php examples/03_complete_demo.php\n";
     echo "  • Run benchmarks: php benchmark.php\n";
     echo "  • Build C++: ./build-cpp.sh\n\n";
-    
+
     exit(0);
 } else {
     echo "❌ SOME TESTS FAILED\n\n";
-    
+
     echo "Failed Suites:\n";
     if ($unitResult !== 0) echo "  ✗ Unit Tests\n";
     if ($integrationResult !== 0) echo "  ✗ Integration Tests\n";
     if ($perfResult !== 0) echo "  ✗ Performance Tests\n";
     echo "\n";
-    
+
     echo "Review output above for details.\n\n";
-    
+
     exit(1);
 }
 

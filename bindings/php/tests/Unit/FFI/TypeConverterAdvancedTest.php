@@ -19,7 +19,7 @@ class TypeConverterAdvancedTest extends TestCase
     public function testLargeArrayConversion(): void
     {
         $largeArray = array_fill(0, 10000, 1.5);
-        
+
         $cArray = TypeConverter::phpArrayToCFloatArray($largeArray);
         $phpArray = TypeConverter::cFloatArrayToPhpArray($cArray, 10000);
 
@@ -31,7 +31,7 @@ class TypeConverterAdvancedTest extends TestCase
     public function testNegativeNumbers(): void
     {
         $array = [-1.5, -2.5, -3.5];
-        
+
         $cArray = TypeConverter::phpArrayToCFloatArray($array);
         $result = TypeConverter::cFloatArrayToPhpArray($cArray, 3);
 
@@ -41,7 +41,7 @@ class TypeConverterAdvancedTest extends TestCase
     public function testMixedNumberTypes(): void
     {
         $array = [1, 2.5, 3, 4.7]; // Mix of int and float
-        
+
         $cArray = TypeConverter::phpArrayToCFloatArray($array);
         $result = TypeConverter::cFloatArrayToPhpArray($cArray, 4);
 
@@ -95,7 +95,7 @@ class TypeConverterAdvancedTest extends TestCase
     public function testIntArrayConversion(): void
     {
         $phpArray = [10, 20, 30, 40, 50];
-        
+
         $cArray = TypeConverter::phpArrayToCIntArray($phpArray);
         $result = TypeConverter::cIntArrayToPhpArray($cArray, 5);
 
@@ -105,7 +105,7 @@ class TypeConverterAdvancedTest extends TestCase
     public function testDoubleArrayConversion(): void
     {
         $phpArray = [1.1, 2.2, 3.3, 4.4];
-        
+
         $cArray = TypeConverter::phpArrayToCDoubleArray($phpArray);
         $result = TypeConverter::cDoubleArrayToPhpArray($cArray, 4);
 
@@ -117,7 +117,7 @@ class TypeConverterAdvancedTest extends TestCase
     public function testJsonWithNullValues(): void
     {
         $data = ['key' => null, 'another' => 'value'];
-        
+
         $json = TypeConverter::phpArrayToJson($data);
         $decoded = TypeConverter::jsonToPhpArray($json);
 

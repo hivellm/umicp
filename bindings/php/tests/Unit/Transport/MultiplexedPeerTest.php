@@ -18,7 +18,7 @@ class MultiplexedPeerTest extends TestCase
     public function testPeerCreationWithoutServer(): void
     {
         $loop = Loop::get();
-        
+
         $peer = new MultiplexedPeer(
             peerId: 'test-peer',
             loop: $loop,
@@ -26,7 +26,7 @@ class MultiplexedPeerTest extends TestCase
         );
 
         $stats = $peer->getStats();
-        
+
         $this->assertEquals('test-peer', $stats['peer_id']);
         $this->assertEquals(0, $stats['total_peers']);
         $this->assertFalse($stats['server_active']);
@@ -35,7 +35,7 @@ class MultiplexedPeerTest extends TestCase
     public function testPeerCreationWithServer(): void
     {
         $loop = Loop::get();
-        
+
         $peer = new MultiplexedPeer(
             peerId: 'test-peer-server',
             loop: $loop,
@@ -43,7 +43,7 @@ class MultiplexedPeerTest extends TestCase
         );
 
         $stats = $peer->getStats();
-        
+
         $this->assertEquals('test-peer-server', $stats['peer_id']);
         $this->assertTrue($stats['server_active']);
     }
@@ -51,7 +51,7 @@ class MultiplexedPeerTest extends TestCase
     public function testPeerWithMetadata(): void
     {
         $loop = Loop::get();
-        
+
         $metadata = [
             'role' => 'coordinator',
             'version' => '1.0.0',
@@ -73,7 +73,7 @@ class MultiplexedPeerTest extends TestCase
     public function testGetPeersByType(): void
     {
         $loop = Loop::get();
-        
+
         $peer = new MultiplexedPeer('test', $loop);
 
         $incoming = $peer->getPeersByType('incoming');

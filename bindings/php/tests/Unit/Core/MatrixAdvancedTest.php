@@ -58,7 +58,7 @@ class MatrixAdvancedTest extends TestCase
     public function testVectorNormalizationIdempotent(): void
     {
         $vec = [3.0, 4.0];
-        
+
         $normalized1 = $this->matrix->vectorNormalize($vec);
         $normalized2 = $this->matrix->vectorNormalize($normalized1);
 
@@ -77,7 +77,7 @@ class MatrixAdvancedTest extends TestCase
         $result = $this->matrix->matrixMultiply($matA, $matB, $size, $size, $size);
 
         $this->assertCount($size * $size, $result);
-        
+
         // Each element should be 2 * size (1*2 summed size times)
         $expected = 2.0 * $size;
         foreach ($result as $value) {

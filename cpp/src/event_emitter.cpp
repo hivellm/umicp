@@ -8,6 +8,7 @@
 #include <thread>
 #include <condition_variable>
 #include <future>
+#include <iostream>
 
 namespace umicp {
 
@@ -292,4 +293,5 @@ size_t AsyncEventEmitter::pending_events() const {
 }
 
 } // namespace umicp
+
 

@@ -70,6 +70,17 @@ set(TEST_SOURCES
     test_event_emitter.cpp
     test_multiplexed_peer.cpp
     test_websocket_components.cpp
+    # New comprehensive core tests
+    unit/test_envelope_comprehensive.cpp
+    unit/test_frame_comprehensive.cpp
+    unit/test_buffer_comprehensive.cpp
+    unit/test_compression_comprehensive.cpp
+    unit/test_config_comprehensive.cpp
+    unit/test_schema_registry_comprehensive.cpp
+    # HTTP transport tests
+    unit/test_http_client.cpp
+    unit/test_http_server.cpp
+    integration/test_http_integration.cpp
 )
 
 # Create test executable
@@ -83,6 +94,7 @@ target_link_libraries(umicp_tests
     ${JSON_LIBRARIES}
     ${ZLIB_LIBRARIES}
     ${OPENSSL_LIBRARIES}
+    ${CURL_LIBRARIES}
     ${CBOR_LIBRARIES}
     pthread
 )
@@ -206,11 +218,39 @@ add_custom_target(test_all
 add_executable(event_emitter_tests test_event_emitter.cpp test_main.cpp)
 target_link_libraries(event_emitter_tests umicp_static ${GTEST_LIBRARIES} ${GTEST_MAIN_LIBRARIES} pthread)
 
-add_executable(multiplexed_peer_tests test_multiplexed_peer.cpp test_main.cpp)
-target_link_libraries(multiplexed_peer_tests umicp_static ${GTEST_LIBRARIES} ${GTEST_MAIN_LIBRARIES} pthread)
+add_executable(multiplexed_peer_tests test_multiplexed_peer.cpp)
+target_link_libraries(multiplexed_peer_tests umicp_static ${GTEST_LIBRARIES} ${GTEST_MAIN_LIBRARIES} pthread websockets uuid)
 
-add_executable(websocket_tests test_websocket_components.cpp test_main.cpp)
-target_link_libraries(websocket_tests umicp_static ${GTEST_LIBRARIES} ${GTEST_MAIN_LIBRARIES} pthread)
+add_executable(websocket_tests test_websocket_components.cpp)
+target_link_libraries(websocket_tests umicp_static ${GTEST_LIBRARIES} ${GTEST_MAIN_LIBRARIES} pthread websockets uuid)
+
+# New comprehensive test targets
+add_executable(envelope_comprehensive_tests unit/test_envelope_comprehensive.cpp test_main.cpp)
+target_link_libraries(envelope_comprehensive_tests umicp_static ${GTEST_LIBRARIES} ${GTEST_MAIN_LIBRARIES} pthread)
+
+add_executable(frame_comprehensive_tests unit/test_frame_comprehensive.cpp test_main.cpp)
+target_link_libraries(frame_comprehensive_tests umicp_static ${GTEST_LIBRARIES} ${GTEST_MAIN_LIBRARIES} pthread)
+
+add_executable(buffer_comprehensive_tests unit/test_buffer_comprehensive.cpp test_main.cpp)
+target_link_libraries(buffer_comprehensive_tests umicp_static ${GTEST_LIBRARIES} ${GTEST_MAIN_LIBRARIES} pthread)
+
+add_executable(compression_comprehensive_tests unit/test_compression_comprehensive.cpp test_main.cpp)
+target_link_libraries(compression_comprehensive_tests umicp_static ${GTEST_LIBRARIES} ${GTEST_MAIN_LIBRARIES} pthread ${ZLIB_LIBRARIES})
+
+add_executable(compression_simple_tests unit/test_compression_simple.cpp)
+target_link_libraries(compression_simple_tests umicp_static ${GTEST_LIBRARIES} ${GTEST_MAIN_LIBRARIES} pthread ${ZLIB_LIBRARIES})
+
+add_executable(config_comprehensive_tests unit/test_config_comprehensive.cpp test_main.cpp)
+target_link_libraries(config_comprehensive_tests umicp_static ${GTEST_LIBRARIES} ${GTEST_MAIN_LIBRARIES} pthread ${JSON_LIBRARIES})
+
+add_executable(schema_comprehensive_tests unit/test_schema_registry_comprehensive.cpp test_main.cpp)
+target_link_libraries(schema_comprehensive_tests umicp_static ${GTEST_LIBRARIES} ${GTEST_MAIN_LIBRARIES} pthread)
+
+add_executable(compression_core_tests unit/test_compression_core.cpp test_main.cpp)
+target_link_libraries(compression_core_tests umicp_static ${GTEST_LIBRARIES} ${GTEST_MAIN_LIBRARIES} pthread ${ZLIB_LIBRARIES})
+
+add_executable(e2e_basic_tests integration/test_e2e_basic.cpp test_main.cpp)
+target_link_libraries(e2e_basic_tests umicp_static ${GTEST_LIBRARIES} ${GTEST_MAIN_LIBRARIES} pthread websockets uuid)
 
 add_custom_target(test_new_features
     COMMAND event_emitter_tests
@@ -218,4 +258,53 @@ add_custom_target(test_new_features
     COMMAND websocket_tests
     DEPENDS event_emitter_tests multiplexed_peer_tests websocket_tests
     COMMENT "Running Phase 1-3 feature tests"
+)
+
+add_custom_target(test_comprehensive_core
+    COMMAND envelope_comprehensive_tests
+    COMMAND frame_comprehensive_tests
+    COMMAND buffer_comprehensive_tests
+    COMMAND compression_comprehensive_tests
+    COMMAND config_comprehensive_tests
+    COMMAND schema_comprehensive_tests
+    DEPENDS envelope_comprehensive_tests frame_comprehensive_tests buffer_comprehensive_tests
+            compression_comprehensive_tests config_comprehensive_tests schema_comprehensive_tests
+    COMMENT "Running comprehensive core tests (100% coverage)"
+)
+
+add_custom_target(test_full_suite
+    COMMAND ${CMAKE_COMMAND} -E echo "Running full test suite..."
+    COMMAND event_emitter_tests
+    COMMAND multiplexed_peer_tests
+    COMMAND websocket_tests
+    COMMAND envelope_comprehensive_tests
+    COMMAND frame_comprehensive_tests
+    COMMAND buffer_comprehensive_tests
+    COMMAND compression_comprehensive_tests
+    COMMAND config_comprehensive_tests
+    COMMAND schema_comprehensive_tests
+    COMMAND matrix_tests
+    DEPENDS event_emitter_tests multiplexed_peer_tests websocket_tests
+            envelope_comprehensive_tests frame_comprehensive_tests buffer_comprehensive_tests
+            compression_comprehensive_tests config_comprehensive_tests schema_comprehensive_tests
+            matrix_tests
+    COMMENT "Running complete test suite for 100% core coverage"
+)
+
+# HTTP transport test targets
+add_executable(http_client_tests unit/test_http_client.cpp)
+target_link_libraries(http_client_tests umicp_static ${GTEST_LIBRARIES} ${GTEST_MAIN_LIBRARIES} ${CURL_LIBRARIES} uuid pthread)
+
+add_executable(http_server_tests unit/test_http_server.cpp)
+target_link_libraries(http_server_tests umicp_static ${GTEST_LIBRARIES} ${GTEST_MAIN_LIBRARIES} uuid pthread)
+
+add_executable(http_integration_tests integration/test_http_integration.cpp)
+target_link_libraries(http_integration_tests umicp_static ${GTEST_LIBRARIES} ${GTEST_MAIN_LIBRARIES} ${CURL_LIBRARIES} uuid pthread)
+
+add_custom_target(test_http
+    COMMAND http_client_tests
+    COMMAND http_server_tests
+    COMMAND http_integration_tests
+    DEPENDS http_client_tests http_server_tests http_integration_tests
+    COMMENT "Running HTTP transport tests"
 )

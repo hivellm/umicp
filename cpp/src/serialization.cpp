@@ -67,13 +67,43 @@ Result<std::string> JsonSerializer::serialize_envelope(const Envelope& envelope)
 
     if (envelope.payload_hint) {
         json << ",\"payload_hint\":{";
-        // bool first = true; // TODO: Use this when implementing PayloadHint serialization
-        // TODO: Serialize PayloadHint struct properly
-        // for (const auto& [key, value] : *envelope.payload_hint) {
-        //     if (!first) json << ",";
-        //     json << "\"" << key << "\":\"" << value << "\"";
-        //     first = false;
-        // }
+
+        // Serialize type (required)
+        json << "\"type\":\"";
+        switch (envelope.payload_hint->type) {
+            case PayloadType::VECTOR: json << "vector"; break;
+            case PayloadType::TEXT: json << "text"; break;
+            case PayloadType::METADATA: json << "metadata"; break;
+            case PayloadType::BINARY: json << "binary"; break;
+            default: json << "metadata"; break;
+        }
+        json << "\"";
+
+        // Serialize optional fields
+        if (envelope.payload_hint->size) {
+            json << ",\"size\":" << *envelope.payload_hint->size;
+        }
+
+        if (envelope.payload_hint->encoding) {
+            json << ",\"encoding\":\"";
+            switch (*envelope.payload_hint->encoding) {
+                case EncodingType::FLOAT32: json << "float32"; break;
+                case EncodingType::FLOAT64: json << "float64"; break;
+                case EncodingType::INT32: json << "int32"; break;
+                case EncodingType::INT64: json << "int64"; break;
+                case EncodingType::UINT8: json << "uint8"; break;
+                case EncodingType::UINT16: json << "uint16"; break;
+                case EncodingType::UINT32: json << "uint32"; break;
+                case EncodingType::UINT64: json << "uint64"; break;
+                default: json << "float32"; break;
+            }
+            json << "\"";
+        }
+
+        if (envelope.payload_hint->count) {
+            json << ",\"count\":" << *envelope.payload_hint->count;
+        }
+
         json << "}";
     }
 

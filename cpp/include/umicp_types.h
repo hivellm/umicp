@@ -112,7 +112,9 @@ enum class ErrorCode {
     INVALID_CONFIG = 18,
     INITIALIZATION_FAILED = 19,
     CONNECTION_FAILED = 20,
-    PROTOCOL_ERROR = 21
+    PROTOCOL_ERROR = 21,
+    FILE_ERROR = 22,
+    PARSE_ERROR = 23
 };
 
 // Forward declarations

@@ -4,6 +4,8 @@
  */
 
 #include "multiplexed_peer.h"
+#include "websocket_server.h"
+#include "websocket_client.h"
 #include <random>
 #include <sstream>
 #include <iomanip>
@@ -44,23 +46,78 @@ Result<void> MultiplexedPeer::start_server() {
         return Result<void>::error(ErrorCode::INVALID_CONFIG, "No server configuration provided");
     }
 
-    // TODO: Implement WebSocketServer integration in Phase 3
-    // For now, return error indicating feature not yet implemented
-    return Result<void>::error(
-        ErrorCode::NOT_IMPLEMENTED,
-        "Server component requires Phase 3 (Advanced WebSocket) implementation"
-    );
+    // Create WebSocket server config from peer config
+    WebSocketServerConfig ws_config;
+    ws_config.port = options_.server->port;
+    ws_config.path = options_.server->path;
+    ws_config.per_message_deflate = options_.server->compression;
+    ws_config.max_payload_size = options_.server->max_payload;
+    ws_config.ping_interval = options_.server->ping_interval;
+    ws_config.connection_timeout = options_.server->connection_timeout;
 
-    // Future implementation:
-    // server_ = std::make_unique<WebSocketServer>(options_.server.value());
-    // server_->on_connection([this](auto transport) {
-    //     handle_incoming_connection(transport);
-    // });
-    // auto result = server_->start();
-    // if (result.is_ok()) {
-    //     server_running_ = true;
-    // }
-    // return result;
+    // Create WebSocket server
+    server_ = std::make_unique<WebSocketServer>(ws_config);
+
+    // Set up callbacks
+    server_->set_connection_callback([this](const std::string& client_id) {
+        // Create transport wrapper for the client
+        // Note: For now, we'll create a PeerConnection without a direct Transport object
+        // since WebSocketServer manages the connection internally
+        auto conn = std::make_shared<PeerConnection>(
+            client_id,
+            ConnectionType::INCOMING,
+            nullptr // Transport is managed by server
+        );
+
+        {
+            std::lock_guard<std::mutex> lock(peers_mutex_);
+            peers_[client_id] = conn;
+            stats_.total_peers++;
+            stats_.incoming_connections++;
+        }
+
+        // Emit event
+        Event event("peer:connect");
+        event.set("peer_id", client_id);
+        event.set("type", std::string("incoming"));
+        emit("peer:connect", event);
+
+        if (options_.on_peer_connect) {
+            options_.on_peer_connect(*conn);
+        }
+    });
+
+    server_->set_disconnection_callback([this](const std::string& client_id) {
+        handle_peer_disconnected(client_id);
+    });
+
+    server_->set_message_callback([this](const std::string& client_id, const ByteBuffer& data) {
+        // Parse envelope from data
+        try {
+            std::string json_str(data.begin(), data.end());
+            auto parse_result = EnvelopeProcessor::deserialize(json_str);
+
+            if (parse_result.is_ok() && parse_result.value.has_value()) {
+                handle_message(client_id, *parse_result.value);
+            } else {
+                handle_error("Failed to parse envelope: " + parse_result.error(), &client_id);
+            }
+        } catch (...) {
+            handle_error("Failed to parse envelope", &client_id);
+        }
+    });
+
+    server_->set_error_callback([this](const std::string& error, const std::string* client_id) {
+        handle_error(error, client_id);
+    });
+
+    // Start server
+    auto result = server_->start();
+    if (result.is_ok()) {
+        server_running_ = true;
+    }
+
+    return result;
 }
 
 Result<void> MultiplexedPeer::stop_server() {
@@ -68,8 +125,14 @@ Result<void> MultiplexedPeer::stop_server() {
         return Result<void>::error(ErrorCode::INVALID_STATE, "Server not running");
     }
 
-    // TODO: Implement in Phase 3
-    // server_->stop();
+    if (server_) {
+        auto result = server_->stop();
+        if (!result.is_ok()) {
+            return result;
+        }
+        server_.reset();
+    }
+
     server_running_ = false;
 
     return Result<void>::ok();
@@ -87,48 +150,84 @@ Result<std::string> MultiplexedPeer::connect_to_peer(
     const std::string& url,
     const std::unordered_map<std::string, std::string>& metadata
 ) {
-    // TODO: Implement WebSocketClient integration in Phase 3
-    return Result<std::string>::error(
-        ErrorCode::NOT_IMPLEMENTED,
-        "Client component requires Phase 3 (Advanced WebSocket) implementation"
-    );
+    // Create WebSocket client config
+    WebSocketClientConfig ws_config;
+    ws_config.url = url;
+    ws_config.reconnect.enabled = true;
+    ws_config.reconnect.max_attempts = 10;
+    ws_config.per_message_deflate = true;
 
-    // Future implementation:
-    // auto client = std::make_unique<WebSocketClient>(url);
-    // auto result = client->connect();
-    // if (!result.is_ok()) {
-    //     return Result<std::string>::error(result.error_code(), result.error());
-    // }
-    //
-    // std::string peer_id = generate_peer_id();
-    // auto conn = std::make_shared<PeerConnection>(
-    //     peer_id,
-    //     ConnectionType::OUTGOING,
-    //     std::move(client)
-    // );
-    // conn->url = url;
-    // conn->metadata = metadata;
-    //
-    // {
-    //     std::lock_guard<std::mutex> lock(peers_mutex_);
-    //     peers_[peer_id] = conn;
-    //     stats_.total_peers++;
-    //     stats_.outgoing_connections++;
-    // }
-    //
-    // // Send handshake
-    // send_handshake(peer_id);
-    //
-    // // Emit event
-    // Event event("peer:connect");
-    // event.set("peer", *conn);
-    // emit("peer:connect", event);
-    //
-    // if (options_.on_peer_connect) {
-    //     options_.on_peer_connect(*conn);
-    // }
-    //
-    // return Result<std::string>::ok(peer_id);
+    // Create WebSocket client
+    auto client = std::make_shared<WebSocketClient>(ws_config);
+
+    // Generate peer ID
+    std::string peer_id = generate_peer_id();
+
+    // Create peer connection
+    auto conn = std::make_shared<PeerConnection>(
+        peer_id,
+        ConnectionType::OUTGOING,
+        client
+    );
+    conn->url = url;
+    conn->metadata = metadata;
+
+    // Set up client callbacks
+    client->set_connect_callback([this, peer_id]() {
+        // Connection established, send handshake
+        send_handshake(peer_id);
+    });
+
+    client->set_disconnect_callback([this, peer_id]() {
+        handle_peer_disconnected(peer_id);
+    });
+
+    client->set_ws_message_callback([this, peer_id](const ByteBuffer& data) {
+        // Parse envelope from data
+        try {
+            std::string json_str(data.begin(), data.end());
+            auto parse_result = EnvelopeProcessor::deserialize(json_str);
+
+            if (parse_result.is_ok() && parse_result.value.has_value()) {
+                handle_message(peer_id, *parse_result.value);
+            } else {
+                handle_error("Failed to parse envelope: " + parse_result.error(), &peer_id);
+            }
+        } catch (...) {
+            handle_error("Failed to parse envelope", &peer_id);
+        }
+    });
+
+    client->set_ws_error_callback([this, peer_id](const std::string& error) {
+        handle_error(error, &peer_id);
+    });
+
+    // Connect
+    auto result = client->connect();
+    if (!result.is_ok()) {
+        return Result<std::string>::error(result.error_code(), result.error());
+    }
+
+    // Add to peers map
+    {
+        std::lock_guard<std::mutex> lock(peers_mutex_);
+        peers_[peer_id] = conn;
+        stats_.total_peers++;
+        stats_.outgoing_connections++;
+    }
+
+    // Emit event
+    Event event("peer:connect");
+    event.set("peer_id", peer_id);
+    event.set("type", std::string("outgoing"));
+    event.set("url", url);
+    emit("peer:connect", event);
+
+    if (options_.on_peer_connect) {
+        options_.on_peer_connect(*conn);
+    }
+
+    return Result<std::string>::ok(peer_id);
 }
 
 // ============================================================================
@@ -210,7 +309,7 @@ Result<void> MultiplexedPeer::send_to_peer(const std::string& peer_id, const Env
         conn = it->second;
     }
 
-    if (!conn->is_connected || !conn->transport) {
+    if (!conn->is_connected) {
         return Result<void>::error(ErrorCode::NOT_CONNECTED, "Peer not connected: " + peer_id);
     }
 
@@ -218,8 +317,22 @@ Result<void> MultiplexedPeer::send_to_peer(const std::string& peer_id, const Env
     auto json = envelope.to_json();
     ByteBuffer buffer(json.begin(), json.end());
 
-    // Send via transport
-    auto result = conn->transport->send(buffer);
+    Result<void> result;
+
+    // Send based on connection type
+    if (conn->type == ConnectionType::INCOMING) {
+        // Incoming connection - use server to send
+        if (!server_) {
+            return Result<void>::error(ErrorCode::INVALID_STATE, "Server not available");
+        }
+        result = server_->send_to_client(peer_id, buffer);
+    } else {
+        // Outgoing connection - use transport (WebSocketClient)
+        if (!conn->transport) {
+            return Result<void>::error(ErrorCode::NOT_CONNECTED, "Transport not available");
+        }
+        result = conn->transport->send(buffer);
+    }
 
     if (result.is_ok()) {
         std::lock_guard<std::mutex> lock(stats_mutex_);
@@ -645,4 +758,5 @@ Result<void> MultiplexedPeer::handle_handshake(const std::string& peer_id, const
 }
 
 } // namespace umicp
+
 

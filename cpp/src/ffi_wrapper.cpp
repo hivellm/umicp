@@ -5,9 +5,9 @@
  * to enable PHP FFI integration.
  */
 
-#include "../include/envelope.hpp"
-#include "../include/matrix.hpp"
-#include "../include/frame.hpp"
+#include "envelope.h"
+#include "matrix_ops.h"
+#include "frame.h"
 #include <cstring>
 #include <memory>
 #include <string>

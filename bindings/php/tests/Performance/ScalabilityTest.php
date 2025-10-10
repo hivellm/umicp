@@ -72,7 +72,7 @@ class ScalabilityTest extends TestCase
 
         for ($i = 0; $i < $operations; $i++) {
             $op = $i % 3;
-            
+
             if ($op === 0) {
                 $matrix->dotProduct($vec1, $vec2);
                 $results['dotProduct']++;

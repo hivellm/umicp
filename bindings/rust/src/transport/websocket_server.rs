@@ -167,15 +167,15 @@ impl WebSocketServer {
         let message_handler = self.message_handler.clone();
         let connection_handler = self.connection_handler.clone();
         let disconnection_handler = self.disconnection_handler.clone();
-        
+
         // Take shutdown receiver (can only start once)
         let shutdown_rx = self.shutdown_rx.write().take()
             .ok_or_else(|| UmicpError::transport("Server already started".to_string()))?;
-        
+
         // Spawn accept loop in background
         let handle = tokio::spawn(async move {
             let mut shutdown_rx = shutdown_rx;
-            
+
             loop {
                 tokio::select! {
                     result = listener.accept() => {
@@ -217,7 +217,7 @@ impl WebSocketServer {
                     }
                 }
             }
-            
+
             tracing::info!("Server stopped");
         });
 
@@ -256,7 +256,7 @@ impl WebSocketServer {
         stats.write().total_connections += 1;
 
         tracing::info!("Client {} connected", client_id);
-        
+
         // Call connection handler
         if let Some(handler) = &connection_handler {
             handler(client_id.clone(), addr);
@@ -316,7 +316,7 @@ impl WebSocketServer {
                             Ok(envelope) => {
                                 tracing::debug!("Received envelope from client {}", client_id);
                                 tracing::debug!("From: {}, To: {}", envelope.from(), envelope.to());
-                                
+
                                 // Call message handler
                                 if let Some(handler) = &message_handler {
                                     handler(envelope, client_id.clone());
@@ -348,7 +348,7 @@ impl WebSocketServer {
         stats.write().active_connections -= 1;
 
         tracing::info!("Client {} disconnected", client_id);
-        
+
         // Call disconnection handler
         if let Some(handler) = &disconnection_handler {
             handler(client_id, addr);

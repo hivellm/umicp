@@ -18,7 +18,7 @@ async fn main() -> Result<(), Box<dyn std::error::Error>> {
 
     // Set message handler
     server.set_message_handler(Arc::new(|envelope, client_id| {
-        println!("📨 Message from client {}: {} -> {}", 
+        println!("📨 Message from client {}: {} -> {}",
             client_id, envelope.from(), envelope.to());
         println!("   Operation: {:?}", envelope.operation());
         if let Some(caps) = envelope.capabilities() {
@@ -43,19 +43,19 @@ async fn main() -> Result<(), Box<dyn std::error::Error>> {
 
     // Server is now running in background, we can do other things
     println!("\n📊 Server statistics:");
-    
+
     for i in 1..=10 {
         sleep(Duration::from_secs(2)).await;
-        
+
         let stats = server.get_stats();
-        println!("\n[{}s] Active: {} | Total: {} | Messages: ↓{} ↑{}", 
+        println!("\n[{}s] Active: {} | Total: {} | Messages: ↓{} ↑{}",
             i * 2,
             stats.active_connections,
             stats.total_connections,
             stats.messages_received,
             stats.messages_sent
         );
-        
+
         // Send broadcast message every 4 seconds if there are clients
         if i % 2 == 0 && stats.active_connections > 0 {
             let message = format!("Server time: {}s", i * 2);
@@ -66,7 +66,7 @@ async fn main() -> Result<(), Box<dyn std::error::Error>> {
                 .capability("type", "broadcast")
                 .capability("message", &message)
                 .build()?;
-            
+
             server.broadcast(envelope).await?;
             println!("📡 Broadcast sent to all clients");
         }
@@ -75,10 +75,10 @@ async fn main() -> Result<(), Box<dyn std::error::Error>> {
     // Shutdown server
     println!("\n🛑 Shutting down server...");
     server.shutdown()?;
-    
+
     // Wait for server to stop
     server_handle.await?;
-    
+
     println!("✓ Server stopped gracefully");
 
     Ok(())

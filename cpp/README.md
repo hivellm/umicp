@@ -30,16 +30,31 @@ This is the C++ core implementation of the Universal Matrix Intelligent Communic
 - Builder patterns for complex objects
 - RAII resource management
 
+### 🌐 **Transport Layer**
+- **WebSocket** - Real-time bidirectional communication
+- **HTTP/1.1** - Request/response pattern (✅ **NEW**)
+- Multi-transport support with load balancing
+- SSL/TLS encryption
+- Auto-reconnect and connection management
+
 ## Building
 
 ### Prerequisites
 
 ```bash
 # Ubuntu/Debian
-sudo apt-get install build-essential cmake libjson-c-dev zlib1g-dev libssl-dev
+sudo apt-get install build-essential cmake libjson-c-dev zlib1g-dev libssl-dev \
+    libcurl4-openssl-dev libwebsockets-dev uuid-dev
 
 # Optional (for better performance)
-sudo apt-get install libcbor-dev libmsgpack-c-dev
+sudo apt-get install libcbor-dev libmsgpack-c-dev liblz4-dev
+
+# Fedora/RHEL
+sudo dnf install gcc-c++ cmake json-c-devel zlib-devel openssl-devel \
+    libcurl-devel libwebsockets-devel libuuid-devel
+
+# macOS
+brew install cmake json-c openssl curl libwebsockets
 ```
 
 ### Build Instructions
@@ -214,12 +229,44 @@ enum class ErrorCode {
 
 ## Examples
 
-See `examples/basic_example.cpp` for comprehensive usage examples including:
+### Available Examples
 
-- Envelope creation and serialization
-- Frame building with compression
-- Matrix operations with SIMD acceleration
-- Performance benchmarking
+1. **`basic_example.cpp`** - Core functionality
+   - Envelope creation and serialization
+   - Frame building with compression
+   - Matrix operations with SIMD acceleration
+   - Performance benchmarking
+
+2. **`websocket_peer_example.cpp`** - WebSocket transport
+   - WebSocket client/server
+   - Real-time bidirectional communication
+   - Auto-reconnect handling
+   - Multiplexed peer connections
+
+3. **`http_example.cpp`** - ✅ **NEW** HTTP transport
+   - HTTP/1.1 client and server
+   - Request/response pattern
+   - Custom endpoints
+   - Health checks and statistics
+
+4. **`event_system_example.cpp`** - Event-driven architecture
+   - Event emission and handling
+   - Custom event types
+   - Event propagation
+
+5. **`multiplexed_peer_example.cpp`** - P2P communication
+   - Mesh network topology
+   - Multi-peer routing
+   - Connection management
+
+### Running Examples
+
+```bash
+cd build
+./basic_example
+./websocket_peer_example
+./http_example          # ✅ NEW
+```
 
 ## Testing
 
@@ -246,10 +293,14 @@ make test
 - json-c (JSON processing)
 - zlib (compression)
 - OpenSSL (crypto operations)
+- **libcurl** (HTTP client) ✅ **NEW**
+- libwebsockets (WebSocket transport)
+- libuuid (UUID generation)
 
 ### Optional
 - libcbor (CBOR serialization)
 - libmsgpack-c (MessagePack serialization)
+- liblz4 (LZ4 compression)
 - LLVM (advanced optimizations)
 
 ## License

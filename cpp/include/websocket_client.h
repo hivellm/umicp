@@ -18,6 +18,11 @@
 #include <chrono>
 #include <functional>
 #include <atomic>
+#include <queue>
+
+// Forward declare libwebsockets types
+struct lws;
+struct lws_context;
 
 namespace umicp {
 
@@ -114,9 +119,9 @@ public:
     Result<void> send_frame(const Frame& frame) override;
     Result<void> configure(const TransportConfig& config) override;
     TransportConfig get_config() const override;
-    void set_message_callback(Transport::MessageCallback callback) override;
-    void set_connection_callback(Transport::ConnectionCallback callback) override;
-    void set_error_callback(Transport::ErrorCallback callback) override;
+    void set_message_callback(umicp::MessageCallback callback) override;
+    void set_connection_callback(umicp::ConnectionCallback callback) override;
+    void set_error_callback(umicp::ErrorCallback callback) override;
     TransportStats get_stats() const override;
     void reset_stats() override;
     TransportType get_type() const override { return TransportType::WEBSOCKET; }
@@ -159,8 +164,8 @@ private:
     mutable std::mutex state_mutex_;
 
     // libwebsockets context (implementation detail)
-    struct lws_context* lws_context_;
-    struct lws* wsi_; // WebSocket instance
+    lws_context* lws_context_;
+    lws* wsi_; // WebSocket instance
     std::unique_ptr<std::thread> service_thread_;
     std::atomic<bool> should_stop_;
 
@@ -177,14 +182,18 @@ private:
     ErrorCallback ws_error_callback_;
 
     // Transport callbacks
-    Transport::MessageCallback transport_message_callback_;
-    Transport::ConnectionCallback transport_connection_callback_;
-    Transport::ErrorCallback transport_error_callback_;
+    umicp::MessageCallback transport_message_callback_;
+    umicp::ConnectionCallback transport_connection_callback_;
+    umicp::ErrorCallback transport_error_callback_;
 
     // Statistics
     mutable std::mutex stats_mutex_;
     ClientStats stats_;
     TransportStats transport_stats_;
+
+    // Send queue
+    mutable std::mutex send_queue_mutex_;
+    std::queue<ByteBuffer> send_queue_;
 
     // Internal methods
     void service_loop();
@@ -196,9 +205,10 @@ private:
     void attempt_reconnect();
     void reset_reconnect_state();
     void update_reconnect_delay();
+    bool process_send_queue();
 
     // libwebsockets callbacks (static)
-    static int callback_websocket(struct lws* wsi, enum lws_callback_reasons reason,
+    static int callback_websocket(lws* wsi, int reason,
                                    void* user, void* in, size_t len);
 };
 
@@ -231,4 +241,5 @@ inline std::unique_ptr<WebSocketClient> create_websocket_client_with_config(
 } // namespace umicp
 
 #endif // UMICP_WEBSOCKET_CLIENT_H
+
 

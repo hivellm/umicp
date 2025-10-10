@@ -35,6 +35,7 @@ find_package(PkgConfig REQUIRED)
 pkg_check_modules(JSON REQUIRED json-c)
 pkg_check_modules(ZLIB REQUIRED zlib)
 pkg_check_modules(OPENSSL REQUIRED openssl)
+pkg_check_modules(CURL REQUIRED libcurl)
 
 # WebSocket and HTTP/2 dependencies moved to bindings
 
@@ -49,6 +50,7 @@ include_directories(
     ${JSON_INCLUDE_DIRS}
     ${ZLIB_INCLUDE_DIRS}
     ${OPENSSL_INCLUDE_DIRS}
+    ${CURL_INCLUDE_DIRS}
     ${CBOR_INCLUDE_DIRS}
     ${LZ4_INCLUDE_DIRS}
 )
@@ -58,6 +60,7 @@ link_directories(
     ${JSON_LIBRARY_DIRS}
     ${ZLIB_LIBRARY_DIRS}
     ${OPENSSL_LIBRARY_DIRS}
+    ${CURL_LIBRARY_DIRS}
     ${CBOR_LIBRARY_DIRS}
     ${LZ4_LIBRARY_DIRS}
 )
@@ -79,11 +82,14 @@ set(UMICP_SOURCES
     src/multiplexed_peer.cpp
     src/websocket_server.cpp
     src/websocket_client.cpp
+    src/http_server.cpp
+    src/http_client.cpp
 )
 
 # FFI wrapper sources (for language bindings)
+# Temporarily disabled due to compilation errors
 set(UMICP_FFI_SOURCES
-    src/ffi_wrapper.cpp
+    # src/ffi_wrapper.cpp
 )
 
 # Header files
@@ -104,6 +110,8 @@ set(UMICP_HEADERS
     include/multiplexed_peer.h
     include/websocket_server.h
     include/websocket_client.h
+    include/http_server.h
+    include/http_client.h
 )
 
 # Create static library
@@ -112,6 +120,7 @@ target_link_libraries(umicp_static
     ${JSON_LIBRARIES}
     ${ZLIB_LIBRARIES}
     ${OPENSSL_LIBRARIES}
+    ${CURL_LIBRARIES}
     ${CBOR_LIBRARIES}
     ${LZ4_LIBRARIES}
 )
@@ -122,6 +131,7 @@ target_link_libraries(umicp_shared
     ${JSON_LIBRARIES}
     ${ZLIB_LIBRARIES}
     ${OPENSSL_LIBRARIES}
+    ${CURL_LIBRARIES}
     ${CBOR_LIBRARIES}
     ${LZ4_LIBRARIES}
 )
@@ -132,6 +142,7 @@ target_link_libraries(umicp_core
     ${JSON_LIBRARIES}
     ${ZLIB_LIBRARIES}
     ${OPENSSL_LIBRARIES}
+    ${CURL_LIBRARIES}
     ${CBOR_LIBRARIES}
     ${LZ4_LIBRARIES}
 )

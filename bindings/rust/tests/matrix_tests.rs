@@ -15,7 +15,7 @@ fn test_create_matrix_instance() {
 fn test_vector_addition() {
     let matrix = Matrix::new();
     let size = 100;
-    
+
     let mut a = vec![0.0f32; size];
     let mut b = vec![0.0f32; size];
     let mut result = vec![0.0f32; size];
@@ -121,7 +121,7 @@ fn test_dot_product() {
 fn test_normalize_vector() {
     let matrix = Matrix::new();
     let size = 4;
-    
+
     let mut vector = vec![3.0f32, 4.0, 0.0, 0.0];
 
     let operation_result = matrix.normalize(&mut vector, 1, size)
@@ -131,7 +131,7 @@ fn test_normalize_vector() {
 
     // Calculate magnitude
     let magnitude: f32 = vector.iter().map(|&x| x * x).sum::<f32>().sqrt();
-    
+
     // Should be unit length (magnitude = 1.0)
     assert!((magnitude - 1.0).abs() < 0.00001);
 }

@@ -39,10 +39,10 @@ class OperationTypeTest extends TestCase
     {
         $this->assertTrue(OperationType::DATA->isData());
         $this->assertFalse(OperationType::DATA->isControl());
-        
+
         $this->assertTrue(OperationType::ACK->isAck());
         $this->assertFalse(OperationType::ACK->isError());
-        
+
         $this->assertTrue(OperationType::ERROR->isError());
         $this->assertTrue(OperationType::CONTROL->isControl());
     }

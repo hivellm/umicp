@@ -525,3 +525,4 @@ transport->set_message_callback([](const ByteBuffer& data) {
 **Document Version:** 1.0  
 **See Also:** [IMPLEMENTATION_ROADMAP.md](./IMPLEMENTATION_ROADMAP.md) | [FEATURE_COMPARISON.md](./FEATURE_COMPARISON.md)
 
+

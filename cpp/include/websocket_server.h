@@ -19,6 +19,11 @@
 #include <thread>
 #include <chrono>
 #include <functional>
+#include <queue>
+
+// Forward declare libwebsockets types
+struct lws;
+struct lws_context;
 
 namespace umicp {
 
@@ -154,12 +159,21 @@ private:
     mutable std::mutex state_mutex_;
 
     // libwebsockets context (implementation detail)
-    struct lws_context* lws_context_;
+    lws_context* lws_context_;
     std::unique_ptr<std::thread> service_thread_;
 
     // Client tracking
     mutable std::mutex clients_mutex_;
     std::unordered_map<std::string, std::shared_ptr<WebSocketClientInfo>> clients_;
+
+    // Per-session data mapping (lws* to client_id)
+    mutable std::mutex session_mutex_;
+    std::unordered_map<lws*, std::string> wsi_to_client_id_;
+    std::unordered_map<std::string, lws*> client_id_to_wsi_;
+
+    // Send queues per client
+    mutable std::mutex send_queues_mutex_;
+    std::unordered_map<std::string, std::queue<ByteBuffer>> send_queues_;
 
     // Callbacks
     std::mutex callbacks_mutex_;
@@ -174,15 +188,19 @@ private:
 
     // Internal methods
     void service_loop();
-    void handle_connection(const std::string& client_id, const std::string& remote_addr, uint16_t port);
-    void handle_disconnection(const std::string& client_id);
-    void handle_message(const std::string& client_id, const ByteBuffer& data);
+    void handle_connection(lws* wsi, const std::string& client_id, const std::string& remote_addr, uint16_t port);
+    void handle_disconnection(lws* wsi);
+    void handle_message(lws* wsi, const ByteBuffer& data);
     void handle_error(const std::string& error, const std::string* client_id = nullptr);
     void update_client_activity(const std::string& client_id);
     void check_timeouts();
+    std::string get_client_id_for_wsi(lws* wsi) const;
+    bool process_send_queue(lws* wsi, const std::string& client_id);
+    void register_session(lws* wsi, const std::string& client_id);
+    void unregister_session(lws* wsi);
 
     // libwebsockets callbacks (static)
-    static int callback_websocket(struct lws* wsi, enum lws_callback_reasons reason,
+    static int callback_websocket(lws* wsi, int reason,
                                    void* user, void* in, size_t len);
 };
 

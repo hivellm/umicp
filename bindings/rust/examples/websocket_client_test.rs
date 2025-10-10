@@ -14,10 +14,10 @@ async fn main() -> Result<(), Box<dyn std::error::Error>> {
     tracing_subscriber::fmt::init();
 
     println!("🔌 Connecting to WebSocket server...");
-    
+
     // Create client
     let client = Arc::new(WebSocketClient::new("ws://127.0.0.1:9001"));
-    
+
     // Connect with retry
     match client.connect_with_retry().await {
         Ok(_) => println!("✓ Connected to server!"),
@@ -36,7 +36,7 @@ async fn main() -> Result<(), Box<dyn std::error::Error>> {
         let msg_num = i.to_string();
         let content = format!("Hello from Rust! Message #{}", i);
         let timestamp = chrono::Utc::now().to_rfc3339();
-        
+
         let envelope = Envelope::builder()
             .from("rust-client")
             .to("server")
