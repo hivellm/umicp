@@ -29,8 +29,10 @@ jobs:
       working-directory: cpp
       run: |
         cmake -B build -DCMAKE_BUILD_TYPE=$BUILD_TYPE \
+          -DCMAKE_INSTALL_PREFIX=/usr \
+          -DBUILD_SHARED_LIBS=ON \
           -DUMICP_BUILD_TESTS=ON \
-          -DUMICP_BUILD_EXAMPLES=ON \
+          -DUMICP_BUILD_EXAMPLES=OFF \
           -DUMICP_ENABLE_WEBSOCKET=ON \
           -DUMICP_ENABLE_HTTP=ON
 
@@ -42,11 +44,20 @@ jobs:
       working-directory: cpp
       run: cd build && ctest -C $BUILD_TYPE --output-on-failure
 
-    - name: Package
+    - name: Install to staging
       working-directory: cpp
       run: |
         cd build
-        cpack -G "TGZ;DEB" -C $BUILD_TYPE
+        make install DESTDIR=$PWD/install-staging
+        
+    - name: Create development package
+      working-directory: cpp/build
+      run: |
+        # Create tar.gz with libraries, headers, and CMake config
+        tar -czf umicp-dev-linux-x64.tar.gz \
+          -C install-staging/usr \
+          include/ lib/ \
+          --transform 's,^,umicp-dev/'
         
     - name: Get version from tag
       id: get_version
@@ -56,9 +67,7 @@ jobs:
       uses: actions/upload-artifact@v4
       with:
         name: umicp-linux-x64-${{ steps.get_version.outputs.VERSION }}
-        path: |
-          cpp/build/*.tar.gz
-          cpp/build/*.deb
+        path: cpp/build/umicp-dev-linux-x64.tar.gz
         retention-days: 90
 
   # Build on macOS
@@ -79,8 +88,10 @@ jobs:
       working-directory: cpp
       run: |
         cmake -B build -DCMAKE_BUILD_TYPE=$BUILD_TYPE \
+          -DCMAKE_INSTALL_PREFIX=/usr/local \
+          -DBUILD_SHARED_LIBS=ON \
           -DUMICP_BUILD_TESTS=ON \
-          -DUMICP_BUILD_EXAMPLES=ON \
+          -DUMICP_BUILD_EXAMPLES=OFF \
           -DUMICP_ENABLE_WEBSOCKET=ON \
           -DUMICP_ENABLE_HTTP=ON \
           -DOPENSSL_ROOT_DIR=/usr/local/opt/openssl
@@ -93,11 +104,19 @@ jobs:
       working-directory: cpp
       run: cd build && ctest -C $BUILD_TYPE --output-on-failure
 
-    - name: Package
+    - name: Install to staging
       working-directory: cpp
       run: |
         cd build
-        cpack -G "TGZ;ZIP" -C $BUILD_TYPE
+        make install DESTDIR=$PWD/install-staging
+
+    - name: Create development package
+      working-directory: cpp/build
+      run: |
+        tar -czf umicp-dev-macos-x64.tar.gz \
+          -C install-staging/usr/local \
+          include/ lib/ \
+          --transform 's,^,umicp-dev/'
 
     - name: Get version from tag
       id: get_version
@@ -107,9 +126,7 @@ jobs:
       uses: actions/upload-artifact@v4
       with:
         name: umicp-macos-x64-${{ steps.get_version.outputs.VERSION }}
-        path: |
-          cpp/build/*.tar.gz
-          cpp/build/*.zip
+        path: cpp/build/umicp-dev-macos-x64.tar.gz
         retention-days: 90
 
   # Build on Windows
@@ -140,8 +157,9 @@ jobs:
         cmake -B build -G "Visual Studio 17 2022" -A x64 `
           -DCMAKE_BUILD_TYPE=$env:BUILD_TYPE `
           -DCMAKE_TOOLCHAIN_FILE="$env:VCPKG_ROOT/scripts/buildsystems/vcpkg.cmake" `
+          -DBUILD_SHARED_LIBS=ON `
           -DUMICP_BUILD_TESTS=ON `
-          -DUMICP_BUILD_EXAMPLES=ON `
+          -DUMICP_BUILD_EXAMPLES=OFF `
           -DUMICP_ENABLE_WEBSOCKET=ON `
           -DUMICP_ENABLE_HTTP=ON
 
@@ -153,11 +171,17 @@ jobs:
       working-directory: cpp
       run: cd build; ctest -C $env:BUILD_TYPE --output-on-failure
 
-    - name: Package
+    - name: Install to staging
       working-directory: cpp
       run: |
         cd build
-        cpack -G "ZIP;NSIS" -C $env:BUILD_TYPE
+        cmake --install . --prefix install-staging --config $env:BUILD_TYPE
+
+    - name: Create development package
+      working-directory: cpp/build
+      run: |
+        # Create ZIP with DLLs, LIBs, headers, and CMake config
+        Compress-Archive -Path install-staging/* -DestinationPath umicp-dev-windows-x64.zip
 
     - name: Get version from tag
       id: get_version
@@ -169,9 +193,7 @@ jobs:
       uses: actions/upload-artifact@v4
       with:
         name: umicp-windows-x64-${{ steps.get_version.outputs.VERSION }}
-        path: |
-          cpp/build/*.zip
-          cpp/build/*.exe
+        path: cpp/build/umicp-dev-windows-x64.zip
         retention-days: 90
 
   # Create GitHub Release
@@ -199,71 +221,139 @@ jobs:
     - name: Create Release
       uses: softprops/action-gh-release@v1
       with:
-        name: UMICP v${{ steps.get_version.outputs.VERSION }}
+        name: UMICP C++ Library v${{ steps.get_version.outputs.VERSION }}
         body: |
-          # UMICP v${{ steps.get_version.outputs.VERSION }}
+          # UMICP C++ Library v${{ steps.get_version.outputs.VERSION }}
           
           ## 🚀 Release Notes
           
-          Universal Matrix Intelligent Communication Protocol - High-performance communication protocol for AI model interoperability.
+          Universal Matrix Intelligent Communication Protocol - High-performance C++ library for AI model interoperability.
           
-          ## 📦 Available Packages
+          ## 📦 Development Packages
+          
+          Download the appropriate package for your platform and extract it to your development environment.
           
           ### Linux (x64)
-          - `umicp-${{ steps.get_version.outputs.VERSION }}-Linux.tar.gz` - Binary tarball
-          - `umicp-${{ steps.get_version.outputs.VERSION }}-Linux.deb` - Debian package
+          - `umicp-dev-linux-x64.tar.gz` - Shared libraries (.so), headers, CMake config
+          - **Contents**: `libumicp.so`, headers in `include/`, CMake files
           
           ### macOS (x64)
-          - `umicp-${{ steps.get_version.outputs.VERSION }}-Darwin.tar.gz` - Binary tarball
-          - `umicp-${{ steps.get_version.outputs.VERSION }}-Darwin.zip` - ZIP archive
+          - `umicp-dev-macos-x64.tar.gz` - Dynamic libraries (.dylib), headers, CMake config
+          - **Contents**: `libumicp.dylib`, headers in `include/`, CMake files
           
           ### Windows (x64)
-          - `umicp-${{ steps.get_version.outputs.VERSION }}-win64.zip` - ZIP archive
-          - `umicp-${{ steps.get_version.outputs.VERSION }}-win64.exe` - NSIS installer
-          
-          ## 📚 Documentation
-          
-          - [C++ Documentation](https://github.com/hivellm/umicp/tree/main/cpp/docs)
-          - [API Reference](https://github.com/hivellm/umicp/tree/main/docs/api)
-          - [Examples](https://github.com/hivellm/umicp/tree/main/cpp/examples)
+          - `umicp-dev-windows-x64.zip` - DLLs, import libraries (.lib), headers, CMake config
+          - **Contents**: `umicp.dll`, `umicp.lib`, headers in `include/`, CMake files
           
           ## 🔧 Installation
           
-          ### Using Package Managers
+          ### Extract and Install (Linux/macOS)
           
           ```bash
-          # Conan
-          conan install --requires=umicp/${{ steps.get_version.outputs.VERSION }}
+          # Extract
+          tar -xzf umicp-dev-linux-x64.tar.gz
+          cd umicp-dev
           
-          # vcpkg
-          vcpkg install umicp
+          # Copy to system directories (requires sudo)
+          sudo cp -r include/* /usr/local/include/
+          sudo cp -r lib/* /usr/local/lib/
+          sudo ldconfig  # Linux only
           ```
           
-          ### From Source
+          ### Extract and Use (Windows)
+          
+          ```powershell
+          # Extract to your project directory
+          Expand-Archive umicp-dev-windows-x64.zip -DestinationPath C:\Libraries\umicp
+          
+          # Add to your CMake project:
+          # set(UMICP_DIR "C:/Libraries/umicp")
+          ```
+          
+          ## 💻 Using in Your Project
+          
+          ### With CMake
+          
+          ```cmake
+          cmake_minimum_required(VERSION 3.15)
+          project(MyProject)
+          
+          # Find UMICP
+          find_package(UMICP REQUIRED CONFIG)
+          
+          # Link to your executable/library
+          add_executable(my_app main.cpp)
+          target_link_libraries(my_app PRIVATE UMICP::UMICP)
+          ```
+          
+          ### Manual Compilation
           
           ```bash
-          # Extract tarball
-          tar -xzf umicp-${{ steps.get_version.outputs.VERSION }}-Linux.tar.gz
-          cd umicp-${{ steps.get_version.outputs.VERSION }}
+          # Linux/macOS
+          g++ -std=c++17 my_app.cpp -lumicp -lssl -lcrypto -o my_app
           
-          # Install
-          sudo make install
+          # Windows (MSVC)
+          cl /std:c++17 my_app.cpp umicp.lib /link /out:my_app.exe
+          ```
+          
+          ## 📚 Quick Start Example
+          
+          ```cpp
+          #include <umicp/envelope.hpp>
+          #include <umicp/matrix.hpp>
+          #include <iostream>
+          
+          int main() {
+              // Create an envelope
+              umicp::Envelope env;
+              env.setFrom("system-a");
+              env.setTo("system-b");
+              env.setOperation(umicp::OperationType::DATA);
+              
+              // Create a matrix
+              umicp::Matrix mat(3, 3);
+              mat.fill(1.0);
+              
+              // Use cosine similarity
+              double similarity = mat.cosineSimilarity(mat);
+              
+              std::cout << "UMICP initialized successfully!" << std::endl;
+              std::cout << "Similarity: " << similarity << std::endl;
+              
+              return 0;
+          }
           ```
           
           ## ✨ Features
           
-          - ✅ Core Protocol (Envelope, Frame, Matrix)
-          - ✅ WebSocket Transport
-          - ✅ HTTP/HTTP2 Support
-          - ✅ SIMD Matrix Operations
-          - ✅ Cross-platform (Linux, macOS, Windows)
-          - ✅ C++17 Standard
+          - ✅ **Core Protocol**: Envelope, Frame, Matrix operations
+          - ✅ **Transport Layer**: WebSocket, HTTP/HTTP2
+          - ✅ **SIMD Acceleration**: Optimized matrix operations
+          - ✅ **Cross-platform**: Linux, macOS, Windows
+          - ✅ **C++17**: Modern C++ standard
+          - ✅ **Thread-safe**: Safe for concurrent use
           
           ## 📋 Requirements
           
-          - C++17 compatible compiler
-          - CMake 3.15+
-          - OpenSSL 1.1.1+
+          **Build Requirements** (already included in packages):
+          - C++17 compatible compiler (GCC 7+, Clang 5+, MSVC 2017+)
+          
+          **Runtime Dependencies**:
+          - OpenSSL 1.1.1+ (libssl, libcrypto)
+          - For WebSocket: websocketpp, asio
+          - For HTTP: libcurl
+          
+          ## 📖 Documentation
+          
+          - [API Reference](https://github.com/hivellm/umicp/tree/main/cpp/docs)
+          - [Examples](https://github.com/hivellm/umicp/tree/main/cpp/examples)
+          - [Integration Guide](https://github.com/hivellm/umicp/blob/main/cpp/docs/INTEGRATION.md)
+          
+          ## 📦 Package Managers
+          
+          Coming soon:
+          - **Conan**: `conan install --requires=umicp/${{ steps.get_version.outputs.VERSION }}`
+          - **vcpkg**: `vcpkg install umicp`
           
           ## 🐛 Bug Reports
           
