@@ -1,7 +1,8 @@
 [package]
 name = "umicp-core"
 version = "0.1.1"
-edition = "2021"
+edition = "2024"
+rust-version = "1.85"
 description = "UMICP Rust bindings for high-performance communication and matrix operations"
 license = "MIT"
 authors = ["HiveLLM AI Collaborative Team"]
@@ -29,19 +30,20 @@ sha2 = "0.10"
 rand = "0.8"
 
 # Async runtime
-tokio = { version = "1.35", features = ["full"], optional = true }
+tokio = { version = "1.42", features = ["full"], optional = true }
 futures = { version = "0.3", optional = true }
 async-trait = { version = "0.1", optional = true }
 
 # WebSocket support
-tokio-tungstenite = { version = "0.21", optional = true }
-tungstenite = { version = "0.21", optional = true }
+tokio-tungstenite = { version = "0.24", optional = true }
+tungstenite = { version = "0.24", optional = true }
 
 # HTTP support
-axum = { version = "0.6", optional = true }
-hyper = { version = "0.14", optional = true, features = ["full"] }
-tower = { version = "0.4", optional = true }
-reqwest = { version = "0.11", features = ["json", "stream"], optional = true }
+axum = { version = "0.7", optional = true }
+hyper = { version = "1.5", optional = true, features = ["full"] }
+hyper-util = { version = "0.1", optional = true, features = ["tokio"] }
+tower = { version = "0.5", optional = true }
+reqwest = { version = "0.12", features = ["json", "stream"], optional = true }
 
 # Utilities
 tracing = { version = "0.1", optional = true }
@@ -56,5 +58,5 @@ serial_test = "3.0"
 [features]
 default = []
 websocket = ["tokio", "futures", "async-trait", "tokio-tungstenite", "tungstenite", "tracing"]
-http2 = ["tokio", "futures", "async-trait", "axum", "hyper", "tower", "reqwest", "tracing"]
+http2 = ["tokio", "futures", "async-trait", "axum", "hyper", "hyper-util", "tower", "reqwest", "tracing"]
 full = ["websocket", "http2"]

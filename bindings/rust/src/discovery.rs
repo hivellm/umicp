@@ -7,7 +7,7 @@ Allows peers to discover and connect to each other based on capabilities and met
 
 use crate::{Envelope, OperationType};
 #[cfg(feature = "websocket")]
-use crate::peer::{PeerInfo, WebSocketPeer};
+use crate::peer::PeerInfo;
 use parking_lot::RwLock;
 use std::collections::HashMap;
 use std::sync::Arc;
@@ -227,41 +227,30 @@ impl ServiceDiscovery {
 
     /// Parse discovery envelope
     pub fn parse_discovery_envelope(&self, envelope: &Envelope) -> Option<ServiceInfo> {
+        let caps = envelope.capabilities()?;
+
         // Check if it's a discovery message
-        if envelope
-            .capabilities()
-            .get("type")
-            .map(|v| v == "discovery")
-            .unwrap_or(false)
-        {
+        if caps.get("type").map(|v| v == "discovery").unwrap_or(false) {
             let service_id = envelope.from().to_string();
-            let name = envelope
-                .capabilities()
-                .get("service_name")
-                .cloned()
-                .unwrap_or_default();
-            let address = envelope
-                .capabilities()
-                .get("service_address")
-                .cloned()
-                .unwrap_or_default();
+            let name = caps.get("service_name").cloned().unwrap_or_default();
+            let address = caps.get("service_address").cloned().unwrap_or_default();
 
             let mut service = ServiceInfo::new(service_id, name, address);
 
             // Parse version
-            if let Some(version) = envelope.capabilities().get("service_version") {
+            if let Some(version) = caps.get("service_version") {
                 service.version = version.clone();
             }
 
             // Parse capabilities (cap:*)
-            for (key, _value) in envelope.capabilities() {
+            for (key, _value) in caps.iter() {
                 if let Some(cap) = key.strip_prefix("cap:") {
                     service.add_capability(cap.to_string());
                 }
             }
 
             // Parse metadata (meta:*)
-            for (key, value) in envelope.capabilities() {
+            for (key, value) in caps.iter() {
                 if let Some(meta_key) = key.strip_prefix("meta:") {
                     service.add_metadata(meta_key.to_string(), value.clone());
                 }
@@ -273,41 +262,29 @@ impl ServiceDiscovery {
         }
     }
 
-    /// Auto-discover from peer
+    /// Auto-discover from peer (requires peer connection info)
     #[cfg(feature = "websocket")]
-    pub fn discover_from_peer(&self, peer: &WebSocketPeer) -> Vec<ServiceInfo> {
-        let mut discovered = Vec::new();
+    pub fn discover_from_peer_info(&self, peer_info: &PeerInfo) -> ServiceInfo {
+        let service = ServiceInfo {
+            service_id: peer_info.id.clone(),
+            name: peer_info
+                .metadata
+                .get("name")
+                .cloned()
+                .unwrap_or_else(|| peer_info.id.clone()),
+            address: peer_info.url.clone().unwrap_or_default(),
+            capabilities: peer_info.capabilities.clone(),
+            metadata: peer_info.metadata.clone(),
+            last_seen: SystemTime::now(),
+            version: peer_info
+                .metadata
+                .get("version")
+                .cloned()
+                .unwrap_or_else(|| "1.0.0".to_string()),
+        };
 
-        for conn_id in peer.get_connection_ids() {
-            if let Some(peer_info) = peer.get_peer_info(&conn_id) {
-                let service = ServiceInfo {
-                    service_id: peer_info.peer_id.clone(),
-                    name: peer_info
-                        .metadata
-                        .get("name")
-                        .cloned()
-                        .unwrap_or_else(|| peer_info.peer_id.clone()),
-                    address: peer_info
-                        .metadata
-                        .get("address")
-                        .cloned()
-                        .unwrap_or_default(),
-                    capabilities: peer_info.capabilities.clone(),
-                    metadata: peer_info.metadata.clone(),
-                    last_seen: SystemTime::now(),
-                    version: peer_info
-                        .metadata
-                        .get("version")
-                        .cloned()
-                        .unwrap_or_else(|| "1.0.0".to_string()),
-                };
-
-                discovered.push(service.clone());
-                self.register_service(service);
-            }
-        }
-
-        discovered
+        self.register_service(service.clone());
+        service
     }
 }
 

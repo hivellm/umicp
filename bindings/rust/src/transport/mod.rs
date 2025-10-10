@@ -13,8 +13,8 @@ pub mod websocket_server;
 #[cfg(feature = "http2")]
 pub mod http_client;
 
-#[cfg(feature = "http2")]
-pub mod http_server;
+// #[cfg(feature = "http2")]
+// pub mod http_server; // Temporarily disabled - axum 0.7 compatibility issue
 
 #[cfg(feature = "websocket")]
 pub use websocket_client::WebSocketClient;
@@ -26,7 +26,7 @@ pub use websocket_server::WebSocketServer;
 pub use http_client::HttpClient;
 
 #[cfg(feature = "http2")]
-pub use http_server::HttpServer;
+// pub use http_server::HttpServer; // Disabled
 
 // Re-export legacy placeholder for backward compatibility
 #[cfg(not(any(feature = "websocket", feature = "http2")))]

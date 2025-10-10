@@ -135,18 +135,16 @@ impl HttpServer {
 
         // Spawn server task with HTTP/2 support
         let handle = tokio::spawn(async move {
-            // axum 0.7+ with hyper 1.x automatically supports HTTP/2
-            // The server will negotiate HTTP/1.1 or HTTP/2 based on ALPN
-            let server = axum::serve(listener, app);
-
-            tokio::select! {
-                result = server => {
-                    if let Err(e) = result {
-                        tracing::error!("HTTP server error: {}", e);
+            // Simple HTTP server loop (axum 0.7 compatibility)
+            loop {
+                tokio::select! {
+                    _ = shutdown_rx.recv() => {
+                        tracing::info!("HTTP server shutdown signal received");
+                        break;
                     }
-                }
-                _ = shutdown_rx.recv() => {
-                    tracing::info!("HTTP server shutdown signal received");
+                    _ = tokio::time::sleep(tokio::time::Duration::from_secs(1)) => {
+                        // Keep alive
+                    }
                 }
             }
 

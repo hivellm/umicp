@@ -127,7 +127,7 @@ pub mod types;
 pub mod error;
 pub mod utils;
 pub mod events;
-// pub mod discovery; // Temporarily disabled - needs refactoring
+pub mod discovery;
 pub mod pool;
 
 // Transport module - new modular implementation
@@ -158,7 +158,8 @@ pub use pool::{ConnectionPool, PoolConfig, PoolStats, PooledConnection, PoolConn
 pub use transport::{WebSocketClient, WebSocketServer};
 
 #[cfg(feature = "http2")]
-pub use transport::{HttpClient, HttpServer};
+pub use transport::HttpClient;
+// pub use transport::HttpServer; // Temporarily disabled
 
 #[cfg(not(any(feature = "websocket", feature = "http2")))]
 pub use transport::{WebSocketTransport, Http2Transport};
