@@ -282,7 +282,7 @@ impl WebSocketServer {
                         match envelope.serialize() {
                             Ok(json) => {
                                 let size = json.len();
-                                if let Err(e) = write.send(Message::Text(json)).await {
+                                if let Err(e) = write.send(Message::Text(json.into())).await {
                                     tracing::error!("Failed to send to {}: {}", client_id_send, e);
                                     break;
                                 }
