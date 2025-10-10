@@ -177,7 +177,14 @@ func TestFrame_RoundTrip(t *testing.T) {
 			assert.Equal(t, original.Length, deserialized.Length)
 			assert.Equal(t, original.Type, deserialized.Type)
 			assert.Equal(t, original.Flags, deserialized.Flags)
-			assert.Equal(t, original.Payload, deserialized.Payload)
+
+			// For zero-length payloads, both nil and empty slice are acceptable
+			if original.Length == 0 {
+				assert.True(t, len(deserialized.Payload) == 0,
+					"Zero-length payload should be empty, got len=%d", len(deserialized.Payload))
+			} else {
+				assert.Equal(t, original.Payload, deserialized.Payload)
+			}
 		})
 	}
 }

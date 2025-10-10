@@ -229,7 +229,6 @@ func TestNormalize(t *testing.T) {
 func TestManhattanDistance(t *testing.T) {
 	a := []float32{1, 2, 3}
 	b := []float32{4, 6, 8}
-	want := float32(10) // |1-4| + |2-6| + |3-8| = 3 + 4 + 5 = 12? No: 3 + 4 + 5 = 12, but wait |3-8| = 5, so 3+4+5 = 12 actually
 
 	got, err := ManhattanDistance(a, b)
 	assert.NoError(t, err)

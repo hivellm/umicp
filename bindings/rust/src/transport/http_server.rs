@@ -1,7 +1,17 @@
 /*!
 # HTTP Server Implementation
 
-Streaming HTTP server using axum for UMICP protocol.
+Streaming HTTP/1.1 and HTTP/2 server using axum for UMICP protocol.
+
+The server automatically negotiates HTTP/2 via ALPN when available,
+falling back to HTTP/1.1 for compatibility.
+
+## Features
+- HTTP/2 multiplexing (automatic via hyper 1.x)
+- Streaming responses
+- JSON API for envelopes
+- Statistics tracking
+- Graceful shutdown
 */
 
 use crate::error::{Result, UmicpError};
@@ -123,18 +133,20 @@ impl HttpServer {
             .take()
             .ok_or_else(|| UmicpError::transport("Server already started".to_string()))?;
 
-        // Spawn server task
+        // Spawn server task with HTTP/2 support
         let handle = tokio::spawn(async move {
+            // axum 0.7+ with hyper 1.x automatically supports HTTP/2
+            // The server will negotiate HTTP/1.1 or HTTP/2 based on ALPN
             let server = axum::serve(listener, app);
 
             tokio::select! {
                 result = server => {
                     if let Err(e) = result {
-                        tracing::error!("Server error: {}", e);
+                        tracing::error!("HTTP server error: {}", e);
                     }
                 }
                 _ = shutdown_rx.recv() => {
-                    tracing::info!("Shutdown signal received");
+                    tracing::info!("HTTP server shutdown signal received");
                 }
             }
 

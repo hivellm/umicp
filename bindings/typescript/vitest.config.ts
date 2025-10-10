@@ -1,6 +1,9 @@
 import { defineConfig } from 'vitest/config';
 import { resolve } from 'path';
 
+// IMPORTANT: Native modules are not thread-safe!
+// Using pool: 'forks' to avoid segmentation faults when running tests
+// Each test file runs in a separate process (fork) instead of a thread
 export default defineConfig({
   test: {
     globals: true,
@@ -30,10 +33,21 @@ export default defineConfig({
     testTimeout: 60000,
     hookTimeout: 60000,
     teardownTimeout: 10000,
-    isolate: true,
-    threads: true,
-    maxThreads: 4,
-    minThreads: 1
+    isolate: false,
+    // Disable worker threads/forks to prevent segfaults with native modules
+    // Run all tests sequentially in the main process
+    pool: 'forks',
+    poolOptions: {
+      forks: {
+        singleFork: true,
+      }
+    },
+    // Disable file parallelization
+    fileParallelism: false,
+    sequence: {
+      concurrent: false,
+      shuffle: false,
+    }
   },
   resolve: {
     alias: {

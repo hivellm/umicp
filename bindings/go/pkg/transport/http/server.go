@@ -6,6 +6,7 @@ import (
 	"io"
 	"net/http"
 	"sync"
+	"sync/atomic"
 	"time"
 
 	"github.com/hivellm/umicp-go/pkg/transport"
@@ -41,6 +42,8 @@ type Server struct {
 	handler func(*umicp.Envelope) (*umicp.Envelope, error)
 	mu      sync.RWMutex
 	stats   *transport.Stats
+	running int32    // atomic boolean
+	conns   sync.Map // map[string]*Connection
 }
 
 // NewServer creates a new HTTP/2 server
@@ -73,6 +76,10 @@ func (s *Server) OnRequest(handler func(*umicp.Envelope) (*umicp.Envelope, error
 
 // Start starts the HTTP/2 server
 func (s *Server) Start(ctx context.Context) error {
+	if s.IsRunning() {
+		return fmt.Errorf("server already running")
+	}
+
 	h2s := &http2.Server{}
 
 	mux := http.NewServeMux()
@@ -86,12 +93,40 @@ func (s *Server) Start(ctx context.Context) error {
 		MaxHeaderBytes: s.config.MaxHeaderBytes,
 	}
 
+	atomic.StoreInt32(&s.running, 1)
+
 	go func() {
-		<-ctx.Done()
-		s.server.Shutdown(context.Background())
+		if err := s.server.ListenAndServe(); err != http.ErrServerClosed {
+			atomic.StoreInt32(&s.running, 0)
+		}
 	}()
 
-	return s.server.ListenAndServe()
+	go func() {
+		<-ctx.Done()
+		s.Stop(context.Background())
+	}()
+
+	return nil
+}
+
+// Stop gracefully stops the HTTP/2 server
+func (s *Server) Stop(ctx context.Context) error {
+	if !s.IsRunning() {
+		return nil
+	}
+
+	atomic.StoreInt32(&s.running, 0)
+
+	if s.server != nil {
+		return s.server.Shutdown(ctx)
+	}
+
+	return nil
+}
+
+// IsRunning returns true if server is running
+func (s *Server) IsRunning() bool {
+	return atomic.LoadInt32(&s.running) == 1
 }
 
 // handleRequest handles incoming HTTP requests
@@ -168,10 +203,12 @@ func (s *Server) Stats() *transport.Stats {
 	return &statsCopy
 }
 
-// Shutdown gracefully shuts down the server
-func (s *Server) Shutdown(ctx context.Context) error {
-	if s.server != nil {
-		return s.server.Shutdown(ctx)
-	}
-	return nil
+// GetConnections returns the number of active connections
+func (s *Server) GetConnections() int {
+	count := 0
+	s.conns.Range(func(key, value interface{}) bool {
+		count++
+		return true
+	})
+	return count
 }

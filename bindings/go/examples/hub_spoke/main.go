@@ -11,7 +11,7 @@ import (
 )
 
 func main() {
-	fmt.Println("=== UMICP Hub-and-Spoke Topology Example ===\n")
+	fmt.Println("=== UMICP Hub-and-Spoke Topology Example ===")
 
 	ctx := context.Background()
 

@@ -11,7 +11,7 @@ import (
 )
 
 func main() {
-	fmt.Println("=== UMICP HTTP/2 Example ===\n")
+	fmt.Println("=== UMICP HTTP/2 Example ===")
 
 	// Start server
 	go runHTTPServer()
@@ -57,14 +57,20 @@ func runHTTPServer() {
 
 func runHTTPClient() {
 	config := httpTransport.DefaultClientConfig()
-	config.BaseURL = "http://127.0.0.1:8081/umicp"
+	config.BaseURL = "http://127.0.0.1:8081"
 
 	client := httpTransport.NewClient(*config)
 	defer client.Close()
 
 	ctx := context.Background()
 
-	fmt.Println("[CLIENT] Sending requests...\n")
+	// Connect
+	if err := client.Connect(ctx); err != nil {
+		log.Fatalf("[CLIENT] Failed to connect: %v", err)
+	}
+	defer client.Disconnect(ctx)
+
+	fmt.Println("[CLIENT] Connected, sending requests...")
 
 	// Send 5 requests
 	for i := 1; i <= 5; i++ {
@@ -77,13 +83,13 @@ func runHTTPClient() {
 
 		fmt.Printf("[CLIENT] Sending request #%d\n", i)
 
-		response, err := client.Send(ctx, env)
+		err := client.Send(ctx, env)
 		if err != nil {
 			log.Printf("[CLIENT] Error: %v", err)
 			continue
 		}
 
-		fmt.Printf("[CLIENT] Response #%d: %s\n", i, response.Capabilities["status"])
+		fmt.Printf("[CLIENT] Request #%d sent successfully\n", i)
 
 		time.Sleep(500 * time.Millisecond)
 	}
@@ -91,10 +97,10 @@ func runHTTPClient() {
 	// Print statistics
 	stats := client.Stats()
 	fmt.Printf("\n[CLIENT] Statistics:\n")
-	fmt.Printf("  Requests Sent: %d\n", stats.MessagesSent)
-	fmt.Printf("  Responses Received: %d\n", stats.MessagesReceived)
+	fmt.Printf("  Messages Sent: %d\n", stats.MessagesSent)
 	fmt.Printf("  Bytes Sent: %d\n", stats.BytesSent)
-	fmt.Printf("  Bytes Received: %d\n", stats.BytesReceived)
+	fmt.Printf("  Errors: %d\n", stats.Errors)
+	fmt.Printf("  Uptime: %v\n", stats.Uptime)
 
 	fmt.Println("\n=== Example Complete ===")
 }

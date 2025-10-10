@@ -131,6 +131,7 @@ func DeserializeFrame(r io.Reader) (*Frame, error) {
 			return nil, fmt.Errorf("failed to read frame payload: %w", err)
 		}
 	}
+	// For zero-length frames, Payload remains nil (as set by default)
 
 	return frame, nil
 }

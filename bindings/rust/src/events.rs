@@ -5,6 +5,7 @@ EventEmitter pattern for UMICP with multiple subscribers.
 */
 
 use crate::Envelope;
+#[cfg(feature = "websocket")]
 use crate::peer::PeerInfo;
 use parking_lot::RwLock;
 use std::collections::HashMap;
@@ -36,16 +37,19 @@ pub enum EventData {
         peer_id: String,
     },
     /// Peer connection event
+    #[cfg(feature = "websocket")]
     PeerConnect {
         peer_id: String,
         info: PeerInfo,
     },
     /// Peer disconnection event
+    #[cfg(feature = "websocket")]
     PeerDisconnect {
         peer_id: String,
         info: PeerInfo,
     },
     /// Handshake complete event
+    #[cfg(feature = "websocket")]
     HandshakeComplete {
         peer_id: String,
         info: PeerInfo,
@@ -109,9 +113,8 @@ impl EventEmitter {
         if let Some(listeners) = listeners {
             for listener in listeners {
                 let data_clone = data.clone();
-                tokio::spawn(async move {
-                    listener(data_clone);
-                });
+                // Call listener synchronously since we're not using async runtime
+                listener(data_clone);
             }
         }
     }
@@ -177,6 +180,7 @@ impl EventEmitter {
     }
 
     /// Emit peer connect event
+    #[cfg(feature = "websocket")]
     pub fn emit_peer_connect(&self, peer_id: String, info: PeerInfo) {
         self.emit(
             EventType::PeerConnect,
@@ -185,6 +189,7 @@ impl EventEmitter {
     }
 
     /// Emit peer disconnect event
+    #[cfg(feature = "websocket")]
     pub fn emit_peer_disconnect(&self, peer_id: String, info: PeerInfo) {
         self.emit(
             EventType::PeerDisconnect,
@@ -193,6 +198,7 @@ impl EventEmitter {
     }
 
     /// Emit handshake complete event
+    #[cfg(feature = "websocket")]
     pub fn emit_handshake_complete(&self, peer_id: String, info: PeerInfo) {
         self.emit(
             EventType::HandshakeComplete,
@@ -275,6 +281,7 @@ mod tests {
         assert!(*called.read());
     }
 
+    #[cfg(feature = "websocket")]
     #[tokio::test]
     async fn test_emit_async() {
         let emitter = EventEmitter::new();

@@ -8,6 +8,13 @@ use umicp_core::{Envelope, OperationType, WebSocketClient, WebSocketServer};
 use std::time::Duration;
 use tokio::time::{sleep, timeout};
 
+// Helper to get a random available port
+fn get_test_port() -> u16 {
+    use std::net::TcpListener;
+    let listener = TcpListener::bind("127.0.0.1:0").unwrap();
+    listener.local_addr().unwrap().port()
+}
+
 #[tokio::test]
 async fn test_create_websocket_client() {
     let client = WebSocketClient::new("ws://localhost:8080");
@@ -24,9 +31,14 @@ async fn test_create_websocket_server() {
 }
 
 #[tokio::test(flavor = "multi_thread")]
+#[serial_test::serial]
 async fn test_client_server_connection() {
+    // Use random port to avoid conflicts
+    let port = get_test_port();
+    let addr = format!("127.0.0.1:{}", port);
+
     // Start server (non-blocking now!)
-    let mut server = WebSocketServer::new("127.0.0.1:20091")
+    let mut server = WebSocketServer::new(&addr)
         .expect("Failed to create server");
 
     let _server_handle = server.start().await.expect("Failed to start server");
@@ -35,9 +47,9 @@ async fn test_client_server_connection() {
     sleep(Duration::from_millis(500)).await;
 
     // Connect client
-    let client = WebSocketClient::new("ws://127.0.0.1:20091");
+    let client = WebSocketClient::new(&format!("ws://{}", addr));
 
-    let connect_result = timeout(Duration::from_secs(5), client.connect()).await;
+    let connect_result = timeout(Duration::from_secs(10), client.connect()).await;
 
     assert!(connect_result.is_ok(), "Connection timed out");
     assert!(connect_result.unwrap().is_ok(), "Connection failed");
@@ -45,14 +57,20 @@ async fn test_client_server_connection() {
 
     let _ = client.disconnect().await;
 
-    // Cleanup
+    // Cleanup with delay
     server.shutdown().expect("Failed to shutdown server");
+    sleep(Duration::from_millis(500)).await; // Wait for port to be released
 }
 
 #[tokio::test(flavor = "multi_thread")]
+#[serial_test::serial]
 async fn test_send_message_client_to_server() {
+    // Use random port to avoid conflicts
+    let port = get_test_port();
+    let addr = format!("127.0.0.1:{}", port);
+
     // Start server
-    let mut server = WebSocketServer::new("127.0.0.1:20092")
+    let mut server = WebSocketServer::new(&addr)
         .expect("Failed to create server");
 
     let _handle = server.start().await.expect("Failed to start server");
@@ -60,7 +78,7 @@ async fn test_send_message_client_to_server() {
     sleep(Duration::from_millis(500)).await;
 
     // Connect and send
-    let client = WebSocketClient::new("ws://127.0.0.1:20092");
+    let client = WebSocketClient::new(&format!("ws://{}", addr));
     client.connect().await.expect("Failed to connect");
 
     sleep(Duration::from_millis(100)).await;
@@ -85,18 +103,24 @@ async fn test_send_message_client_to_server() {
 
     client.disconnect().await.expect("Failed to disconnect");
     server.shutdown().expect("Failed to shutdown server");
+    sleep(Duration::from_millis(500)).await; // Wait for port to be released
 }
 
 #[tokio::test(flavor = "multi_thread")]
+#[serial_test::serial]
 async fn test_multiple_messages() {
-    let mut server = WebSocketServer::new("127.0.0.1:20093")
+    // Use random port
+    let port = get_test_port();
+    let addr = format!("127.0.0.1:{}", port);
+
+    let mut server = WebSocketServer::new(&addr)
         .expect("Failed to create server");
 
     let _handle = server.start().await.expect("Failed to start server");
 
-    sleep(Duration::from_millis(200)).await;
+    sleep(Duration::from_millis(500)).await;
 
-    let client = WebSocketClient::new("ws://127.0.0.1:20093");
+    let client = WebSocketClient::new(&format!("ws://{}", addr));
     client.connect().await.expect("Failed to connect");
 
     sleep(Duration::from_millis(100)).await;
@@ -122,18 +146,24 @@ async fn test_multiple_messages() {
 
     client.disconnect().await.expect("Failed to disconnect");
     server.shutdown().expect("Failed to shutdown server");
+    sleep(Duration::from_millis(500)).await; // Wait for port to be released
 }
 
 #[tokio::test(flavor = "multi_thread")]
+#[serial_test::serial]
 async fn test_client_disconnect_and_reconnect() {
-    let mut server = WebSocketServer::new("127.0.0.1:20094")
+    // Use random port
+    let port = get_test_port();
+    let addr = format!("127.0.0.1:{}", port);
+
+    let mut server = WebSocketServer::new(&addr)
         .expect("Failed to create server");
 
     let _handle = server.start().await.expect("Failed to start server");
 
-    sleep(Duration::from_millis(200)).await;
+    sleep(Duration::from_millis(500)).await;
 
-    let client = WebSocketClient::new("ws://127.0.0.1:20094");
+    let client = WebSocketClient::new(&format!("ws://{}", addr));
 
     // First connection
     client.connect().await.expect("Failed to connect");
@@ -157,6 +187,7 @@ async fn test_client_disconnect_and_reconnect() {
 
     client.disconnect().await.expect("Failed to disconnect");
     server.shutdown().expect("Failed to shutdown server");
+    sleep(Duration::from_millis(500)).await; // Wait for port to be released
 }
 
 #[tokio::test]

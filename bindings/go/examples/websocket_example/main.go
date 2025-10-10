@@ -11,7 +11,7 @@ import (
 )
 
 func main() {
-	fmt.Println("=== UMICP WebSocket Example ===\n")
+	fmt.Println("=== UMICP WebSocket Example ===")
 
 	// Start server in goroutine
 	go runServer()

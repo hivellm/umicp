@@ -11,7 +11,7 @@ import (
 )
 
 func main() {
-	fmt.Println("=== UMICP Federated Learning Example ===\n")
+	fmt.Println("=== UMICP Federated Learning Example ===")
 
 	ctx := context.Background()
 

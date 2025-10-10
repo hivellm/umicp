@@ -8,7 +8,7 @@ import (
 )
 
 func main() {
-	fmt.Println("=== UMICP Go Bindings - Basic Example ===\n")
+	fmt.Println("=== UMICP Go Bindings - Basic Example ===")
 
 	// Example 1: Create a basic envelope
 	fmt.Println("1. Creating a basic envelope...")

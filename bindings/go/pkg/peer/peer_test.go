@@ -104,6 +104,7 @@ func TestPeer_EventHandlers(t *testing.T) {
 
 	// Note: In real test, would use channels to verify
 	assert.NotNil(t, peer.eventBus)
+	assert.True(t, messageCalled)
 }
 
 func TestPeerConnection_Types(t *testing.T) {

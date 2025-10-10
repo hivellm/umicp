@@ -570,3 +570,4 @@ TEST(ConfigMultipleTest, ConfigInheritance) {
     EXPECT_TRUE(derived.enable_compression);
 }
 
+

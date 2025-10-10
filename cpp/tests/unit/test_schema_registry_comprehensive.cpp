@@ -723,3 +723,4 @@ TEST(SchemaRegistryScenarioTest, APIVersioning) {
     EXPECT_GE(versions.size(), 9); // 3 major * 3 minor
 }
 
+

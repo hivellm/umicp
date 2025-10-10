@@ -64,22 +64,26 @@ func TestClient_CallbacksRegistration(t *testing.T) {
 		messageCalled = true
 	})
 	assert.NotNil(t, client.onMessage)
+	assert.False(t, messageCalled)
 
 	connectCalled := false
 	client.OnConnect(func() {
 		connectCalled = true
 	})
 	assert.NotNil(t, client.onConnect)
+	assert.False(t, connectCalled)
 
 	disconnectCalled := false
 	client.OnDisconnect(func(err error) {
 		disconnectCalled = true
 	})
 	assert.NotNil(t, client.onDisconnect)
+	assert.False(t, disconnectCalled)
 
 	errorCalled := false
 	client.OnError(func(err error) {
 		errorCalled = true
 	})
 	assert.NotNil(t, client.onError)
+	assert.False(t, errorCalled)
 }

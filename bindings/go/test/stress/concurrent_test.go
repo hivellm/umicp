@@ -5,7 +5,9 @@ import (
 	"testing"
 
 	"github.com/hivellm/umicp-go/pkg/umicp"
+	"github.com/hivellm/umicp-go/pkg/umicp/matrix"
 	"github.com/stretchr/testify/assert"
+	"github.com/stretchr/testify/require"
 )
 
 // TestConcurrent_EnvelopeCreation tests concurrent envelope creation

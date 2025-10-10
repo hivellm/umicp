@@ -12,7 +12,7 @@ import (
 )
 
 func main() {
-	fmt.Println("=== UMICP Full Mesh Network Example ===\n")
+	fmt.Println("=== UMICP Full Mesh Network Example ===")
 
 	ctx := context.Background()
 	var wg sync.WaitGroup

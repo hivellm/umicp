@@ -11,7 +11,7 @@ import (
 )
 
 func main() {
-	fmt.Println("=== UMICP Multiplexed Peer Example ===\n")
+	fmt.Println("=== UMICP Multiplexed Peer Example ===")
 
 	// Start 3 interconnected peers
 	go runPeerA()

@@ -7,6 +7,7 @@ import (
 	"io"
 	"net/http"
 	"sync"
+	"sync/atomic"
 	"time"
 
 	"github.com/hivellm/umicp-go/pkg/transport"
@@ -33,10 +34,11 @@ func DefaultClientConfig() *ClientConfig {
 
 // Client represents an HTTP/2 streaming client
 type Client struct {
-	config ClientConfig
-	client *http.Client
-	mu     sync.RWMutex
-	stats  *transport.Stats
+	config    ClientConfig
+	client    *http.Client
+	mu        sync.RWMutex
+	stats     *transport.Stats
+	connected int32 // atomic boolean
 }
 
 // NewClient creates a new HTTP/2 client
@@ -70,27 +72,47 @@ func NewClient(config ClientConfig) *Client {
 	}
 }
 
-// Send sends an envelope and waits for response
-func (c *Client) Send(ctx context.Context, env *umicp.Envelope) (*umicp.Envelope, error) {
-	data, err := env.Serialize()
-	if err != nil {
-		return nil, fmt.Errorf("serialization failed: %w", err)
+// Connect establishes connection (HTTP/2 is connectionless, so this is a no-op)
+func (c *Client) Connect(ctx context.Context) error {
+	atomic.StoreInt32(&c.connected, 1)
+	c.mu.Lock()
+	c.stats.ConnectedAt = time.Now()
+	c.mu.Unlock()
+	return nil
+}
+
+// Disconnect closes the connection
+func (c *Client) Disconnect(ctx context.Context) error {
+	atomic.StoreInt32(&c.connected, 0)
+	return nil
+}
+
+// Send sends an envelope via HTTP/2 POST request
+func (c *Client) Send(ctx context.Context, env *umicp.Envelope) error {
+	if !c.IsConnected() {
+		return fmt.Errorf("client not connected")
 	}
 
-	req, err := http.NewRequestWithContext(ctx, "POST", c.config.BaseURL, bytes.NewReader(data))
+	data, err := env.Serialize()
 	if err != nil {
-		return nil, fmt.Errorf("request creation failed: %w", err)
+		return fmt.Errorf("serialization failed: %w", err)
+	}
+
+	req, err := http.NewRequestWithContext(ctx, "POST", c.config.BaseURL+"/umicp", bytes.NewReader(data))
+	if err != nil {
+		return fmt.Errorf("request creation failed: %w", err)
 	}
 
 	req.Header.Set("Content-Type", "application/json")
 	req.Header.Set("Accept", "application/json")
+	req.Header.Set("User-Agent", "UMICP-Go/1.0")
 
 	resp, err := c.client.Do(req)
 	if err != nil {
 		c.mu.Lock()
 		c.stats.Errors++
 		c.mu.Unlock()
-		return nil, fmt.Errorf("request failed: %w", err)
+		return fmt.Errorf("request failed: %w", err)
 	}
 	defer resp.Body.Close()
 
@@ -98,23 +120,26 @@ func (c *Client) Send(ctx context.Context, env *umicp.Envelope) (*umicp.Envelope
 		c.mu.Lock()
 		c.stats.Errors++
 		c.mu.Unlock()
-		return nil, fmt.Errorf("unexpected status code: %d", resp.StatusCode)
+		return fmt.Errorf("unexpected status code: %d", resp.StatusCode)
 	}
 
-	respData, err := io.ReadAll(resp.Body)
+	_, err = io.ReadAll(resp.Body)
 	if err != nil {
-		return nil, fmt.Errorf("response read failed: %w", err)
+		return fmt.Errorf("response read failed: %w", err)
 	}
 
 	c.mu.Lock()
 	c.stats.MessagesSent++
 	c.stats.BytesSent += int64(len(data))
-	c.stats.MessagesReceived++
-	c.stats.BytesReceived += int64(len(respData))
 	c.stats.LastMessageAt = time.Now()
 	c.mu.Unlock()
 
-	return umicp.DeserializeEnvelope(respData)
+	return nil
+}
+
+// IsConnected returns true if client is connected
+func (c *Client) IsConnected() bool {
+	return atomic.LoadInt32(&c.connected) == 1
 }
 
 // Stats returns transport statistics

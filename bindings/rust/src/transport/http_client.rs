@@ -1,7 +1,17 @@
 /*!
 # HTTP Client Implementation
 
-HTTP client using reqwest for UMICP protocol.
+HTTP/1.1 and HTTP/2 client using reqwest for UMICP protocol.
+
+The client uses HTTP/2 Prior Knowledge mode for maximum performance
+when communicating with known HTTP/2-capable servers.
+
+## Features
+- HTTP/2 with multiplexing
+- Connection pooling
+- Automatic retries
+- Statistics tracking
+- Health checks
 */
 
 use crate::error::{Result, UmicpError};
@@ -50,10 +60,13 @@ pub struct HttpClient {
 }
 
 impl HttpClient {
-    /// Create new HTTP client
+    /// Create new HTTP client with HTTP/2 support
     pub fn new(base_url: impl Into<String>) -> Result<Self> {
         let client = Client::builder()
+            .http2_prior_knowledge()  // Force HTTP/2
             .timeout(Duration::from_secs(30))
+            .pool_idle_timeout(Duration::from_secs(90))
+            .pool_max_idle_per_host(10)
             .build()
             .map_err(|e| UmicpError::transport(format!("Failed to create client: {}", e)))?;
 
@@ -70,7 +83,10 @@ impl HttpClient {
     /// Create with custom configuration
     pub fn with_config(config: HttpClientConfig) -> Result<Self> {
         let client = Client::builder()
+            .http2_prior_knowledge()  // Force HTTP/2
             .timeout(config.timeout)
+            .pool_idle_timeout(Duration::from_secs(90))
+            .pool_max_idle_per_host(10)
             .build()
             .map_err(|e| UmicpError::transport(format!("Failed to create client: {}", e)))?;
 

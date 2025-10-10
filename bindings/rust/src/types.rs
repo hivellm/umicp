@@ -146,7 +146,7 @@ impl Default for PayloadHint {
 }
 
 /// Transport statistics
-#[derive(Debug, Clone, Serialize, Deserialize)]
+#[derive(Debug, Clone, Serialize, Deserialize, Default)]
 pub struct TransportStats {
     /// Total messages sent
     pub messages_sent: u64,
