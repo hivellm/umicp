@@ -27,7 +27,7 @@ func main() {
 
 	// Register remote services
 	fmt.Println("\n2. Discovering remote services...")
-	
+
 	service1 := discovery.NewServiceInfo("svc-001", "translation-service", "ws://localhost:8081")
 	service1.AddCapability("translation")
 	service1.AddCapability("language-detection")
@@ -110,11 +110,11 @@ func main() {
 	fmt.Println("\n9. Simulating service lifecycle...")
 	for i := 0; i < 3; i++ {
 		time.Sleep(2 * time.Second)
-		
+
 		// Update some services
 		sd.UpdateServiceHealth("svc-001")
 		sd.UpdateServiceHealth("svc-002")
-		
+
 		stats := sd.GetStats()
 		fmt.Printf("   [%ds] Services: %d active, %d stale\n",
 			(i+1)*2, stats.ActiveServices, stats.StaleServices)
@@ -140,4 +140,3 @@ func main() {
 
 	fmt.Println("\n✓ Service Discovery example completed!")
 }
-

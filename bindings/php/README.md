@@ -160,28 +160,3 @@ umicp/bindings/php/
 ├── config/       Configuration
 └── Build scripts Automation
 ```
-
----
-
-## 🤝 Contributing
-
-See [CONTRIBUTING.md](docs/CONTRIBUTING.md)
-
----
-
-## 📄 License
-
-MIT License - See [LICENSE](LICENSE)
-
----
-
-## 🔗 Links
-
-- **Repository**: https://github.com/hivellm/umicp
-- **Issues**: https://github.com/hivellm/umicp/issues
-- **Documentation**: [docs/](docs/)
-
----
-
-**Status**: ✅ Production-Ready | **Version**: 0.1.1 | **Grade**: A+ | **Team**: HiveLLM
-

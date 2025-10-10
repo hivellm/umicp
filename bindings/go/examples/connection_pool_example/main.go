@@ -40,7 +40,7 @@ func main() {
 	fmt.Println("\n3. Creating pooled connections...")
 	conn1 := pool.NewPooledConnection("ws://localhost:8080")
 	conn2 := pool.NewPooledConnection("ws://localhost:8081")
-	
+
 	fmt.Printf("   ✓ Connection 1: %s (State: Available)\n", conn1.ID[:8])
 	fmt.Printf("   ✓ Connection 2: %s (State: Available)\n", conn2.ID[:8])
 
@@ -67,7 +67,7 @@ func main() {
 
 	// Check connection states
 	fmt.Println("\n7. Checking connection properties...")
-	
+
 	fmt.Printf("   Connection 1:\n")
 	fmt.Printf("     • ID: %s\n", conn1.ID[:16])
 	fmt.Printf("     • Address: %s\n", conn1.Address)
@@ -88,9 +88,9 @@ func main() {
 	fmt.Println("\n9. Testing stale connection detection...")
 	oldConn := pool.NewPooledConnection("ws://localhost:8082")
 	oldConn.CreatedAt = time.Now().Add(-10 * time.Minute)
-	
+
 	if oldConn.IsStale(5 * time.Minute) {
-		fmt.Printf("   ✓ Connection is stale (created %s ago)\n", 
+		fmt.Printf("   ✓ Connection is stale (created %s ago)\n",
 			time.Since(oldConn.CreatedAt).Round(time.Minute))
 	}
 
@@ -98,9 +98,9 @@ func main() {
 	fmt.Println("\n10. Testing idle connection detection...")
 	idleConn := pool.NewPooledConnection("ws://localhost:8083")
 	idleConn.LastUsed = time.Now().Add(-3 * time.Minute)
-	
+
 	if idleConn.IsIdle(2 * time.Minute) {
-		fmt.Printf("   ✓ Connection is idle (last used %s ago)\n", 
+		fmt.Printf("   ✓ Connection is idle (last used %s ago)\n",
 			time.Since(idleConn.LastUsed).Round(time.Minute))
 	}
 
@@ -116,16 +116,16 @@ func main() {
 	// Demonstrate connection lifecycle
 	fmt.Println("\n12. Connection Lifecycle Example:")
 	lifecycleConn := pool.NewPooledConnection("ws://localhost:8084")
-	
+
 	fmt.Printf("   ① Created: State=%v\n", getStateName(lifecycleConn.GetState()))
-	
+
 	lifecycleConn.Acquire()
-	fmt.Printf("   ② Acquired: State=%v, UseCount=%d\n", 
+	fmt.Printf("   ② Acquired: State=%v, UseCount=%d\n",
 		getStateName(lifecycleConn.GetState()), lifecycleConn.UseCount)
-	
+
 	lifecycleConn.Release()
 	fmt.Printf("   ③ Released: State=%v\n", getStateName(lifecycleConn.GetState()))
-	
+
 	lifecycleConn.Close(ctx)
 	fmt.Printf("   ④ Closed: State=%v\n", getStateName(lifecycleConn.GetState()))
 
@@ -196,4 +196,3 @@ func getStateName(state pool.PoolConnectionState) string {
 		return "Unknown"
 	}
 }
-

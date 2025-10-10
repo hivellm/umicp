@@ -342,4 +342,3 @@ func TestMultipleAcquires(t *testing.T) {
 		t.Errorf("Expected UseCount 3, got %d", conn.UseCount)
 	}
 }
-

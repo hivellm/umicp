@@ -198,7 +198,7 @@ func (cp *ConnectionPool) Initialize(ctx context.Context) error {
 
 	for i := 0; i < cp.minSize; i++ {
 		conn := NewPooledConnection(cp.address)
-		
+
 		if err := conn.Client.Connect(ctx); err != nil {
 			return err
 		}
@@ -250,7 +250,7 @@ func (cp *ConnectionPool) Acquire(ctx context.Context) (*PooledConnection, error
 		cp.mu.Lock()
 		if len(cp.connections) < cp.maxSize {
 			conn := NewPooledConnection(cp.address)
-			
+
 			if err := conn.Client.Connect(ctx); err != nil {
 				cp.mu.Unlock()
 				return nil, err
@@ -322,7 +322,7 @@ func (cp *ConnectionPool) Remove(connID string) error {
 	}
 
 	delete(cp.connections, connID)
-	
+
 	if conn.GetState() == StateInUse {
 		cp.stats.InUseConnections--
 	} else {
@@ -383,14 +383,14 @@ func (cp *ConnectionPool) CleanupStaleConnections() int {
 	for id, conn := range cp.connections {
 		if conn.IsStale(cp.maxAge) {
 			delete(cp.connections, id)
-			
+
 			if conn.GetState() == StateInUse {
 				cp.stats.InUseConnections--
 			} else {
 				cp.stats.AvailableConnections--
 			}
 			cp.stats.TotalConnections--
-			
+
 			conn.Close(context.Background())
 			removed++
 		}
@@ -465,4 +465,3 @@ type PoolStats struct {
 	TotalAcquires        int `json:"total_acquires"`
 	TotalReleases        int `json:"total_releases"`
 }
-

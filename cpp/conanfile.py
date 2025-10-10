@@ -28,12 +28,12 @@ class UmicpConan(ConanFile):
     default_options = {
         "shared": False,
         "fPIC": True,
-        "with_websocket": True,
-        "with_http": True,
+        "with_websocket": False,  # Disabled by default for simpler dependencies
+        "with_http": False,       # Disabled by default for simpler dependencies
         "with_tests": False
     }
 
-    exports_sources = "CMakeLists.txt", "src/*", "include/*", "examples/*", "tests/*"
+    exports_sources = "CMakeLists.txt", "src/*", "include/*", "examples/*", "tests/*", "*.pc.in", "*.cmake.in", "CPack.cmake"
 
     def config_options(self):
         if self.settings.os == "Windows":
@@ -66,10 +66,10 @@ class UmicpConan(ConanFile):
 
     def generate(self):
         tc = CMakeToolchain(self)
-        tc.variables["UMICP_BUILD_TESTS"] = self.options.with_tests
-        tc.variables["UMICP_BUILD_EXAMPLES"] = False
-        tc.variables["UMICP_ENABLE_WEBSOCKET"] = self.options.with_websocket
-        tc.variables["UMICP_ENABLE_HTTP"] = self.options.with_http
+        tc.variables["BUILD_TESTS"] = self.options.with_tests  # Match CMakeLists.txt variable
+        tc.variables["BUILD_EXAMPLES"] = False  # Match CMakeLists.txt variable
+        tc.variables["ENABLE_WEBSOCKET"] = self.options.with_websocket
+        tc.variables["ENABLE_HTTP"] = self.options.with_http
         tc.generate()
 
         deps = CMakeDeps(self)
