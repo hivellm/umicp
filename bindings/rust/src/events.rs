@@ -225,6 +225,7 @@ mod tests {
     use super::*;
     use std::time::Duration;
 
+
     #[test]
     fn test_event_emitter_creation() {
         let emitter = EventEmitter::new();

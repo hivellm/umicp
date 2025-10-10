@@ -7,10 +7,11 @@ Maintains a pool of reusable connections to reduce connection overhead.
 
 #[cfg(feature = "websocket")]
 use crate::transport::WebSocketClient;
-use parking_lot::RwLock;
 use std::collections::{HashMap, VecDeque};
 use std::sync::Arc;
 use std::time::{Duration, SystemTime};
+#[cfg(feature = "websocket")]
+use parking_lot::RwLock;
 
 /// Connection state in pool
 #[derive(Debug, Clone, Copy, PartialEq, Eq)]

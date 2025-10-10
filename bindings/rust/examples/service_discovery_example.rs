@@ -69,7 +69,7 @@ fn main() -> Result<(), Box<dyn std::error::Error>> {
         println!("  From: {}", envelope.from());
         println!("  To: {}", envelope.to());
         println!("  Type: {:?}", envelope.operation());
-        println!("  Capabilities: {}", envelope.capabilities().len());
+        println!("  Capabilities: {}", envelope.capabilities().as_ref().map(|c| c.len()).unwrap_or(0));
     }
 
     // Simulate receiving a discovery message

@@ -4,10 +4,14 @@
 Demonstrates HTTP server and client communication.
 */
 
+#[cfg(feature = "http2")]
 use std::sync::Arc;
+#[cfg(feature = "http2")]
 use tokio::time::{sleep, Duration};
+#[cfg(feature = "http2")]
 use umicp_core::{Envelope, HttpClient, HttpServer, OperationType};
 
+#[cfg(feature = "http2")]
 #[tokio::main]
 async fn main() -> Result<(), Box<dyn std::error::Error>> {
     tracing_subscriber::fmt::init();

@@ -4,10 +4,14 @@
 Demonstrates WebSocketPeer with auto-handshake and message handling.
 */
 
+#[cfg(feature = "websocket")]
 use std::sync::Arc;
+#[cfg(feature = "websocket")]
 use tokio::time::{sleep, Duration};
+#[cfg(feature = "websocket")]
 use umicp_core::{Envelope, OperationType, WebSocketPeer, WebSocketPeerConfig, WebSocketClient};
 
+#[cfg(feature = "websocket")]
 #[tokio::main]
 async fn main() -> Result<(), Box<dyn std::error::Error>> {
     tracing_subscriber::fmt::init();

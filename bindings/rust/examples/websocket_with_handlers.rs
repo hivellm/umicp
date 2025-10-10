@@ -4,10 +4,14 @@
 Demonstrates the refactored non-blocking WebSocket server with message handlers.
 */
 
+#[cfg(feature = "websocket")]
 use std::sync::Arc;
+#[cfg(feature = "websocket")]
 use tokio::time::{sleep, Duration};
+#[cfg(feature = "websocket")]
 use umicp_core::{Envelope, OperationType, WebSocketServer};
 
+#[cfg(feature = "websocket")]
 #[tokio::main]
 async fn main() -> Result<(), Box<dyn std::error::Error>> {
     // Initialize tracing

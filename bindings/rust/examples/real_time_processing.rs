@@ -433,6 +433,7 @@ fn demonstrate_real_time_analytics(analytics: Arc<AnalyticsEngine>) -> Result<()
 
         // Perform statistical analysis
         let analysis = analytics.analyze_data(&data)?;
+        println!("Stream {}: mean={:.2}, std_dev={:.2}, min={:.2}, max={:.2}",
                  stream_name,
                  analysis["mean"],
                  analysis["std_dev"],

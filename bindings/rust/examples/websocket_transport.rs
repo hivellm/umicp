@@ -5,10 +5,15 @@ This example demonstrates how to use the WebSocket transport layer for
 real-time communication with UMICP envelopes.
 */
 
+use std::sync::Arc;
+use tokio::sync::Mutex;
+use umicp_core::{Envelope, OperationType, WebSocketClient, WebSocketServer};
+
 // WebSocket transport example - requires websocket feature
 
 #[cfg(feature = "websocket")]
-fn main() -> Result<(), Box<dyn std::error::Error>> {
+#[tokio::main]
+async fn main() -> Result<(), Box<dyn std::error::Error>> {
     println!("UMICP Rust Bindings - WebSocket Transport Example");
     println!("================================================\n");
 
@@ -30,16 +35,18 @@ async fn run_server() -> Result<(), Box<dyn std::error::Error>> {
     println!("Starting WebSocket server...");
 
     // Create server transport
-    let mut server = WebSocketTransport::new_server("127.0.0.1:8080").await?;
+    let mut server = WebSocketServer::new("127.0.0.1:8080")?;
 
     // Message counter
     let message_count = Arc::new(Mutex::new(0));
 
     // Set message handler
     let message_count_clone = Arc::clone(&message_count);
-    server.set_message_handler(move |envelope: Envelope, conn_id: String| {
+    let server_clone = server.clone();
+    server.set_message_handler(Arc::new(move |envelope: Envelope, conn_id: String| {
         let message_count = Arc::clone(&message_count_clone);
-        async move {
+        let server_clone = server_clone.clone();
+        tokio::spawn(async move {
             let mut count = message_count.lock().await;
             *count += 1;
 
@@ -47,13 +54,6 @@ async fn run_server() -> Result<(), Box<dyn std::error::Error>> {
             println!("   From: {}", envelope.from());
             println!("   Operation: {:?}", envelope.operation());
             println!("   Message ID: {}", envelope.message_id());
-
-            if let Some(capabilities) = envelope.capabilities() {
-                println!("   Capabilities:");
-                for (key, value) in capabilities {
-                    println!("     {}: {}", key, value);
-                }
-            }
 
             // Create acknowledgment response
             let response = Envelope::builder()
@@ -63,30 +63,21 @@ async fn run_server() -> Result<(), Box<dyn std::error::Error>> {
                 .message_id(format!("ack-{}", envelope.message_id()))
                 .capability("status", "received")
                 .capability("server_time", &chrono::Utc::now().to_rfc3339())
-                .build()?;
+                .build().unwrap();
 
             // Send response
-            server.send(response, &conn_id).await?;
+            let _ = server_clone.send(response, &conn_id).await;
             println!("   ✓ Sent acknowledgment\n");
+        });
+    }));
 
-            Ok(())
-        }
-    });
-
-    // Set connection handler
-    server.set_connection_handler(|connected: bool, conn_id: String| async move {
-        if connected {
-            println!("🔗 Client connected: {}", conn_id);
-        } else {
-            println!("📴 Client disconnected: {}", conn_id);
-        }
-    });
-
-    println!("🚀 Server running on ws://127.0.0.1:8080");
+    // Start server
+    let handle = server.start().await?;
+    println!("🚀 Server listening on ws://127.0.0.1:8080");
     println!("💡 Press Ctrl+C to stop\n");
 
-    // Run server
-    server.run().await?;
+    // Wait for server to finish
+    handle.await?;
 
     Ok(())
 }
@@ -96,16 +87,16 @@ async fn run_client() -> Result<(), Box<dyn std::error::Error>> {
     println!("Starting WebSocket client...");
 
     // Create client transport
-    let mut client = WebSocketTransport::new_client("ws://127.0.0.1:8080").await?;
+    let client = WebSocketClient::new("ws://127.0.0.1:8080");
 
     // Message counter
     let message_count = Arc::new(Mutex::new(0));
 
     // Set message handler for responses
     let message_count_clone = Arc::clone(&message_count);
-    client.set_message_handler(move |envelope: Envelope, _conn_id: String| {
+    client.set_message_handler(Arc::new(move |envelope: Envelope| {
         let message_count = Arc::clone(&message_count_clone);
-        async move {
+        tokio::spawn(async move {
             let mut count = message_count.lock().await;
             *count += 1;
 
@@ -113,39 +104,11 @@ async fn run_client() -> Result<(), Box<dyn std::error::Error>> {
             println!("   From: {}", envelope.from());
             println!("   Operation: {:?}", envelope.operation());
             println!("   Message ID: {}", envelope.message_id());
+        });
+    }));
 
-            if let Some(capabilities) = envelope.capabilities() {
-                println!("   Capabilities:");
-                for (key, value) in capabilities {
-                    println!("     {}: {}", key, value);
-                }
-            }
-            println!();
-
-            Ok(())
-        }
-    });
-
-    // Set connection handler
-    client.set_connection_handler(|connected: bool, conn_id: String| async move {
-        if connected {
-            println!("🔗 Connected to server: {}", conn_id);
-        } else {
-            println!("📴 Disconnected from server: {}", conn_id);
-        }
-    });
-
-    // Start client in background
-    let client_clone = client.clone();
-    tokio::spawn(async move {
-        if let Err(e) = client.run().await {
-            eprintln!("Client error: {}", e);
-        }
-    });
-
-    // Wait a moment for connection
-    tokio::time::sleep(tokio::time::Duration::from_secs(1)).await;
-
+    // Connect client
+    client.connect().await?;
     println!("🚀 Client connected to ws://127.0.0.1:8080");
     println!("💡 Sending test messages...\n");
 
@@ -162,38 +125,18 @@ async fn run_client() -> Result<(), Box<dyn std::error::Error>> {
             .capability("data", &format!("Hello from Rust client! Message #{}", i))
             .build()?;
 
-        println!("📤 Sending message {}", i);
-        client_clone.send_to_server(message).await?;
+        client.send(message).await?;
+        println!("📤 Sent message {}", i);
 
-        // Wait between messages
-        tokio::time::sleep(tokio::time::Duration::from_secs(1)).await;
+        // Wait a bit between messages
+        tokio::time::sleep(tokio::time::Duration::from_millis(500)).await;
     }
 
+    println!("\n✅ All messages sent. Waiting for responses...\n");
+
     // Wait for responses
-    println!("\n⏳ Waiting for responses...");
-    tokio::time::sleep(tokio::time::Duration::from_secs(3)).await;
+    tokio::time::sleep(tokio::time::Duration::from_secs(5)).await;
 
-    // Get statistics
-    let stats = client_clone.get_stats().await;
-    println!("\n📊 Client Statistics:");
-    println!("   Messages sent: {}", stats.messages_sent);
-    println!("   Messages received: {}", stats.messages_received);
-    println!("   Bytes sent: {}", stats.bytes_sent);
-    println!("   Bytes received: {}", stats.bytes_received);
-    println!("   Active connections: {}", stats.active_connections);
-    println!("   Total connections: {}", stats.total_connections);
-
-    // Shutdown
-    client_clone.shutdown().await?;
-    println!("\n✓ Client example completed successfully!");
-
-    Ok(())
-}
-
-#[cfg(not(feature = "websocket"))]
-fn main() -> Result<(), Box<dyn std::error::Error>> {
-    println!("WebSocket transport is not available.");
-    println!("To enable WebSocket support, compile with:");
-    println!("  cargo build --features websocket");
+    println!("👋 Client finished");
     Ok(())
 }

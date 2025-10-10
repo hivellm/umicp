@@ -4,11 +4,16 @@
 Demonstrates EventEmitter with multiple subscribers.
 */
 
+#[cfg(feature = "websocket")]
 use std::sync::Arc;
+#[cfg(feature = "websocket")]
 use parking_lot::RwLock;
+#[cfg(feature = "websocket")]
 use tokio::time::{sleep, Duration};
+#[cfg(feature = "websocket")]
 use umicp_core::{EventEmitter, EventType, EventData, Envelope, OperationType, PeerInfo};
 
+#[cfg(feature = "websocket")]
 #[tokio::main]
 async fn main() -> Result<(), Box<dyn std::error::Error>> {
     println!("🎭 Event System Example\n");

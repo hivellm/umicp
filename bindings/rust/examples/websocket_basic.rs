@@ -4,10 +4,14 @@
 Demonstrates basic WebSocket communication using UMICP Rust bindings.
 */
 
+#[cfg(feature = "websocket")]
 use umicp_core::{Envelope, OperationType, WebSocketClient, WebSocketServer};
+#[cfg(feature = "websocket")]
 use std::time::Duration;
+#[cfg(feature = "websocket")]
 use tokio::time::sleep;
 
+#[cfg(feature = "websocket")]
 #[tokio::main]
 async fn main() -> anyhow::Result<()> {
     // Initialize tracing
