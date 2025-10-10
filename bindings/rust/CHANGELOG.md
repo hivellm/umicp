@@ -146,6 +146,6 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ---
 
-**Contributors**: CMMV-Hive AI Collaborative Team
+**Contributors**: HiveLLM AI Collaborative Team
 **License**: CC0-1.0
-**Repository**: https://github.com/cmmv-hive/umicp
+**Repository**: https://github.com/hivellm/umicp

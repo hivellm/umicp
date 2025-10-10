@@ -1,11 +1,20 @@
 {
-  "name": "@umicp/core",
-  "version": "1.0.0",
+  "name": "@hivellm/umicp",
+  "version": "0.1.0",
   "description": "UMICP TypeScript/JavaScript bindings for C++ core",
-  "main": "dist/index.js",
-  "types": "dist/index.d.ts",
+  "main": "dist/cjs/index.js",
+  "module": "dist/esm/index.js",
+  "types": "dist/cjs/index.d.ts",
+  "type": "module",
+  "exports": {
+    ".": {
+      "import": "./dist/esm/index.js",
+      "require": "./dist/cjs/index.js",
+      "types": "./dist/cjs/index.d.ts"
+    }
+  },
   "scripts": {
-    "build": "tsc && node-gyp rebuild",
+    "build": "tsc -p tsconfig.cjs.json && tsc -p tsconfig.esm.json && node-gyp rebuild",
     "install": "npm run build",
     "test": "jest",
     "test:watch": "jest --watch",
@@ -37,6 +46,18 @@
     "node-addon-api": "^7.0.0",
     "ws": "^8.14.2"
   },
+  "peerDependencies": {
+    "@cmmv/http": ">=0.5.0",
+    "@cmmv/server": ">=0.5.0"
+  },
+  "peerDependenciesMeta": {
+    "@cmmv/http": {
+      "optional": true
+    },
+    "@cmmv/server": {
+      "optional": true
+    }
+  },
   "devDependencies": {
     "@types/node": "^20.10.5",
     "@types/jest": "^29.5.8",
@@ -51,12 +72,12 @@
   },
   "repository": {
     "type": "git",
-    "url": "https://github.com/cmmv-hive/umicp-core.git"
+    "url": "https://github.com/hivellm/umicp-core.git"
   },
   "bugs": {
-    "url": "https://github.com/cmmv-hive/umicp-core/issues"
+    "url": "https://github.com/hivellm/umicp-core/issues"
   },
-  "homepage": "https://github.com/cmmv-hive/umicp-core#readme",
+  "homepage": "https://github.com/hivellm/umicp-core#readme",
   "files": [
     "dist/",
     "build/Release/umicp_core.node",
@@ -91,8 +112,8 @@
     "performance",
     "simd"
   ],
-  "author": "CMMV-Hive AI Collaborative Team",
-  "license": "CC0-1.0",
+  "author": "HiveLLM AI Collaborative Team",
+  "license": "MIT",
   "publishConfig": {
     "access": "public"
   }

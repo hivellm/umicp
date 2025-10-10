@@ -1,0 +1,51 @@
+# Composer
+/vendor/
+composer.lock
+composer.phar
+
+# PHPUnit
+.phpunit.result.cache
+/coverage/
+*.coverage
+
+# IDE
+/.idea/
+/.vscode/
+*.swp
+*.swo
+*~
+.DS_Store
+
+# Config
+/config/umicp.php
+
+# FFI Build artifacts
+/build/
+*.so
+*.dylib
+*.dll
+*.o
+*.a
+
+# Logs
+*.log
+/logs/
+
+# Temporary files
+/tmp/
+*.tmp
+*.cache
+
+# OS
+Thumbs.db
+.DS_Store
+
+# PHPStan
+.phpstan.cache/
+
+# Psalm
+.psalm/
+
+# Benchmark
+/benchmark-results/
+

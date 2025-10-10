@@ -254,7 +254,7 @@ make test
 
 ## License
 
-This implementation is part of the CMMV-Hive project and follows the same license terms.
+This implementation is part of the HiveLLM project and follows the same license terms.
 
 ## Next Steps
 

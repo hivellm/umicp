@@ -77,6 +77,11 @@ set(UMICP_SOURCES
     src/c_api.cpp
 )
 
+# FFI wrapper sources (for language bindings)
+set(UMICP_FFI_SOURCES
+    src/ffi_wrapper.cpp
+)
+
 # Header files
 set(UMICP_HEADERS
     include/umicp.h
@@ -111,6 +116,26 @@ target_link_libraries(umicp_shared
     ${OPENSSL_LIBRARIES}
     ${CBOR_LIBRARIES}
     ${LZ4_LIBRARIES}
+)
+
+# Create FFI shared library (for language bindings via FFI)
+add_library(umicp_core SHARED ${UMICP_SOURCES} ${UMICP_FFI_SOURCES} ${UMICP_HEADERS})
+target_link_libraries(umicp_core
+    ${JSON_LIBRARIES}
+    ${ZLIB_LIBRARIES}
+    ${OPENSSL_LIBRARIES}
+    ${CBOR_LIBRARIES}
+    ${LZ4_LIBRARIES}
+)
+
+# Enable position-independent code for FFI library
+set_target_properties(umicp_core PROPERTIES
+    POSITION_INDEPENDENT_CODE ON
+    C_VISIBILITY_PRESET hidden
+    CXX_VISIBILITY_PRESET hidden
+    OUTPUT_NAME umicp_core
+    VERSION ${PROJECT_VERSION}
+    SOVERSION ${PROJECT_VERSION_MAJOR}
 )
 
 # Set library properties
@@ -157,7 +182,7 @@ endif()
 # Examples moved to bindings
 
 # Installation
-install(TARGETS umicp_static umicp_shared
+install(TARGETS umicp_static umicp_shared umicp_core
     LIBRARY DESTINATION lib
     ARCHIVE DESTINATION lib
     RUNTIME DESTINATION bin

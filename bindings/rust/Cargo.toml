@@ -3,10 +3,10 @@ name = "umicp-core"
 version = "1.0.0"
 edition = "2021"
 description = "UMICP Rust bindings for high-performance communication and matrix operations"
-license = "CC0-1.0"
-authors = ["CMMV-Hive AI Collaborative Team"]
-repository = "https://github.com/cmmv-hive/umicp"
-homepage = "https://github.com/cmmv-hive/umicp"
+license = "MIT"
+authors = ["HiveLLM AI Collaborative Team"]
+repository = "https://github.com/hivellm/umicp"
+homepage = "https://github.com/hivellm/umicp"
 documentation = "https://docs.rs/umicp-core"
 keywords = ["umicp", "communication", "matrix", "federated-learning", "ai"]
 categories = ["api-bindings", "science", "network-programming"]
@@ -18,20 +18,42 @@ crate-type = ["cdylib", "lib"]
 [dependencies]
 serde = { version = "1.0", features = ["derive"] }
 serde_json = "1.0"
-uuid = { version = "0.8", features = ["v4"] }
+uuid = { version = "1.6", features = ["v4", "serde"] }
 chrono = { version = "0.4", features = ["serde"] }
 thiserror = "1.0"
 anyhow = "1.0"
 ndarray = "0.15"
-base64 = "0.13"
+base64 = "0.21"
 hex = "0.4"
-sha2 = "0.9"
-rand = "0.7"
+sha2 = "0.10"
+rand = "0.8"
+
+# Async runtime
+tokio = { version = "1.35", features = ["full"], optional = true }
+futures = { version = "0.3", optional = true }
+async-trait = { version = "0.1", optional = true }
+
+# WebSocket support
+tokio-tungstenite = { version = "0.21", optional = true }
+tungstenite = { version = "0.21", optional = true }
+
+# HTTP support
+axum = { version = "0.7", optional = true }
+hyper = { version = "1.0", optional = true }
+tower = { version = "0.4", optional = true }
+reqwest = { version = "0.11", features = ["json", "stream"], optional = true }
+
+# Utilities
+tracing = { version = "0.1", optional = true }
+parking_lot = "0.12"
 
 [dev-dependencies]
+tokio-test = "0.4"
+mockito = "1.2"
+tracing-subscriber = "0.3"
 
 [features]
 default = []
-websocket = []
-http2 = []
+websocket = ["tokio", "futures", "async-trait", "tokio-tungstenite", "tungstenite", "tracing"]
+http2 = ["tokio", "futures", "async-trait", "axum", "hyper", "tower", "reqwest", "tracing"]
 full = ["websocket", "http2"]

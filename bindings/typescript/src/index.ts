@@ -3,12 +3,55 @@
  * High-performance bindings to C++ core implementation
  */
 
+import { createRequire } from 'module';
+import { fileURLToPath } from 'url';
+import { dirname, join, resolve } from 'path';
+
 // Native addon - with fallback for testing
 let addon: any;
 
-try {
-  addon = require('../build/Release/umicp_core.node');
-} catch (error) {
+// Function to load addon - works in both ESM and CJS
+function loadAddon(): any {
+  try {
+    // Get the directory of this file
+    // @ts-ignore - import.meta is available in ESM
+    const currentFileUrl = typeof import.meta !== 'undefined' ? import.meta.url : `file://${__filename}`;
+    const currentDir = dirname(fileURLToPath(currentFileUrl));
+
+    // Create require function for ESM
+    const requireFunc = createRequire(currentFileUrl);
+
+    const possiblePaths = [
+      resolve(currentDir, '../build/Release/umicp_core.node'),
+      resolve(currentDir, '../../build/Release/umicp_core.node'),
+    ];
+
+    let lastError: any = null;
+
+    for (const addonPath of possiblePaths) {
+      try {
+        const addon = requireFunc(addonPath);
+        console.log(`✅ Native addon loaded from: ${addonPath}`);
+        return addon;
+      } catch (error: any) {
+        lastError = error;
+        console.warn(`Failed to load from ${addonPath}: ${error.message}`);
+      }
+    }
+
+    if (lastError) {
+      console.warn('Last error details:', lastError.message);
+    }
+  } catch (error: any) {
+    console.warn('Error in loadAddon:', error.message);
+  }
+
+  return null;
+}
+
+addon = loadAddon();
+
+if (!addon) {
   // Create a mock addon for testing when native module is not available
   console.warn('Native addon not found, using mock implementation for testing');
   addon = {
@@ -20,6 +63,8 @@ try {
     createEnvelope: function() { throw new Error('Native addon not available'); },
     createMatrix: function() { throw new Error('Native addon not available'); }
   };
+} else {
+  console.log('✅ Native addon loaded successfully');
 }
 
 // Check if WebSocket transport is available
@@ -422,6 +467,34 @@ export const UMICP = {
   PayloadType,
   EncodingType
 };
+
+// High-level transport exports
+export {
+  StreamableHTTPServer,
+  StreamableHTTPClient,
+  StreamableHTTPPeer,
+  createUMICPHandler,
+  createUMICPRoute,
+  type StreamableHTTPServerOptions,
+  type StreamableHTTPClientOptions,
+  type StreamableHTTPPeerOptions,
+  type StreamableHTTPPeerEvents,
+  type HTTPPeerConnection,
+  type HTTPPeerInfo,
+} from './transports/streamable-http.js';
+
+export {
+  UMICPWebSocketServer,
+  UMICPWebSocketClient,
+  UMICPWebSocketPeer,
+  createUMICPWebSocketServer,
+  type UMICPWebSocketServerOptions,
+  type UMICPWebSocketClientOptions,
+  type UMICPWebSocketPeerOptions,
+  type UMICPWebSocketPeerEvents,
+  type PeerConnection,
+  type PeerInfo,
+} from './transports/websocket-transport.js';
 
 // Default exports
 export default UMICP;

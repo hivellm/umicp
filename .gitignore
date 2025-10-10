@@ -93,3 +93,4 @@ secrets/
 *.umicp
 matrix_data/
 transport_logs/
+.vectorizer

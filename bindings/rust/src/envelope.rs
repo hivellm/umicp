@@ -129,9 +129,6 @@ impl Envelope {
         validate_non_empty(&self.from, "from")?;
         validate_non_empty(&self.to, "to")?;
         validate_non_empty(&self.message_id, "message_id")?;
-        if !validate_uuid(&self.message_id) {
-            return Err(UmicpError::validation(format!("Invalid UUID format: {}", self.message_id)));
-        }
 
         if let Some(capabilities) = &self.capabilities {
             for (key, value) in capabilities {

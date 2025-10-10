@@ -123,16 +123,38 @@ println!("Matrix multiplication: {:?}", matrix_result);
 
 pub mod envelope;
 pub mod matrix;
-pub mod transport;
 pub mod types;
 pub mod error;
 pub mod utils;
 
+// Transport module - new modular implementation
+#[cfg(feature = "websocket")]
+pub mod transport;
+
+// Legacy transport placeholders
+#[cfg(not(feature = "websocket"))]
+#[path = "transport_legacy.rs"]
+pub mod transport;
+
+// Peer module - multiplexed peer architecture
+#[cfg(feature = "websocket")]
+pub mod peer;
+
 pub use envelope::Envelope;
 pub use matrix::Matrix;
-pub use transport::{WebSocketTransport, Http2Transport};
 pub use types::*;
 pub use error::*;
+
+// Re-export transport types based on features
+#[cfg(feature = "websocket")]
+pub use transport::{WebSocketClient, WebSocketServer};
+
+#[cfg(not(feature = "websocket"))]
+pub use transport::{WebSocketTransport, Http2Transport};
+
+// Re-export peer types
+#[cfg(feature = "websocket")]
+pub use peer::{HandshakeMessage, HandshakeProtocol, PeerConnection, PeerInfo, PeerType, WebSocketPeer, WebSocketPeerConfig};
 
 /// Version information
 pub const VERSION: &str = env!("CARGO_PKG_VERSION");

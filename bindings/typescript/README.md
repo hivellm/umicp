@@ -2,13 +2,14 @@
 
 [![npm version](https://badge.fury.io/js/%40umicp%2Fcore.svg)](https://badge.fury.io/js/%40umicp%2Fcore)
 [![License: MIT](https://img.shields.io/badge/License-MIT-yellow.svg)](https://opensource.org/licenses/MIT)
-[![Tests](https://github.com/cmmv-hive/umicp/workflows/tests/badge.svg)](https://github.com/cmmv-hive/umicp/actions)
+[![Tests](https://github.com/hivellm/umicp/workflows/tests/badge.svg)](https://github.com/hivellm/umicp/actions)
 
 TypeScript bindings for the Universal Matrix Inter-Communication Protocol (UMICP), providing high-performance communication and matrix operations for distributed systems, federated learning, and real-time applications.
 
 ## 🚀 Features
 
 - **🔗 Universal Communication**: WebSocket-based transport with automatic reconnection
+- **🌐 Multiplexed Peer Architecture**: Each peer can BOTH receive incoming connections AND connect to multiple remote peers
 - **📦 Type-Safe Envelopes**: Strongly-typed message serialization and validation
 - **⚡ High Performance**: Optimized matrix operations with SIMD support
 - **🔄 Federated Learning**: Built-in support for ML model distribution and aggregation
@@ -19,7 +20,7 @@ TypeScript bindings for the Universal Matrix Inter-Communication Protocol (UMICP
 ## 📦 Installation
 
 ```bash
-npm install @umicp/core
+npm install @hivellm/umicp
 ```
 
 ### Prerequisites
@@ -31,7 +32,7 @@ npm install @umicp/core
 ### Basic Envelope Usage
 
 ```typescript
-import { UMICP, OperationType } from '@umicp/core';
+import { UMICP, OperationType } from '@hivellm/umicp';
 
 // Create a UMICP envelope
 const envelope = UMICP.createEnvelope({
@@ -55,10 +56,87 @@ console.log('From:', received.getFrom());
 console.log('Capabilities:', received.getCapabilities());
 ```
 
-### WebSocket Transport
+### Multiplexed Peer (NEW! 🎉)
+
+The new `UMICPWebSocketPeer` enables true peer-to-peer communication where each node can simultaneously accept incoming connections AND connect to multiple remote peers.
 
 ```typescript
-import { AdvancedWebSocketTransport } from '@umicp/core/transport';
+import { UMICPWebSocketPeer, Envelope, OperationType } from '@hivellm/umicp';
+
+// Create a multiplexed peer
+const peer = new UMICPWebSocketPeer({
+  peerId: 'my-agent',
+  
+  // Server component - accepts incoming connections
+  server: {
+    port: 20081,
+    path: '/umicp',
+    compression: true
+  }
+});
+
+// Setup event handlers using EventEmitter pattern
+peer.on('message', async (envelope, peerConnection) => {
+  console.log(`Message from ${peerConnection.id} (${peerConnection.type})`);
+  
+  // Respond
+  const response = new Envelope({
+    from: 'my-agent',
+    to: envelope.getFrom(),
+    operation: OperationType.ACK,
+    messageId: `ack-${Date.now()}`,
+    capabilities: { status: 'received' }
+  });
+  
+  peer.sendToPeer(peerConnection.id, response);
+});
+
+peer.on('peer:connect', (peerConnection) => {
+  console.log(`Peer connected: ${peerConnection.id}`);
+});
+
+peer.on('peer:disconnect', (peerConnection) => {
+  console.log(`Peer disconnected: ${peerConnection.id}`);
+});
+
+peer.on('error', (error, peerConnection) => {
+  console.error(`Error:`, error.message);
+});
+
+// Connect to multiple remote peers
+await peer.connectToPeer('ws://localhost:20082/umicp');
+await peer.connectToPeer('ws://localhost:20083/umicp');
+
+// Send to specific peer
+peer.sendToPeer('peer-id', envelope);
+
+// Broadcast to all connected peers
+peer.broadcast(envelope);
+
+// Get statistics
+const stats = peer.getStats();
+console.log(`Connected peers: ${stats.totalPeers}`);
+console.log(`Incoming: ${stats.incomingConnections}`);
+console.log(`Outgoing: ${stats.outgoingConnections}`);
+```
+
+**Benefits:**
+- ✅ True peer-to-peer: no fixed client/server hierarchy
+- ✅ Dynamic topology: add/remove connections at runtime
+- ✅ Unified API: same code for incoming and outgoing connections
+- ✅ Flexible patterns: mesh, hub-and-spoke, pipeline, hierarchical
+- ✅ Event-driven: uses Node.js EventEmitter for flexible event handling
+- ✅ Multiple listeners: add/remove event handlers dynamically
+
+**Quick Start:**
+- [Quick Start Guide](./QUICKSTART_MULTIPLEXED.md)
+- [Full Documentation](./MULTIPLEXED_PEER.md)
+- [Example: 3 Interconnected Agents](../../agent-framework/typescript/examples/umicp/multiplexed-agent.ts)
+
+### WebSocket Transport (Legacy)
+
+```typescript
+import { AdvancedWebSocketTransport } from '@hivellm/umicp/transport';
 
 // Server setup
 const server = new AdvancedWebSocketTransport({
@@ -108,7 +186,7 @@ await client.send(message);
 ### Matrix Operations
 
 ```typescript
-import { Matrix } from '@umicp/core';
+import { Matrix } from '@hivellm/umicp';
 
 // Create matrix instance
 const matrix = new Matrix();
@@ -345,7 +423,7 @@ UMICP_CONNECTION_TIMEOUT=10000
 
 ### Build from Source
 ```bash
-git clone https://github.com/cmmv-hive/umicp.git
+git clone https://github.com/hivellm/umicp.git
 cd umicp/bindings/typescript
 npm install
 npm run build
@@ -363,6 +441,8 @@ npm run docs         # Generate documentation
 
 ## 📖 Documentation
 
+- [Multiplexed Peer Quick Start](./QUICKSTART_MULTIPLEXED.md) ⭐ **NEW!**
+- [Multiplexed Peer Full Docs](./MULTIPLEXED_PEER.md) ⭐ **NEW!**
 - [API Reference](./docs/API.md)
 - [E2E Test Guide](./docs/E2E_TESTS.md)
 - [Transport Layer](./docs/TRANSPORT.md)
@@ -387,10 +467,10 @@ This project is licensed under the MIT License - see the [LICENSE](./LICENSE) fi
 
 ## 🔗 Links
 
-- [GitHub Repository](https://github.com/cmmv-hive/umicp)
-- [NPM Package](https://www.npmjs.com/package/@umicp/core)
+- [GitHub Repository](https://github.com/hivellm/umicp)
+- [NPM Package](https://www.npmjs.com/package/@hivellm/umicp)
 - [Documentation](https://umicp.dev/docs)
-- [Issue Tracker](https://github.com/cmmv-hive/umicp/issues)
+- [Issue Tracker](https://github.com/hivellm/umicp/issues)
 
 ## 🙏 Acknowledgments
 

@@ -5,6 +5,7 @@ Utility functions for UMICP operations.
 */
 
 use crate::error::{Result, UmicpError};
+use base64::{engine::general_purpose::STANDARD as BASE64, Engine};
 use chrono::{DateTime, Utc};
 use sha2::{Digest, Sha256};
 use uuid::Uuid;
@@ -74,12 +75,12 @@ pub fn validate_index(index: usize, max_index: usize, field_name: &str) -> Resul
 
 /// Base64 encode data
 pub fn base64_encode(data: &[u8]) -> String {
-    base64::encode(data)
+    BASE64.encode(data)
 }
 
 /// Base64 decode data
 pub fn base64_decode(data: &str) -> Result<Vec<u8>> {
-    base64::decode(data).map_err(|e| UmicpError::validation(format!("Invalid base64: {}", e)))
+    BASE64.decode(data).map_err(|e| UmicpError::validation(format!("Invalid base64: {}", e)))
 }
 
 /// Convert bytes to human readable format

@@ -39,7 +39,7 @@ cargo add umicp-core
 
 ### Development Installation
 ```bash
-git clone https://github.com/cmmv-hive/umicp.git
+git clone https://github.com/hivellm/umicp.git
 cd umicp/bindings/rust
 cargo build --release
 ```
@@ -1053,9 +1053,9 @@ let envelope = Envelope::builder()
 
 ## Support and Resources
 
-- **GitHub Repository**: https://github.com/cmmv-hive/umicp
+- **GitHub Repository**: https://github.com/hivellm/umicp
 - **Documentation**: https://umicp.dev/docs
-- **Issue Tracker**: https://github.com/cmmv-hive/umicp/issues
+- **Issue Tracker**: https://github.com/hivellm/umicp/issues
 - **Community Forum**: https://community.umicp.dev
 - **Rust Crate**: https://crates.io/crates/umicp-core
 
