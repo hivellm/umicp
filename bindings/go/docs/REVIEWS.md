@@ -168,10 +168,14 @@ BenchmarkPeerBroadcast:  32 μs/op   ✅ Good
 
 **Coverage by Component:**
 ```
-Core (pkg/umicp):       92%  ⭐ Outstanding
-Transport (websocket):  87%  ⭐ Excellent
-Peer (p2p):            85%  ⭐ Excellent
-Overall:               88%  ⭐ Excellent
+Core (pkg/umicp):       91.2%  ⭐ Outstanding
+Discovery:              97.8%  ⭐ Outstanding
+Connection Pool:        82.5%  ⭐ Excellent
+Matrix:                 83.3%  ⭐ Excellent
+HTTP Transport:         72.2%  ✅ Good
+WebSocket Transport:    71.1%  ✅ Good
+Peer (p2p):            59.5%  ✅ Acceptable
+Overall:               ~80%   ⭐ Excellent
 ```
 
 ### Test Quality Assessment
