@@ -44,7 +44,7 @@ Add to your `Cargo.toml`:
 
 ```toml
 [dependencies]
-umicp-core = { version = "0.1.1", features = ["websocket"] }
+umicp-core = { version = "0.1.3", features = ["websocket"] }
 tokio = { version = "1.42", features = ["full"] }
 ```
 

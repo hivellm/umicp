@@ -165,15 +165,12 @@ describe('AdvancedWebSocketTransport', () => {
     const broadcastCount = server.broadcast(broadcastMessage);
     expect(broadcastCount).toBeGreaterThanOrEqual(0);
 
-    // Wait for broadcast delivery (may fail due to timing issues)
-    await new Promise(resolve => setTimeout(resolve, 300));
+    // Wait for broadcast delivery with proper timeout
+    await new Promise(resolve => setTimeout(resolve, 500));
 
-    // Make the test more lenient - broadcast may not work in all environments
-    if (broadcastReceived) {
-      expect(receivedBroadcast).toBe('Hello everyone!');
-    } else {
-      console.log('Broadcast test skipped - message not received (timing/network issue)');
-    }
+    // Verify broadcast was received
+    expect(broadcastReceived).toBe(true);
+    expect(receivedBroadcast).toBe('Hello everyone!');
   });
 
   test('should handle connection statistics', async () => {
@@ -216,14 +213,11 @@ describe('AdvancedWebSocketTransport', () => {
     expect(clientConnected).toBe(true);
     await new Promise(resolve => setTimeout(resolve, 200));
 
-    // Wait for heartbeat (may not work in all test environments)
-    await new Promise(resolve => setTimeout(resolve, 2000));
+    // Wait for heartbeat with adequate timeout (heartbeat interval is 2000ms)
+    await new Promise(resolve => setTimeout(resolve, 2500));
 
-    // Heartbeat may not work reliably in test environment
-    if (!heartbeatReceived) {
-      console.log('Heartbeat test skipped - heartbeat not received (timing/network issue)');
-    }
-    // expect(heartbeatReceived).toBe(true); // Commented out due to timing issues
+    // Verify heartbeat was received
+    expect(heartbeatReceived).toBe(true);
   });
 
   test('should handle multiple clients', async () => {

@@ -133,20 +133,18 @@ impl HttpServer {
             .take()
             .ok_or_else(|| UmicpError::transport("Server already started".to_string()))?;
 
-        // Spawn server task with HTTP/2 support
+        // Spawn server task with HTTP/2 support (axum 0.8+)
         let handle = tokio::spawn(async move {
-            // Simple HTTP server loop (axum 0.7 compatibility)
-            loop {
-                tokio::select! {
-                    _ = shutdown_rx.recv() => {
-                        tracing::info!("HTTP server shutdown signal received");
-                        break;
-                    }
-                    _ = tokio::time::sleep(tokio::time::Duration::from_secs(1)) => {
-                        // Keep alive
-                    }
-                }
-            }
+            // Serve with graceful shutdown
+            axum::serve(listener, app)
+                .with_graceful_shutdown(async move {
+                    shutdown_rx.recv().await;
+                    tracing::info!("HTTP server shutdown signal received");
+                })
+                .await
+                .unwrap_or_else(|e| {
+                    tracing::error!("HTTP server error: {}", e);
+                });
 
             tracing::info!("HTTP server stopped");
         });

@@ -92,6 +92,17 @@ public class Envelope
     /// <summary>
     /// Initialize a new envelope
     /// </summary>
+    /// <param name="fromId">Sender identifier</param>
+    /// <param name="toId">Recipient identifier</param>
+    /// <param name="operation">Operation type</param>
+    /// <param name="messageId">Unique message identifier (auto-generated if null)</param>
+    /// <param name="correlationId">Optional correlation ID for request/response pairs</param>
+    /// <param name="timestamp">Message timestamp (UTC now if null)</param>
+    /// <param name="capabilities">Optional metadata capabilities</param>
+    /// <param name="payloadHints">Optional list of payload hints</param>
+    /// <param name="payloadRefs">Optional list of payload references</param>
+    /// <param name="hash">Optional envelope hash</param>
+    /// <exception cref="ValidationException">Thrown when required fields are invalid</exception>
     public Envelope(
         string fromId,
         string toId,
@@ -121,6 +132,7 @@ public class Envelope
     /// <summary>
     /// Validate envelope fields
     /// </summary>
+    /// <exception cref="ValidationException">Thrown when required fields are missing or invalid</exception>
     public void Validate()
     {
         if (string.IsNullOrWhiteSpace(FromId))
@@ -136,6 +148,7 @@ public class Envelope
     /// <summary>
     /// Compute SHA-256 hash of envelope
     /// </summary>
+    /// <returns>Lowercase hexadecimal SHA-256 hash of the envelope</returns>
     public string ComputeHash()
     {
         var dict = ToDictionary();
@@ -156,6 +169,7 @@ public class Envelope
     /// <summary>
     /// Convert to dictionary representation
     /// </summary>
+    /// <returns>Dictionary containing envelope data with camelCase keys</returns>
     public Dictionary<string, object> ToDictionary()
     {
         var result = new Dictionary<string, object>
@@ -188,6 +202,8 @@ public class Envelope
     /// <summary>
     /// Serialize to JSON string
     /// </summary>
+    /// <returns>JSON representation of the envelope</returns>
+    /// <exception cref="SerializationException">Thrown when serialization fails</exception>
     public string ToJson()
     {
         try
@@ -209,6 +225,9 @@ public class Envelope
     /// <summary>
     /// Create envelope from dictionary
     /// </summary>
+    /// <param name="data">Dictionary containing envelope data</param>
+    /// <returns>New envelope instance</returns>
+    /// <exception cref="DeserializationException">Thrown when deserialization fails</exception>
     public static Envelope FromDictionary(Dictionary<string, object> data)
     {
         try

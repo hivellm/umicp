@@ -129,6 +129,7 @@ pub mod utils;
 pub mod events;
 pub mod discovery;
 pub mod pool;
+pub mod load_balancer;
 
 // Transport module - new modular implementation
 #[cfg(any(feature = "websocket", feature = "http2"))]
@@ -149,6 +150,7 @@ pub use types::*;
 pub use error::*;
 pub use events::{EventEmitter, EventType, EventData, EventListener};
 pub use discovery::{ServiceDiscovery, ServiceInfo};
+pub use load_balancer::{LoadBalancer, LoadBalancingStrategy, BackendEndpoint, LoadBalancerStats, ConnectionGuard};
 
 #[cfg(feature = "websocket")]
 pub use pool::{ConnectionPool, PoolConfig, PoolStats, PooledConnection, PoolConnectionState};
@@ -158,8 +160,7 @@ pub use pool::{ConnectionPool, PoolConfig, PoolStats, PooledConnection, PoolConn
 pub use transport::{WebSocketClient, WebSocketServer};
 
 #[cfg(feature = "http2")]
-pub use transport::HttpClient;
-// pub use transport::HttpServer; // Temporarily disabled
+pub use transport::{HttpClient, HttpServer};
 
 #[cfg(not(any(feature = "websocket", feature = "http2")))]
 pub use transport::{WebSocketTransport, Http2Transport};

@@ -20,6 +20,11 @@ type ServerConfig struct {
 	Compression     bool
 	ReadBufferSize  int
 	WriteBufferSize int
+	// AllowedOrigins is a list of allowed origins. If empty, all origins are allowed.
+	// Use "*" to allow all origins explicitly.
+	AllowedOrigins []string
+	// CheckOrigin is a custom origin checker function. If nil, uses AllowedOrigins.
+	CheckOrigin func(r *http.Request) bool
 }
 
 // DefaultServerConfig returns default server configuration
@@ -76,14 +81,35 @@ func NewServer(config ServerConfig) *Server {
 		config.Path = "/ws"
 	}
 
+	// Setup CheckOrigin function
+	checkOrigin := config.CheckOrigin
+	if checkOrigin == nil {
+		// Use AllowedOrigins if custom CheckOrigin not provided
+		if len(config.AllowedOrigins) == 0 {
+			// Default: allow all origins (for backward compatibility)
+			checkOrigin = func(r *http.Request) bool {
+				return true
+			}
+		} else {
+			// Check against allowed origins list
+			checkOrigin = func(r *http.Request) bool {
+				origin := r.Header.Get("Origin")
+				for _, allowed := range config.AllowedOrigins {
+					if allowed == "*" || allowed == origin {
+						return true
+					}
+				}
+				return false
+			}
+		}
+	}
+
 	return &Server{
 		config: config,
 		upgrader: websocket.Upgrader{
 			ReadBufferSize:  config.ReadBufferSize,
 			WriteBufferSize: config.WriteBufferSize,
-			CheckOrigin: func(r *http.Request) bool {
-				return true // TODO: Configure properly
-			},
+			CheckOrigin:     checkOrigin,
 		},
 		stats: &transport.Stats{
 			ConnectedAt: time.Now(),

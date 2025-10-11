@@ -8,9 +8,24 @@ namespace Umicp.Core;
 /// </summary>
 public class MatrixResult
 {
+    /// <summary>
+    /// Array result for vector/matrix operations
+    /// </summary>
     public float[]? Result { get; set; }
+
+    /// <summary>
+    /// Scalar result for dot product and similar operations
+    /// </summary>
     public float ScalarResult { get; set; }
+
+    /// <summary>
+    /// Number of rows in the result matrix
+    /// </summary>
     public int Rows { get; set; }
+
+    /// <summary>
+    /// Number of columns in the result matrix
+    /// </summary>
     public int Cols { get; set; }
 }
 
@@ -19,6 +34,9 @@ public class MatrixResult
 /// </summary>
 public class DotProductResult
 {
+    /// <summary>
+    /// Dot product result value
+    /// </summary>
     public float Result { get; set; }
 }
 
@@ -27,6 +45,9 @@ public class DotProductResult
 /// </summary>
 public class CosineSimilarityResult
 {
+    /// <summary>
+    /// Cosine similarity value (range: -1 to 1)
+    /// </summary>
     public float Similarity { get; set; }
 }
 
@@ -36,8 +57,12 @@ public class CosineSimilarityResult
 public static class Matrix
 {
     /// <summary>
-    /// Compute dot product of two vectors
+    /// Compute dot product of two vectors using SIMD acceleration
     /// </summary>
+    /// <param name="a">First vector</param>
+    /// <param name="b">Second vector</param>
+    /// <returns>Dot product result</returns>
+    /// <exception cref="MatrixOperationException">Thrown when vector dimensions mismatch</exception>
     public static float DotProduct(float[] a, float[] b)
     {
         if (a.Length != b.Length)
@@ -67,6 +92,10 @@ public static class Matrix
     /// <summary>
     /// Compute cosine similarity between two vectors
     /// </summary>
+    /// <param name="a">First vector</param>
+    /// <param name="b">Second vector</param>
+    /// <returns>Cosine similarity value between -1 and 1</returns>
+    /// <exception cref="MatrixOperationException">Thrown when vector dimensions mismatch or vectors have zero magnitude</exception>
     public static float CosineSimilarity(float[] a, float[] b)
     {
         if (a.Length != b.Length)
@@ -83,8 +112,10 @@ public static class Matrix
     }
 
     /// <summary>
-    /// Compute magnitude (L2 norm) of a vector
+    /// Compute magnitude (L2 norm) of a vector using SIMD acceleration
     /// </summary>
+    /// <param name="vector">Input vector</param>
+    /// <returns>Vector magnitude (L2 norm)</returns>
     public static float Magnitude(float[] vector)
     {
         float sumOfSquares = 0f;
@@ -110,6 +141,12 @@ public static class Matrix
     /// <summary>
     /// Multiply two matrices
     /// </summary>
+    /// <param name="a">First matrix (m x n) in row-major order</param>
+    /// <param name="b">Second matrix (n x p) in row-major order</param>
+    /// <param name="m">Number of rows in matrix a</param>
+    /// <param name="n">Number of columns in matrix a (and rows in matrix b)</param>
+    /// <param name="p">Number of columns in matrix b</param>
+    /// <returns>Result matrix (m x p) in row-major order</returns>
     public static float[] MatrixMultiply(float[] a, float[] b, int m, int n, int p)
     {
         // a is m x n, b is n x p, result is m x p
@@ -132,8 +169,12 @@ public static class Matrix
     }
 
     /// <summary>
-    /// Add two matrices element-wise
+    /// Add two matrices element-wise using SIMD acceleration
     /// </summary>
+    /// <param name="a">First matrix/vector</param>
+    /// <param name="b">Second matrix/vector</param>
+    /// <returns>Result of element-wise addition</returns>
+    /// <exception cref="MatrixOperationException">Thrown when matrix dimensions mismatch</exception>
     public static float[] Add(float[] a, float[] b)
     {
         if (a.Length != b.Length)
@@ -161,8 +202,12 @@ public static class Matrix
     }
 
     /// <summary>
-    /// Subtract two matrices element-wise
+    /// Subtract two matrices element-wise using SIMD acceleration
     /// </summary>
+    /// <param name="a">First matrix/vector</param>
+    /// <param name="b">Second matrix/vector</param>
+    /// <returns>Result of element-wise subtraction (a - b)</returns>
+    /// <exception cref="MatrixOperationException">Thrown when matrix dimensions mismatch</exception>
     public static float[] Subtract(float[] a, float[] b)
     {
         if (a.Length != b.Length)

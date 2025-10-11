@@ -4,6 +4,25 @@ All notable changes to UMICP will be documented in this file.
 
 This is the **BIP-05 implementation** for HiveLLM's standardized inter-model communication protocol.
 
+## [0.1.3] - 2025-10-10
+
+### 📦 Version Alignment Update
+
+#### All Bindings Updated to v0.1.3
+- ✅ **TypeScript**: v0.1.3
+- ✅ **C#**: v0.1.3 (updated from v0.1.2)
+- ✅ **Python**: v0.1.3 (updated from v0.1.0)
+- ✅ **Rust**: v0.1.3 (updated from v0.1.2)
+- ✅ **Java**: v0.1.3 (updated from v0.1.1)
+- ✅ **PHP**: v0.1.3 (updated from v0.1.1)
+
+#### Updates
+- Synchronized all SDK versions to v0.1.3
+- Updated parent/child module references in Java
+- Updated package metadata and release notes
+
+---
+
 ## [0.1.1] - 2025-10-10
 
 ### 📚 Documentation Update - All Bindings Status

@@ -5,9 +5,9 @@
 import { Envelope, UMICP, OperationType } from '../src/index';
 import { AdvancedWebSocketTransport } from '../examples/transport-example';
 
-// Skip integration tests as they require real WebSocket servers
-// These should be run in a dedicated integration testing environment or migrated to mocks
-describe.skip('UMICP Integration Tests', () => {
+// Integration tests with WebSocket servers
+// Tests use localhost servers with proper setup/teardown
+describe('UMICP Integration Tests', () => {
   let server: AdvancedWebSocketTransport;
   let client: AdvancedWebSocketTransport;
 

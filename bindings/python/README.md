@@ -418,7 +418,7 @@ Contributions are welcome! Please see [CONTRIBUTING.md](../../CONTRIBUTING.md) f
 
 ---
 
-**Version**: 0.1.0  
+**Version**: 0.1.3  
 **Status**: Initial Release  
 **Python**: 3.9+  
 **Repository**: https://github.com/hivellm/umicp
