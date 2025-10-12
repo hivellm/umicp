@@ -54,3 +54,7 @@ test-results/
 *.swp
 *.swo
 *~
+
+# Publish
+umicp-kotlin
+maven-bundle
