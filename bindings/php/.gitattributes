@@ -1,0 +1,48 @@
+# Git attributes for UMICP PHP package
+# Ensures proper line endings and export handling
+
+# Auto detect text files and perform LF normalization
+* text=auto
+
+# Explicitly declare text files
+*.php text
+*.md text
+*.txt text
+*.json text
+*.xml text
+*.sh text eol=lf
+*.bat text eol=crlf
+
+# Denote all files that are truly binary and should not be modified
+*.png binary
+*.jpg binary
+*.jpeg binary
+*.gif binary
+*.ico binary
+*.so binary
+*.dll binary
+
+# Export-ignore (exclude from Packagist distribution)
+/.github export-ignore
+/.vscode export-ignore
+/.idea export-ignore
+/tests export-ignore
+/examples export-ignore
+/docs export-ignore
+/benchmark.php export-ignore
+/build-cpp.* export-ignore
+/build.* export-ignore
+/publish.* export-ignore
+/setup.sh export-ignore
+/validate-package.php export-ignore
+/verify-implementation.php export-ignore
+/run-tests.php export-ignore
+/test-all.sh export-ignore
+/phpunit.xml export-ignore
+/phpunit.xml.example export-ignore
+/.gitignore export-ignore
+/.gitattributes export-ignore
+/composer.json.example export-ignore
+/config/umicp.example.php export-ignore
+/.packagist.md export-ignore
+

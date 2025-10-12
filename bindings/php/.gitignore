@@ -3,49 +3,37 @@
 composer.lock
 composer.phar
 
-# PHPUnit
-.phpunit.result.cache
-/coverage/
-*.coverage
+# Build artifacts
+*.so
+*.dll
+*.dylib
+/build/
+/artifacts/
 
 # IDE
-/.idea/
-/.vscode/
+.idea/
+.vscode/
 *.swp
 *.swo
 *~
 .DS_Store
 
-# Config
-/config/umicp.php
-
-# FFI Build artifacts
-/build/
-*.so
-*.dylib
-*.dll
-*.o
-*.a
-
-# Logs
+# Tests
+/coverage/
+/.phpunit.cache/
+/.phpunit.result.cache
+/test-results/
 *.log
-/logs/
+
+# Configuration
+/config/umicp.php
+nuget.config
 
 # Temporary files
-/tmp/
 *.tmp
+*.temp
 *.cache
 
 # OS
 Thumbs.db
-.DS_Store
-
-# PHPStan
-.phpstan.cache/
-
-# Psalm
-.psalm/
-
-# Benchmark
-/benchmark-results/
-
+Desktop.ini
