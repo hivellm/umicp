@@ -9,7 +9,7 @@ plugins {
     jacoco
 }
 
-group = "com.hivellm"
+group = "com.hivellm.org"
 version = "0.1.3"
 
 repositories {
@@ -111,6 +111,28 @@ publishing {
                 }
             }
         }
+    }
+    repositories {
+        maven {
+            name = "CentralPortal"
+            url = uri("https://central.sonatype.com/api/v1/publisher/deployments/download")
+
+            credentials {
+                username = findProperty("centralUsername") as String? ?: System.getenv("ORG_GRADLE_PROJECT_centralUsername") ?: "andreferreira"
+                password = findProperty("centralToken") as String? ?: System.getenv("ORG_GRADLE_PROJECT_centralToken") ?: "csbk8dyyw4"
+            }
+        }
+    }
+}
+
+signing {
+    val signingKeyId: String? = findProperty("signingKeyId") as String? ?: System.getenv("ORG_GRADLE_PROJECT_signingKeyId")
+    val signingKey: String? = findProperty("signingKey") as String? ?: System.getenv("ORG_GRADLE_PROJECT_signingKey")
+    val signingPassword: String? = findProperty("signingPassword") as String? ?: System.getenv("ORG_GRADLE_PROJECT_signingPassword")
+
+    if (signingKeyId != null && signingKey != null && signingPassword != null) {
+        useInMemoryPgpKeys(signingKeyId, signingKey, signingPassword)
+        sign(publishing.publications["maven"])
     }
 }
 

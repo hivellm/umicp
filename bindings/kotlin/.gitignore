@@ -1,8 +1,11 @@
 # Gradle
 .gradle/
 build/
+gradle-app.setting
 !gradle-wrapper.jar
-*.log
+!gradle-wrapper.properties
+gradle.properties
+settings.xml
 
 # IntelliJ IDEA
 .idea/
@@ -31,18 +34,23 @@ nbdist/
 
 # Windows
 Thumbs.db
+Desktop.ini
 
 # Kotlin
-*.kotlin_module
+*.kt~
+*.kts~
 
-# Test
+# Test outputs
 test-results/
-test-output/
+*.log
 
 # Coverage
 *.exec
-jacoco.xml
+.jacoco/
 
-# Local config
-local.properties
-
+# Temporary files
+*.tmp
+*.temp
+*.swp
+*.swo
+*~

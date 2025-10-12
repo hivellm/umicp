@@ -19,6 +19,11 @@ import java.util.concurrent.ConcurrentHashMap
 private val logger = KotlinLogging.logger {}
 
 /**
+ * Route handler function type
+ */
+typealias RouteHandler = suspend (UMICPHttpServer.HttpRequest) -> UMICPHttpServer.HttpResponse
+
+/**
  * HTTP/2 Server for UMICP
  *
  * Provides HTTP/2 server with automatic protocol negotiation.
@@ -39,11 +44,6 @@ class UMICPHttpServer(
 
     private val onRequestHandlers = mutableListOf<suspend (HttpRequest) -> Unit>()
     private val onErrorHandlers = mutableListOf<suspend (Exception) -> Unit>()
-
-    /**
-     * Route handler function type
-     */
-    typealias RouteHandler = suspend (HttpRequest) -> HttpResponse
 
     /**
      * HTTP Request representation
@@ -193,7 +193,7 @@ class UMICPHttpServer(
 
     private fun createHandler(): HttpHandler {
         return HttpHandler { exchange ->
-            exchange.dispatch {
+            exchange.dispatch(Runnable {
                 scope.launch {
                     try {
                         handleRequest(exchange)
@@ -203,7 +203,7 @@ class UMICPHttpServer(
                         sendErrorResponse(exchange, e)
                     }
                 }
-            }
+            })
         }
     }
 

@@ -72,12 +72,12 @@
   },
   "repository": {
     "type": "git",
-    "url": "https://github.com/hivellm/umicp-core.git"
+    "url": "https://github.com/hivellm/umicp.git"
   },
   "bugs": {
-    "url": "https://github.com/hivellm/umicp-core/issues"
+    "url": "https://github.com/hivellm/umicp/issues"
   },
-  "homepage": "https://github.com/hivellm/umicp-core#readme",
+  "homepage": "https://github.com/hivellm/umicp#readme",
   "files": [
     "dist/",
     "build/Release/umicp_core.node",
