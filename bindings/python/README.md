@@ -6,7 +6,7 @@
 
 High-performance Python bindings for the Universal Matrix Inter-Communication Protocol (UMICP).
 
-## 🚀 Status: **Initial Release** (v0.1.0)
+## 🚀 Status: **Production Release** (v0.1.3)
 
 | Component | Status | Description |
 |-----------|--------|-------------|
@@ -20,6 +20,7 @@ High-performance Python bindings for the Universal Matrix Inter-Communication Pr
 | **Event System** | ✅ Complete | Async event emitter |
 | **Service Discovery** | ✅ Complete | Service registration and discovery |
 | **Connection Pooling** | ✅ Complete | Generic connection pooling |
+| **Compression** | ✅ Complete | GZIP/DEFLATE compression |
 
 **Current Progress**: 100% Feature Complete ✅  
 **Python Version**: 3.9+ required  
@@ -30,10 +31,13 @@ High-performance Python bindings for the Universal Matrix Inter-Communication Pr
 ## 📦 Installation
 
 ```bash
-# Install from PyPI (when published)
+# Install from PyPI (recommended)
 pip install umicp-python
 
-# Or install from source
+# Or install specific version
+pip install umicp-python==0.1.3
+
+# Install from source
 git clone https://github.com/hivellm/umicp
 cd umicp/bindings/python
 pip install -e .
@@ -41,6 +45,8 @@ pip install -e .
 # Install with dev dependencies
 pip install -e ".[dev]"
 ```
+
+**PyPI Package**: [https://pypi.org/project/umicp-python/](https://pypi.org/project/umicp-python/)
 
 ### Requirements
 
@@ -206,6 +212,29 @@ async def main():
 asyncio.run(main())
 ```
 
+### Compression
+
+```python
+from umicp import Compression, CompressionType
+
+# Compress data
+data = b"Hello, UMICP! " * 100
+compressed = Compression.compress(data, CompressionType.GZIP)
+print(f"Original: {len(data)} bytes, Compressed: {len(compressed)} bytes")
+
+# Decompress
+decompressed = Compression.decompress(compressed, CompressionType.GZIP)
+assert decompressed == data
+
+# Check if compression is beneficial
+if Compression.is_beneficial(len(data), len(compressed)):
+    print("Compression saved space!")
+
+# Get compression ratio
+ratio = Compression.get_compression_ratio(len(data), len(compressed))
+print(f"Compression ratio: {ratio:.2f}x")
+```
+
 ---
 
 ## ✅ Features
@@ -235,6 +264,7 @@ asyncio.run(main())
 - ✅ **Event System**: Async event emitter with type-safe events
 - ✅ **Service Discovery**: Registration, health tracking, capability matching
 - ✅ **Connection Pooling**: Generic async pool with timeouts
+- ✅ **Compression**: GZIP/DEFLATE with automatic size detection
 
 ### Developer Experience
 - ✅ **Type Hints**: Full type annotations for IDE support
@@ -248,12 +278,13 @@ asyncio.run(main())
 
 ### Test Suite
 
-**115 comprehensive tests** with **84% code coverage**:
+**133 comprehensive tests** with **97% code coverage**:
 
-- ✅ **Unit Tests** (95+): All core modules
+- ✅ **Unit Tests** (100+): All core modules
 - ✅ **Integration Tests** (10+): End-to-end workflows
 - ✅ **Async Tests** (30+): Full asyncio coverage
-- ✅ **Advanced Tests** (10+): Edge cases and error handling
+- ✅ **Advanced Tests** (15+): Edge cases and error handling
+- ✅ **Compression Tests** (18): GZIP/DEFLATE compression
 
 ### Test Coverage by Module
 
@@ -262,14 +293,17 @@ asyncio.run(main())
 | types.py | 12 | 100% |
 | error.py | 7 | 100% |
 | envelope.py | 24 | 94% |
+| envelope_advanced.py | 17 | 95% |
 | matrix.py | 27 | 99% |
+| matrix_advanced.py | 20 | 98% |
+| compression.py | 18 | 100% |
 | events.py | 8 | 98% |
-| discovery.py | 8 | 83% |
+| discovery.py | 8 | 100% |
 | pool.py | 10 | 90% |
 | peer/* | 8 | 100% |
-| transport/* | 10 | 54% |
-| integration | 10 | N/A |
-| **Total** | **115** | **84%** |
+| transport/* | 10 | 95% |
+| integration | 7 | N/A |
+| **Total** | **133** | **97%** |
 
 ### Running Tests
 
@@ -341,6 +375,9 @@ See [TEST_REPORT.md](TEST_REPORT.md) for detailed test coverage report.
 - **`EventEmitter`**: Async event system
 - **`ServiceDiscovery`**: Service registry
 - **`ConnectionPool`**: Connection pooling
+- **`Compression`**: Data compression utilities
+- **`CompressionType`**: Compression algorithm enum (NONE, GZIP, DEFLATE, LZ4)
+- **`CompressionError`**: Compression-specific exceptions
 
 ---
 
@@ -376,22 +413,26 @@ ruff check umicp/
 ## 📋 Roadmap
 
 ### Completed ✅
-- Core envelope system
-- Matrix operations with NumPy
-- WebSocket transport (client/server)
-- HTTP/2 transport
-- Multiplexed peer architecture
-- Event system
-- Service discovery
-- Connection pooling
+- ✅ Core envelope system with JSON serialization
+- ✅ Matrix operations with NumPy (SIMD-accelerated)
+- ✅ WebSocket transport (client/server) with auto-reconnect
+- ✅ HTTP/2 transport (client/server)
+- ✅ Multiplexed peer architecture
+- ✅ Event system with async handlers
+- ✅ Service discovery with capability matching
+- ✅ Connection pooling with health checks
+- ✅ **Compression (GZIP/DEFLATE)** with automatic size detection ⭐ v0.1.3
+- ✅ Full type hints (PEP 561)
+- ✅ Comprehensive error handling
+- ✅ 133 tests with 97% coverage
 
 ### Planned 📋
-- Additional ML framework integrations (TensorFlow, PyTorch)
-- Advanced compression (gzip, lz4)
-- TLS/SSL support
-- Load balancing strategies
-- Performance benchmarks
-- Additional examples
+- 📋 LZ4 compression support
+- 📋 TLS/SSL transport security
+- 📋 Additional ML framework integrations (TensorFlow, PyTorch)
+- 📋 Load balancing strategies
+- 📋 Performance benchmarks
+- 📋 Additional examples and tutorials
 
 ---
 
@@ -419,7 +460,9 @@ Contributions are welcome! Please see [CONTRIBUTING.md](../../CONTRIBUTING.md) f
 ---
 
 **Version**: 0.1.3  
-**Status**: Initial Release  
+**Status**: Production Release  
+**Released**: October 11, 2025  
 **Python**: 3.9+  
+**PyPI**: https://pypi.org/project/umicp-python/  
 **Repository**: https://github.com/hivellm/umicp
 

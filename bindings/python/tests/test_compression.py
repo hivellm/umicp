@@ -26,22 +26,24 @@ class TestCompression:
 
     def test_compress_decompress_gzip(self):
         """Test GZIP compression round-trip"""
-        original = b"Hello, UMICP! This is a test message for compression."
+        # Use larger, repetitive text to ensure compression works
+        original = b"Hello, UMICP! " * 50 + b"This is a test message for compression. " * 50
 
         compressed = Compression.compress(original, CompressionType.GZIP)
         assert compressed is not None
-        assert len(compressed) < len(original)  # Should be smaller
+        assert len(compressed) < len(original)  # Should be smaller with larger data
 
         decompressed = Compression.decompress(compressed, CompressionType.GZIP)
         assert decompressed == original
 
     def test_compress_decompress_deflate(self):
         """Test DEFLATE compression round-trip"""
-        original = b"Hello, UMICP! This is a test message for deflate compression."
+        # Use larger, repetitive text to ensure compression works
+        original = b"Hello, UMICP! " * 50 + b"This is a test message for deflate compression. " * 50
 
         compressed = Compression.compress(original, CompressionType.DEFLATE)
         assert compressed is not None
-        assert len(compressed) < len(original)
+        assert len(compressed) < len(original)  # Should be smaller with larger data
 
         decompressed = Compression.decompress(compressed, CompressionType.DEFLATE)
         assert decompressed == original
@@ -156,16 +158,17 @@ class TestCompression:
 
     def test_gzip_vs_deflate(self):
         """Test GZIP vs DEFLATE compression"""
-        text = b"This is a test message that will be compressed using different algorithms."
+        # Use larger, repetitive text to ensure compression works effectively
+        text = b"This is a test message that will be compressed using different algorithms. " * 100
 
         gzip_compressed = Compression.compress(text, CompressionType.GZIP)
         deflate_compressed = Compression.compress(text, CompressionType.DEFLATE)
 
-        # Both should compress
+        # Both should compress significantly with larger data
         assert len(gzip_compressed) < len(text)
         assert len(deflate_compressed) < len(text)
 
-        # DEFLATE should be slightly smaller (no headers)
+        # DEFLATE should be slightly smaller (no GZIP headers)
         assert len(deflate_compressed) < len(gzip_compressed)
 
         # Both should decompress correctly

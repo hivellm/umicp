@@ -15,7 +15,7 @@ Example:
     >>> serialized = envelope.to_json()
 """
 
-__version__ = "0.1.0"
+__version__ = "0.1.3"
 __author__ = "HiveLLM AI Collaborative Team"
 __license__ = "MIT"
 
@@ -54,6 +54,7 @@ from umicp.peer.handshake import HandshakeProtocol
 from umicp.events import EventEmitter, Event, EventType
 from umicp.discovery import ServiceDiscovery, ServiceInfo
 from umicp.pool import ConnectionPool, PoolConfig
+from umicp.compression import Compression, CompressionType, CompressionError
 
 __all__ = [
     # Version
@@ -96,5 +97,9 @@ __all__ = [
     "ServiceInfo",
     "ConnectionPool",
     "PoolConfig",
+    # Compression
+    "Compression",
+    "CompressionType",
+    "CompressionError",
 ]
 
