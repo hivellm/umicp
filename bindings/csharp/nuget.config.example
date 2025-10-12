@@ -1,0 +1,28 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!--
+  NuGet Configuration Example for UMICP C# SDK
+
+  To use:
+  1. Copy this file to nuget.config (without .example)
+  2. Add your NuGet API key
+
+  Get your API key from: https://www.nuget.org/account/apikeys
+-->
+<configuration>
+  <packageSources>
+    <add key="nuget.org" value="https://api.nuget.org/v3/index.json" protocolVersion="3" />
+  </packageSources>
+
+  <packageSourceCredentials>
+    <nuget.org>
+      <add key="Username" value="YOUR_USERNAME" />
+      <add key="ClearTextPassword" value="YOUR_API_KEY" />
+    </nuget.org>
+  </packageSourceCredentials>
+
+  <apikeys>
+    <!-- Or add API key directly -->
+    <!-- <add key="https://api.nuget.org/v3/index.json" value="YOUR_API_KEY" /> -->
+  </apikeys>
+</configuration>
+
