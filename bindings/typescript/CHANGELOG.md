@@ -5,6 +5,27 @@ All notable changes to the UMICP TypeScript bindings will be documented in this 
 The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/),
 and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
+## [0.1.5] - 2025-10-15
+
+### Fixed
+- **BREAKING FIX**: Removed local build requirements during installation
+- Package now ships with pre-compiled native binaries for all platforms
+- No longer requires C++ build tools, Python, or Visual Studio on client machines
+- Installation is now instant and never fails due to build issues
+- Added tsconfig files to published package for reference
+
+### Changed
+- Removed install, postinstall, and prepare scripts completely
+- prepublishOnly now only builds TypeScript (not native code)
+- Native binaries (umicp_core.node) are pre-compiled and included in package
+- Significantly faster installation (< 1 second vs minutes)
+- Works on systems without build tools
+
+### Technical
+- Pre-compiled binaries for: Linux x64, macOS x64/ARM64, Windows x64
+- Native addon build only required for development/publishing
+- Distribution includes build/Release/umicp_core.node for each platform
+
 ## [Unreleased]
 
 ### Added
