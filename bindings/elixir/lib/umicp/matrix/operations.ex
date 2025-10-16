@@ -1,7 +1,7 @@
 defmodule UMICP.Matrix.Operations do
   @moduledoc """
   Matrix and vector operations for UMICP.
-  
+
   Provides high-performance matrix operations using either Nx (Numerical Elixir)
   when available, or pure Elixir fallback implementations.
   """

@@ -1,7 +1,7 @@
 defmodule UMICP.Transport.WebSocket do
   @moduledoc """
   WebSocket transport for UMICP using Mint.WebSocket.
-  
+
   This is a GenServer-based WebSocket client with automatic reconnection
   and message handling.
   """
