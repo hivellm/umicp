@@ -123,14 +123,14 @@ object DiscoveryHelpers {
         val schema = service.getSchema(operationName)
 
         return if (schema != null) {
-            mapOf(
+            mapOf<String, Any?>(
                 "name" to schema.name,
                 "title" to schema.title,
                 "description" to schema.description,
                 "input_schema" to schema.inputSchema,
                 "output_schema" to schema.outputSchema,
                 "annotations" to schema.annotations
-            ).filterValues { it != null }
+            ).filterValues { it != null } as Map<String, Any>
         } else {
             mapOf(
                 "error" to "Operation not found",
