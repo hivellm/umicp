@@ -193,7 +193,7 @@ class ToolDiscoveryTest {
 
     @Test
     fun `test native types in capabilities`() {
-        val capabilities: Map<String, Any> = mapOf(
+        val capabilities: Map<String, Any?> = mapOf(
             "max_tokens" to 100,
             "temperature" to 0.7,
             "enabled" to true,
