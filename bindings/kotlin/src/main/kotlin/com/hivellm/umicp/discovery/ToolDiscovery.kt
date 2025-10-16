@@ -66,7 +66,7 @@ class OperationSchemaBuilder(
     private var title: String? = null
     private var description: String? = null
     private var outputSchema: JSONSchema? = null
-    private var annotations: Map<String, Any>? = null
+    private var annotations: Map<String, Any?>? = null
 
     fun withTitle(title: String) = apply { this.title = title }
     fun withDescription(description: String) = apply { this.description = description }
@@ -87,7 +87,7 @@ class ServerInfoBuilder(
     private var features: List<String>? = null
     private var operationsCount: Int? = null
     private var mcpCompatible: Boolean? = null
-    private var metadata: Map<String, Any>? = null
+    private var metadata: Map<String, Any?>? = null
 
     fun withFeatures(features: List<String>) = apply { this.features = features }
     fun withOperationsCount(count: Int) = apply { this.operationsCount = count }
