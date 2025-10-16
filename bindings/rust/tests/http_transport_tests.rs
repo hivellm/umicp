@@ -5,6 +5,7 @@
 #![cfg(feature = "http2")]
 
 use umicp_core::{Envelope, OperationType};
+use serde_json::json;
 
 #[tokio::test]
 async fn test_http_envelope_creation() {
@@ -90,8 +91,8 @@ async fn test_http_envelope_with_capabilities() {
     use umicp_core::Capabilities;
 
     let mut caps = Capabilities::new();
-    caps.insert("http_version".to_string(), "2".to_string());
-    caps.insert("compression".to_string(), "gzip".to_string());
+    caps.insert("http_version".to_string(), json!("2"));
+    caps.insert("compression".to_string(), json!("gzip"));
 
     let envelope = Envelope::builder()
         .operation(OperationType::Data)

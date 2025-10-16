@@ -7,6 +7,8 @@ Demonstrates basic WebSocket communication using UMICP Rust bindings.
 #[cfg(feature = "websocket")]
 use umicp_core::{Envelope, OperationType, WebSocketClient, WebSocketServer};
 #[cfg(feature = "websocket")]
+use serde_json::json;
+#[cfg(feature = "websocket")]
 use std::time::Duration;
 #[cfg(feature = "websocket")]
 use tokio::time::sleep;
@@ -71,8 +73,8 @@ async fn run_client() -> anyhow::Result<()> {
         .to("rust-server")
         .operation(OperationType::Data)
         .message_id("msg-001")
-        .capability("message", "Hello from Rust client!")
-        .capability("test", "basic-websocket")
+        .capability("message", json!("Hello from Rust client!"))
+        .capability("test", json!("basic-websocket"))
         .build()?;
 
     client.send(envelope).await?;
@@ -87,8 +89,8 @@ async fn run_client() -> anyhow::Result<()> {
         .to("rust-server")
         .operation(OperationType::Data)
         .message_id("msg-002")
-        .capability("message", "Second message!")
-        .capability("sequence", "2")
+        .capability("message", json!("Second message!"))
+        .capability("sequence", json!(2))
         .build()?;
 
     client.send(envelope2).await?;

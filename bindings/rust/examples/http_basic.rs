@@ -10,6 +10,8 @@ use std::sync::Arc;
 use tokio::time::{sleep, Duration};
 #[cfg(feature = "http2")]
 use umicp_core::{Envelope, HttpClient, HttpServer, OperationType};
+#[cfg(feature = "http2")]
+use serde_json::json;
 
 #[cfg(feature = "http2")]
 #[tokio::main]
@@ -58,9 +60,9 @@ async fn main() -> Result<(), Box<dyn std::error::Error>> {
             .from("http-client")
             .to("http-server")
             .operation(OperationType::Data)
-            .capability("message", &msg_content)
-            .capability("sequence", &i.to_string())
-            .capability("protocol", "http")
+            .capability("message", json!(msg_content))
+            .capability("sequence", json!(i))
+            .capability("protocol", json!("http"))
             .build()?;
 
         println!("[{}] Sending message #{}...", chrono::Utc::now().format("%H:%M:%S"), i);

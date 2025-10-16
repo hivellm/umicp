@@ -10,6 +10,8 @@ use std::sync::Arc;
 use tokio::time::{sleep, Duration};
 #[cfg(feature = "websocket")]
 use umicp_core::{Envelope, OperationType, WebSocketPeer, WebSocketPeerConfig, WebSocketClient};
+#[cfg(feature = "websocket")]
+use serde_json::json;
 
 #[cfg(feature = "websocket")]
 #[tokio::main]
@@ -83,8 +85,8 @@ async fn main() -> Result<(), Box<dyn std::error::Error>> {
             .from("standalone-client")
             .to("server-peer")
             .operation(OperationType::Data)
-            .capability("message", &msg_content)
-            .capability("sequence", &i.to_string())
+            .capability("message", json!(msg_content))
+            .capability("sequence", json!(i))
             .build()?;
 
         client.send(envelope).await?;
@@ -117,7 +119,7 @@ async fn main() -> Result<(), Box<dyn std::error::Error>> {
         .from("client-peer")
         .to("server-peer")
         .operation(OperationType::Data)
-        .capability("message", "Hello from peer2 after handshake!")
+        .capability("message", json!("Hello from peer2 after handshake!"))
         .build()?;
 
     peer2.send_to_peer(&peer1_id, envelope).await?;
@@ -146,5 +148,11 @@ async fn main() -> Result<(), Box<dyn std::error::Error>> {
     println!("✓ All connections closed");
 
     Ok(())
+}
+
+#[cfg(not(feature = "websocket"))]
+fn main() {
+    eprintln!("This example requires the 'websocket' feature.");
+    eprintln!("Run with: cargo run --example peer_with_handshake --features websocket");
 }
 

@@ -10,6 +10,8 @@ use std::sync::Arc;
 use tokio::time::{sleep, Duration};
 #[cfg(feature = "websocket")]
 use umicp_core::{Envelope, OperationType, WebSocketServer};
+#[cfg(feature = "websocket")]
+use serde_json::json;
 
 #[cfg(feature = "websocket")]
 #[tokio::main]
@@ -67,8 +69,8 @@ async fn main() -> Result<(), Box<dyn std::error::Error>> {
                 .from("server")
                 .to("all")
                 .operation(OperationType::Data)
-                .capability("type", "broadcast")
-                .capability("message", &message)
+                .capability("type", json!("broadcast"))
+                .capability("message", json!(message))
                 .build()?;
 
             server.broadcast(envelope).await?;
@@ -86,5 +88,11 @@ async fn main() -> Result<(), Box<dyn std::error::Error>> {
     println!("✓ Server stopped gracefully");
 
     Ok(())
+}
+
+#[cfg(not(feature = "websocket"))]
+fn main() {
+    eprintln!("This example requires the 'websocket' feature.");
+    eprintln!("Run with: cargo run --example websocket_with_handlers --features websocket");
 }
 

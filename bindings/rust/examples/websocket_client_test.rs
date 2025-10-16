@@ -10,6 +10,8 @@ use std::sync::Arc;
 use tokio::time::{sleep, Duration};
 #[cfg(feature = "websocket")]
 use umicp_core::{Envelope, OperationType, WebSocketClient};
+#[cfg(feature = "websocket")]
+use serde_json::json;
 
 #[cfg(feature = "websocket")]
 #[tokio::main]
@@ -45,9 +47,9 @@ async fn main() -> Result<(), Box<dyn std::error::Error>> {
             .from("rust-client")
             .to("server")
             .operation(OperationType::Data)
-            .capability("message_number", &msg_num)
-            .capability("content", &content)
-            .capability("timestamp", &timestamp)
+            .capability("message_number", json!(msg_num))
+            .capability("content", json!(content))
+            .capability("timestamp", json!(timestamp))
             .build()?;
 
         println!("[{}] Sending message #{}...", chrono::Utc::now().format("%H:%M:%S"), i);
@@ -75,5 +77,11 @@ async fn main() -> Result<(), Box<dyn std::error::Error>> {
     println!("✓ Disconnected");
 
     Ok(())
+}
+
+#[cfg(not(feature = "websocket"))]
+fn main() {
+    eprintln!("This example requires the 'websocket' feature.");
+    eprintln!("Run with: cargo run --example websocket_client_test --features websocket");
 }
 

@@ -10,6 +10,8 @@ use std::sync::Arc;
 use tokio::time::{sleep, Duration};
 #[cfg(feature = "websocket")]
 use umicp_core::{Envelope, OperationType, WebSocketPeer, WebSocketPeerConfig};
+#[cfg(feature = "websocket")]
+use serde_json::json;
 
 #[cfg(feature = "websocket")]
 #[tokio::main]
@@ -70,7 +72,7 @@ async fn main() -> Result<(), Box<dyn std::error::Error>> {
         .from("peer-2")
         .to("peer-1")
         .operation(OperationType::Data)
-        .capability("message", "Hello from Peer2!")
+        .capability("message", json!("Hello from Peer2!"))
         .build()?;
 
     peer2.send_to_peer(&peer1_id, envelope).await?;
@@ -84,8 +86,8 @@ async fn main() -> Result<(), Box<dyn std::error::Error>> {
         .from("peer-1")
         .to("all")
         .operation(OperationType::Data)
-        .capability("type", "broadcast")
-        .capability("message", "Hello everyone!")
+        .capability("type", json!("broadcast"))
+        .capability("message", json!("Hello everyone!"))
         .build()?;
 
     peer1.broadcast(broadcast_msg).await?;
@@ -111,5 +113,11 @@ async fn main() -> Result<(), Box<dyn std::error::Error>> {
     println!("✓ All peers shutdown");
 
     Ok(())
+}
+
+#[cfg(not(feature = "websocket"))]
+fn main() {
+    eprintln!("This example requires the 'websocket' feature.");
+    eprintln!("Run with: cargo run --example peer_network --features websocket");
 }
 
