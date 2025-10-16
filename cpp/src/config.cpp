@@ -9,7 +9,9 @@
 #include <regex>
 #include <fstream>
 #include <sstream>
-#include <json-c/json.h>
+#include <nlohmann/json.hpp>
+
+using json = nlohmann::json;
 
 namespace umicp {
 
@@ -90,61 +92,48 @@ Result<UMICPConfig> ConfigManager::load_from_file(const std::string& filename) {
     file.close();
 
     // Parse JSON
-    struct json_object* root = json_tokener_parse(content.c_str());
-    if (!root) {
-        return Result<UMICPConfig>(ErrorCode::PARSE_ERROR, "Failed to parse JSON config");
-    }
-
-    // Create config with default values
     UMICPConfig config;
 
-    // Parse fields
-    struct json_object* temp_obj;
+    try {
+        json root = json::parse(content);
 
-    if (json_object_object_get_ex(root, "version", &temp_obj)) {
-        config.version = json_object_get_string(temp_obj);
+        if (root.contains("version")) {
+            config.version = root["version"].get<std::string>();
+        }
+        if (root.contains("max_message_size")) {
+            config.max_message_size = root["max_message_size"].get<size_t>();
+        }
+        if (root.contains("connection_timeout")) {
+            config.connection_timeout = root["connection_timeout"].get<uint32_t>();
+        }
+        if (root.contains("heartbeat_interval")) {
+            config.heartbeat_interval = root["heartbeat_interval"].get<uint32_t>();
+        }
+        if (root.contains("compression_threshold")) {
+            config.compression_threshold = root["compression_threshold"].get<size_t>();
+        }
+        if (root.contains("enable_binary")) {
+            config.enable_binary = root["enable_binary"].get<bool>();
+        }
+        if (root.contains("enable_compression")) {
+            config.enable_compression = root["enable_compression"].get<bool>();
+        }
+        if (root.contains("require_auth")) {
+            config.require_auth = root["require_auth"].get<bool>();
+        }
+        if (root.contains("require_encryption")) {
+            config.require_encryption = root["require_encryption"].get<bool>();
+        }
+        if (root.contains("validate_certificates")) {
+            config.validate_certificates = root["validate_certificates"].get<bool>();
+        }
+
+        // Validate loaded config
+        return validate(config);
+
+    } catch (const json::exception& e) {
+        return Result<UMICPConfig>(ErrorCode::PARSE_ERROR, std::string("JSON parse error: ") + e.what());
     }
-
-    if (json_object_object_get_ex(root, "max_message_size", &temp_obj)) {
-        config.max_message_size = json_object_get_int64(temp_obj);
-    }
-
-    if (json_object_object_get_ex(root, "connection_timeout", &temp_obj)) {
-        config.connection_timeout = json_object_get_int(temp_obj);
-    }
-
-    if (json_object_object_get_ex(root, "heartbeat_interval", &temp_obj)) {
-        config.heartbeat_interval = json_object_get_int(temp_obj);
-    }
-
-    if (json_object_object_get_ex(root, "compression_threshold", &temp_obj)) {
-        config.compression_threshold = json_object_get_int64(temp_obj);
-    }
-
-    if (json_object_object_get_ex(root, "enable_binary", &temp_obj)) {
-        config.enable_binary = json_object_get_boolean(temp_obj);
-    }
-
-    if (json_object_object_get_ex(root, "enable_compression", &temp_obj)) {
-        config.enable_compression = json_object_get_boolean(temp_obj);
-    }
-
-    if (json_object_object_get_ex(root, "require_auth", &temp_obj)) {
-        config.require_auth = json_object_get_boolean(temp_obj);
-    }
-
-    if (json_object_object_get_ex(root, "require_encryption", &temp_obj)) {
-        config.require_encryption = json_object_get_boolean(temp_obj);
-    }
-
-    if (json_object_object_get_ex(root, "validate_certificates", &temp_obj)) {
-        config.validate_certificates = json_object_get_boolean(temp_obj);
-    }
-
-    json_object_put(root);
-
-    // Validate loaded config
-    return validate(config);
 }
 
 Result<void> ConfigManager::save_to_file(const UMICPConfig& config, const std::string& filename) {
@@ -155,32 +144,26 @@ Result<void> ConfigManager::save_to_file(const UMICPConfig& config, const std::s
     }
 
     // Create JSON object
-    struct json_object* root = json_object_new_object();
-
-    json_object_object_add(root, "version", json_object_new_string(config.version.c_str()));
-    json_object_object_add(root, "max_message_size", json_object_new_int64(config.max_message_size));
-    json_object_object_add(root, "connection_timeout", json_object_new_int(config.connection_timeout));
-    json_object_object_add(root, "heartbeat_interval", json_object_new_int(config.heartbeat_interval));
-    json_object_object_add(root, "compression_threshold", json_object_new_int64(config.compression_threshold));
-    json_object_object_add(root, "enable_binary", json_object_new_boolean(config.enable_binary));
-    json_object_object_add(root, "enable_compression", json_object_new_boolean(config.enable_compression));
-    json_object_object_add(root, "require_auth", json_object_new_boolean(config.require_auth));
-    json_object_object_add(root, "require_encryption", json_object_new_boolean(config.require_encryption));
-    json_object_object_add(root, "validate_certificates", json_object_new_boolean(config.validate_certificates));
+    json root;
+    root["version"] = config.version;
+    root["max_message_size"] = config.max_message_size;
+    root["connection_timeout"] = config.connection_timeout;
+    root["heartbeat_interval"] = config.heartbeat_interval;
+    root["compression_threshold"] = config.compression_threshold;
+    root["enable_binary"] = config.enable_binary;
+    root["enable_compression"] = config.enable_compression;
+    root["require_auth"] = config.require_auth;
+    root["require_encryption"] = config.require_encryption;
+    root["validate_certificates"] = config.validate_certificates;
 
     // Write to file
-    const char* json_string = json_object_to_json_string_ext(root, JSON_C_TO_STRING_PRETTY);
-
     std::ofstream file(filename);
     if (!file.is_open()) {
-        json_object_put(root);
         return Result<void>(ErrorCode::FILE_ERROR, "Failed to open file for writing: " + filename);
     }
 
-    file << json_string;
+    file << root.dump(4);  // Pretty print with 4 spaces
     file.close();
-
-    json_object_put(root);
 
     return Result<void>();
 }
