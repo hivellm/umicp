@@ -28,7 +28,7 @@ data class Envelope(
     val messageId: String = UUID.randomUUID().toString(),
     val timestamp: Long = System.currentTimeMillis(),
     val payloadHint: PayloadHint? = null,
-    val capabilities: Map<String, String> = emptyMap()
+    val capabilities: Map<String, Any?> = emptyMap()
 ) {
     /**
      * Validate the envelope

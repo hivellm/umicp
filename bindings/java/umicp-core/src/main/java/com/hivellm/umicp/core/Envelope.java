@@ -268,7 +268,7 @@ public class Envelope implements AutoCloseable {
         }
         return this;
     }
-    
+
     /**
      * Adds or updates a single string capability (helper method).
      *

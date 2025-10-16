@@ -289,7 +289,7 @@ class EnvelopeTest {
                 .doesNotContainKey("key1");
 
             // Set all capabilities
-            Map<String, String> newCaps = new HashMap<>();
+            Map<String, Object> newCaps = new HashMap<>();
             newCaps.put("key3", "value3");
             envelope.setCapabilities(newCaps);
 
@@ -424,7 +424,7 @@ class EnvelopeTest {
         try (Envelope envelope = new Envelope()) {
             envelope.addCapability("key", "value");
 
-            Map<String, String> caps = envelope.getCapabilities();
+            Map<String, Object> caps = envelope.getCapabilities();
             caps.put("new-key", "new-value");
 
             // Original should not be affected

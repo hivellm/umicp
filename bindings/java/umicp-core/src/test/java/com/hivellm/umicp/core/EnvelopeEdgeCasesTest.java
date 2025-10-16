@@ -47,7 +47,7 @@ public class EnvelopeEdgeCasesTest {
 
     @Test
     public void testEnvelope_LargeCapabilities() throws Exception {
-        Map<String, String> largeCaps = new HashMap<>();
+        Map<String, Object> largeCaps = new HashMap<>();
         for (int i = 0; i < 100; i++) {
             largeCaps.put("key" + i, "value" + i);
         }
@@ -125,7 +125,7 @@ public class EnvelopeEdgeCasesTest {
             .count(256)
             .build();
 
-        Map<String, String> caps = new HashMap<>();
+        Map<String, Object> caps = new HashMap<>();
         caps.put("version", "1.0");
         caps.put("priority", "high");
 
@@ -243,7 +243,7 @@ public class EnvelopeEdgeCasesTest {
 
     @Test
     public void testEnvelope_Clone() throws Exception {
-        Map<String, String> caps = new HashMap<>();
+        Map<String, Object> caps = new HashMap<>();
         caps.put("key", "value");
 
         EnvelopeOptions options = EnvelopeOptions.builder()

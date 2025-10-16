@@ -245,7 +245,7 @@ public class EnvelopeOptions {
             this.capabilities.put(key, value);
             return this;
         }
-        
+
         /**
          * Adds a single string capability (helper method).
          *
