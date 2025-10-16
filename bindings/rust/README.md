@@ -3,15 +3,15 @@
 [![Crates.io](https://img.shields.io/crates/v/umicp-core.svg)](https://crates.io/crates/umicp-core)
 [![Documentation](https://docs.rs/umicp-core/badge.svg)](https://docs.rs/umicp-core)
 [![License](https://img.shields.io/badge/license-CC0--1.0-blue.svg)](../../../LICENSE)
-[![Version](https://img.shields.io/badge/version-0.2.0-green.svg)](CHANGELOG.md)
+[![Version](https://img.shields.io/badge/version-0.2.1-green.svg)](CHANGELOG.md)
 
 High-performance Rust bindings for the Universal Matrix Inter-Communication Protocol (UMICP) with **native type support** and **tool discovery**.
 
-## ⚠️ Version 0.2.0 - Breaking Changes
+## ⚠️ Version 0.2.1 - Latest Stable Release
 
-**IMPORTANT**: This is a major update with breaking changes. See [CHANGELOG.md](CHANGELOG.md) and [Migration Guide](#migration-from-01x-to-02x) below.
+**IMPORTANT**: Version 0.2.0 introduced breaking changes. See [CHANGELOG.md](CHANGELOG.md) and [Migration Guide](#migration-from-01x-to-02x) below.
 
-## 🚀 Status: **Production Ready** (v0.2.0)
+## 🚀 Status: **Production Ready** (v0.2.1)
 
 | Component | Status | Coverage | Tests |
 |-----------|--------|----------|-------|
@@ -30,23 +30,26 @@ High-performance Rust bindings for the Universal Matrix Inter-Communication Prot
 **Tests Passing**: 123/123 tests (100%), 11 ignored (integration/timeout)  
 **Production Ready**: ✅ All features implemented and tested  
 **Rust Version**: 1.82+ required (latest stable recommended)  
-**Dependencies**: ✅ Updated to latest versions (2025-10-10)  
+**Rust Edition**: 2024  
+**Dependencies**: ✅ Updated to latest versions (2025-10-16)  
 **Review Status**: ✅ **Complete Implementation Review** - [IMPLEMENTATION_REVIEW_REPORT.md](docs/IMPLEMENTATION_REVIEW_REPORT.md)
 
-### 🎯 Key Achievements (v0.2.0)
-- **40/40 unit tests passing** (100% coverage)
+### 🎯 Key Achievements
+- **123/123 unit tests passing** (100% coverage, 11 ignored for integration)
 - **Native JSON type support** in capabilities (numbers, booleans, arrays, objects)
 - **Tool discovery trait** for auto-discovery services (MCP-compatible)
+- **Rust Edition 2024** for latest language features
 - **Zero compilation errors/warnings**
 - **Memory safe** (Rust guarantees)
 - **Thread safe** (Send + Sync)
 - **Production grade** code quality
 
-### ✨ New in v0.2.0
-- 🔥 **Native Types**: Capabilities now support `serde_json::Value` instead of just strings
-- 🔍 **Tool Discovery**: New `DiscoverableService` trait for service introspection
+### ✨ Key Features
+- 🔥 **Native Types**: Capabilities support `serde_json::Value` (numbers, booleans, arrays, objects)
+- 🔍 **Tool Discovery**: `DiscoverableService` trait for service introspection
 - 📋 **Operation Schemas**: Full JSON Schema support for tool parameters (MCP-compatible)
-- 🛠️ **Better DX**: No more manual string serialization/deserialization
+- 🛠️ **Better DX**: No manual string serialization/deserialization needed
+- 🦀 **Modern Rust**: Edition 2024 with latest Rust 1.82+ features
 
 ---
 
@@ -56,12 +59,14 @@ Add to your `Cargo.toml`:
 
 ```toml
 [dependencies]
-umicp-core = { version = "0.2.0", features = ["websocket"] }
+umicp-core = { version = "0.2.1", features = ["websocket"] }
 tokio = { version = "1.42", features = ["full"] }
 serde_json = "1.0"  # Required for native types
 ```
 
-**Note**: Requires Rust 1.82 or later.
+**Requirements**: 
+- Rust 1.82 or later
+- Edition 2024
 
 ### Features
 
@@ -73,7 +78,7 @@ serde_json = "1.0"  # Required for native types
 
 ## 🎯 Quick Start
 
-### Basic Envelope Usage (v0.2.0 with Native Types)
+### Basic Envelope Usage (Native Types)
 
 ```rust
 use umicp_core::{Envelope, OperationType};
@@ -245,7 +250,7 @@ fn main() -> Result<(), Box<dyn std::error::Error>> {
   - Event types (Message, PeerConnect, PeerDisconnect, Error)
   - Type-safe event callbacks
 
-### Tool Discovery (v0.2.0 - NEW!)
+### Tool Discovery (v0.2.x)
 - ✅ **DiscoverableService Trait**:
   - Auto-discovery of available operations
   - JSON Schema for operation parameters (MCP-compatible)

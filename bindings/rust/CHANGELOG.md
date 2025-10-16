@@ -5,6 +5,24 @@ All notable changes to the UMICP Rust bindings will be documented in this file.
 The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/),
 and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
+## [0.2.1] - 2025-10-16
+
+### Changed
+
+- **Rust Edition 2024**: Updated to use Rust Edition 2024 for latest language features
+- **Documentation Updates**: Updated README and CHANGELOG to reflect current version
+- **Dependency Updates**: All dependencies updated to latest stable versions
+
+### Fixed
+
+- Minor documentation inconsistencies
+- Version badge alignment
+
+### Internal
+
+- Improved project structure for better maintainability
+- Updated examples to showcase Rust 2024 features
+
 ## [0.2.0] - 2025-10-16
 
 ### ⚠️ BREAKING CHANGES
@@ -139,5 +157,6 @@ impl DiscoverableService for MyService {
 - Load balancing
 - Comprehensive test suite
 
+[0.2.1]: https://github.com/hivellm/umicp/compare/v0.2.0...v0.2.1
 [0.2.0]: https://github.com/hivellm/umicp/compare/v0.1.3...v0.2.0
 [0.1.3]: https://github.com/hivellm/umicp/releases/tag/v0.1.3
