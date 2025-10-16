@@ -149,8 +149,9 @@ using json = nlohmann::json;
 // After:  CapabilitiesMap = std::unordered_map<std::string, json>
 using CapabilitiesMap = std::unordered_map<std::string, json>;
 
-// Deprecated: Use CapabilitiesMap instead
-using StringMap [[deprecated("Use CapabilitiesMap with native JSON types")]] = std::unordered_map<std::string, std::string>;
+// Note: StringMap still used for HTTP headers and other string-only maps
+// For Envelope capabilities, use CapabilitiesMap instead
+using StringMap = std::unordered_map<std::string, std::string>;
 using JsonObject = std::unordered_map<std::string, std::string>; // Simplified for MVP
 
 // Envelope structure (JSON control plane)

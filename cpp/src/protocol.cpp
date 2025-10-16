@@ -195,15 +195,15 @@ Result<std::string> Protocol::send_control(const std::string& to, OperationType 
     }
 
     // Add control parameters to envelope
-    envelope_result.value->capabilities = StringMap{
-        {"command", command}
+    envelope_result.value->capabilities = CapabilitiesMap{
+        {"command", json(command)}
     };
 
     if (!params.empty()) {
         if (!envelope_result.value->capabilities) {
-            envelope_result.value->capabilities = StringMap();
+            envelope_result.value->capabilities = CapabilitiesMap();
         }
-        (*envelope_result.value->capabilities)["params"] = params;
+        (*envelope_result.value->capabilities)["params"] = json(params);
     }
 
     auto send_result = transport_->send_envelope(*envelope_result.value);
@@ -774,9 +774,9 @@ Result<void> Protocol::publish_topic(const std::string& topic, const ByteBuffer&
     }
 
     // Add topic information to envelope
-    envelope_result.value->capabilities = StringMap{
-        {"topic", topic},
-        {"type", "publish"}
+    envelope_result.value->capabilities = CapabilitiesMap{
+        {"topic", json(topic)},
+        {"type", json("publish")}
     };
 
     // Send via selected transport

@@ -125,8 +125,10 @@ set(UMICP_HEADERS
 
 # Create static library
 add_library(umicp_static STATIC ${UMICP_SOURCES} ${UMICP_HEADERS})
-target_link_libraries(umicp_static
+target_link_libraries(umicp_static PUBLIC
     nlohmann_json::nlohmann_json
+)
+target_link_libraries(umicp_static PRIVATE
     ${ZLIB_LIBRARIES}
     ${OPENSSL_LIBRARIES}
     ${CURL_LIBRARIES}
@@ -136,8 +138,10 @@ target_link_libraries(umicp_static
 
 # Create shared library
 add_library(umicp_shared SHARED ${UMICP_SOURCES} ${UMICP_HEADERS})
-target_link_libraries(umicp_shared
+target_link_libraries(umicp_shared PUBLIC
     nlohmann_json::nlohmann_json
+)
+target_link_libraries(umicp_shared PRIVATE
     ${ZLIB_LIBRARIES}
     ${OPENSSL_LIBRARIES}
     ${CURL_LIBRARIES}
@@ -237,10 +241,12 @@ add_library(UMICP::static ALIAS umicp_static)
 add_library(UMICP::shared ALIAS umicp_shared)
 
 # Export targets
-export(TARGETS umicp_static umicp_shared
-    FILE UMICPTargets.cmake
-    NAMESPACE UMICP::
-)
+# Note: Temporarily disabled until nlohmann_json export issue is resolved
+# TODO: Fix export to include nlohmann_json or use find_package
+# export(TARGETS umicp_static umicp_shared
+#     FILE UMICPTargets.cmake
+#     NAMESPACE UMICP::
+# )
 
 # Generate and install CMake package config
 include(CMakePackageConfigHelpers)
