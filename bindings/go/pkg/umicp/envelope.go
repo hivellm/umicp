@@ -152,7 +152,7 @@ func (e *Envelope) Clone() *Envelope {
 		Operation:    e.Operation,
 		MessageID:    e.MessageID,
 		Timestamp:    e.Timestamp,
-		Capabilities: make(map[string]string),
+		Capabilities: make(map[string]interface{}),
 		PayloadType:  e.PayloadType,
 		Encoding:     e.Encoding,
 	}
