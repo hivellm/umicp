@@ -18,9 +18,8 @@ import java.util.*
  * @property messageId Unique message identifier
  * @property timestamp Message timestamp (Unix epoch milliseconds)
  * @property payloadHint Optional payload metadata
- * @property capabilities Optional key-value capabilities
+ * @property capabilities Optional key-value capabilities (supports native JSON types)
  */
-@Serializable
 data class Envelope(
     val from: String,
     val to: String,
