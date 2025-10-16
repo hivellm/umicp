@@ -2,7 +2,7 @@
 # Based on BIP-05 Universal Matrix Intelligent Communication Protocol
 
 cmake_minimum_required(VERSION 3.16)
-project(UMICP VERSION 1.1.0 LANGUAGES CXX C)
+project(UMICP VERSION 0.2.0 LANGUAGES CXX C)
 
 # Set C++ standard
 set(CMAKE_CXX_STANDARD 17)

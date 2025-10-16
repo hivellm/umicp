@@ -5,15 +5,15 @@ All notable changes to the UMICP C++ core will be documented in this file.
 The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/),
 and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
-## [1.1.0] - 2025-10-16
+## [0.2.0] - 2025-10-16
 
 ### ⚠️ BREAKING CHANGES
 
 This release introduces native JSON type support in capabilities, requiring updates to all code that uses the Envelope API.
 
 #### Capabilities Type Change
-- **Before (v1.0.0)**: `StringMap = std::unordered_map<std::string, std::string>`
-- **After (v1.1.0)**: `CapabilitiesMap = std::unordered_map<std::string, json>`
+- **Before (v0.1.3)**: `StringMap = std::unordered_map<std::string, std::string>`
+- **After (v0.2.0)**: `CapabilitiesMap = std::unordered_map<std::string, json>`
 
 All capability values are now `nlohmann::json` objects, supporting:
 - Native numbers (`int`, `double`)
@@ -24,10 +24,10 @@ All capability values are now `nlohmann::json` objects, supporting:
 
 #### API Changes
 ```cpp
-// Before (v1.0.0)
+// Before (v0.1.3)
 builder.capabilities(StringMap{{"key", "value"}});
 
-// After (v1.1.0)
+// After (v0.2.0)
 builder.capabilities(CapabilitiesMap{{"key", json("value")}});
 // Or use convenience methods:
 builder.capability_str("key", "value");
@@ -243,5 +243,5 @@ public:
 - Service discovery
 - Connection pooling
 
-[1.1.0]: https://github.com/hivellm/umicp/compare/v1.0.0...v1.1.0
-[1.0.0]: https://github.com/hivellm/umicp/releases/tag/v1.0.0
+[0.2.0]: https://github.com/hivellm/umicp/compare/v0.1.3...v0.2.0
+[0.1.3]: https://github.com/hivellm/umicp/releases/tag/v0.1.3

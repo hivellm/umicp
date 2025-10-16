@@ -6,9 +6,11 @@
 #include <gtest/gtest.h>
 #include "serialization.h"
 #include "../utils/test_helpers.h"
+#include <nlohmann/json.hpp>
 
 using namespace umicp;
 using namespace umicp::testing;
+using json = nlohmann::json;
 
 class SerializationTest : public UMICPTestFixture {
 protected:
@@ -17,10 +19,10 @@ protected:
 
         // Create test envelope
         test_envelope_ = TestHelpers::create_test_envelope("test-sender", "test-receiver");
-        test_envelope_.capabilities = StringMap{
-            {"command", "ping"},
-            {"version", "1.0"},
-            {"binary_support", "true"}
+        test_envelope_.capabilities = CapabilitiesMap{
+            {"command", json("ping")},
+            {"version", json("1.0")},
+            {"binary_support", json(true)}
         };
 
         // Create test frame

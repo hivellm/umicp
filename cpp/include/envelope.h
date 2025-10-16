@@ -2,7 +2,7 @@
  * UMICP Envelope Header
  * JSON control plane message handling
  *
- * Version 1.1.0 - Native JSON type support in capabilities
+ * Version 0.2.0 - Native JSON type support in capabilities
  */
 
 #ifndef UMICP_ENVELOPE_H
@@ -29,7 +29,7 @@ public:
     EnvelopeBuilder& operation(OperationType op);
     EnvelopeBuilder& message_id(const std::string& msg_id);
 
-    // BREAKING CHANGE (v1.1.0): capabilities now accepts CapabilitiesMap with native JSON types
+    // BREAKING CHANGE (v0.2.0): capabilities now accepts CapabilitiesMap with native JSON types
     EnvelopeBuilder& capabilities(const CapabilitiesMap& caps);
 
     // Add a single capability with native JSON value

@@ -2,7 +2,7 @@
  * UMICP Tool Discovery - C++ Core
  * Tool discovery interfaces for auto-discovery services
  *
- * Version 1.1.0 - MCP-compatible tool discovery
+ * Version 0.2.0 - MCP-compatible tool discovery
  */
 
 #ifndef UMICP_TOOL_DISCOVERY_H

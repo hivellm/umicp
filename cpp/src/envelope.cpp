@@ -2,7 +2,7 @@
  * UMICP Envelope Implementation
  * JSON control plane message handling with canonical serialization
  *
- * Version 1.1.0 - Native JSON type support with nlohmann/json
+ * Version 0.2.0 - Native JSON type support with nlohmann/json
  */
 
 #include "umicp_types.h"

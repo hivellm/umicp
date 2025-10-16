@@ -3,7 +3,7 @@
  * Type definitions and constants
  *
  * Based on BIP-05 specifications
- * Version 1.1.0 - Native JSON type support
+ * Version 0.2.0 - Native JSON type support
  */
 
 #ifndef UMICP_TYPES_H
@@ -144,7 +144,7 @@ struct PayloadHint {
 using ByteBuffer = std::vector<uint8_t>;
 using json = nlohmann::json;
 
-// BREAKING CHANGE (v1.1.0): Capabilities now support native JSON types
+// BREAKING CHANGE (v0.2.0): Capabilities now support native JSON types
 // Before: StringMap = std::unordered_map<std::string, std::string>
 // After:  CapabilitiesMap = std::unordered_map<std::string, json>
 using CapabilitiesMap = std::unordered_map<std::string, json>;
