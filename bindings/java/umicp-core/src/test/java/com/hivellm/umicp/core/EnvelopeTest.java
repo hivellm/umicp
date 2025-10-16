@@ -293,7 +293,8 @@ class EnvelopeTest {
             newCaps.put("key3", "value3");
             envelope.setCapabilities(newCaps);
 
-            assertThat(envelope.getCapabilities())
+            Map<String, Object> caps = envelope.getCapabilities();
+            assertThat(caps)
                 .hasSize(1)
                 .containsEntry("key3", "value3");
         }

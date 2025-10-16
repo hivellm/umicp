@@ -1,6 +1,6 @@
 # UMICP TypeScript Bindings
 
-[![npm version](https://badge.fury.io/js/%40umicp%2Fcore.svg)](https://badge.fury.io/js/%40umicp%2Fcore)
+[![npm version](https://badge.fury.io/js/%40hivellm%2Fumicp.svg)](https://badge.fury.io/js/%40hivellm%2Fumicp)
 [![License: MIT](https://img.shields.io/badge/License-MIT-yellow.svg)](https://opensource.org/licenses/MIT)
 [![Tests](https://github.com/hivellm/umicp/workflows/tests/badge.svg)](https://github.com/hivellm/umicp/actions)
 
