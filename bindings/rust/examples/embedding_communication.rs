@@ -7,6 +7,7 @@ for embeddings, transformer states, and distributed model coordination.
 
 use umicp_core::{Envelope, Matrix, OperationType};
 use serde::{Serialize, Deserialize};
+use serde_json::json;
 use std::collections::HashMap;
 
 /// AI Model embedding data structure

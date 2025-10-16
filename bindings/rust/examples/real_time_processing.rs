@@ -6,6 +6,7 @@ envelopes, including streaming data, buffering, and performance optimization.
 */
 
 use umicp_core::{Envelope, Matrix, OperationType};
+use serde_json::json;
 use std::collections::{HashMap, VecDeque};
 use std::sync::{Arc, Mutex};
 use std::time::{Duration, Instant};
