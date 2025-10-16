@@ -2,9 +2,10 @@
 
 [![License](https://img.shields.io/badge/license-MIT-blue.svg)](LICENSE)
 [![.NET](https://img.shields.io/badge/.NET-8.0-purple.svg)](https://dotnet.microsoft.com/)
+[![Version](https://img.shields.io/badge/version-0.2.0-blue.svg)](CHANGELOG.md)
 [![BIP-05](https://img.shields.io/badge/BIP--05-Implementation-green.svg)](https://github.com/hivellm/hive-gov/tree/main/bips/BIP-05)
 
-> **Production-Ready** C# bindings for the Universal Matrix Intelligent Communication Protocol (UMICP)
+> **Production-Ready** C# bindings for the Universal Matrix Intelligent Communication Protocol (UMICP) with MCP-compatible tool discovery
 
 ## 📋 What is UMICP?
 
@@ -15,6 +16,7 @@ UMICP enables efficient inter-model communication between AI systems with:
 - **📦 Efficient**: Binary protocol with optional compression
 - **⚡ Real-time**: WebSocket transport with HTTP support
 - **🤝 Peer-to-Peer**: True multiplexed architecture - each peer is server AND client
+- **🔧 Tool Discovery**: MCP-compatible automatic tool introspection with JSON Schema
 
 ## 🛠️ Installation
 
@@ -34,6 +36,51 @@ dotnet test
 ```
 
 ## 🚀 Quick Start
+
+### 🆕 Tool Discovery (v0.2.0)
+
+```csharp
+using Umicp.Core.ToolDiscovery;
+using System.Text.Json;
+
+// Implement discoverable service
+public class MyService : IDiscoverableService
+{
+    public List<OperationSchema> ListOperations()
+    {
+        return new List<OperationSchema>
+        {
+            new OperationSchema(
+                "search_vectors",
+                JsonDocument.Parse(@"{
+                    ""type"": ""object"",
+                    ""properties"": {
+                        ""query"": {""type"": ""string""},
+                        ""limit"": {""type"": ""integer"", ""default"": 10}
+                    },
+                    ""required"": [""query""]
+                }").RootElement
+            )
+            .WithTitle("Search Vectors")
+            .WithDescription("Search for semantically similar content")
+            .WithAnnotations(JsonDocument.Parse(@"{""read_only"": true}").RootElement)
+        };
+    }
+
+    public ServerInfo GetServerInfo()
+    {
+        return new ServerInfo("my-service", "1.0.0", "UMICP/0.2")
+            .WithFeatures(new List<string> { "discovery", "search" })
+            .WithMcpCompatible(true);
+    }
+}
+
+// Use discovery helpers
+var service = new MyService();
+var operationsResponse = DiscoveryHelpers.GenerateOperationsResponse(service);
+var schemaResponse = DiscoveryHelpers.GenerateSchemaResponse(service, "search_vectors");
+var infoResponse = DiscoveryHelpers.GenerateServerInfoResponse(service);
+```
 
 ### Basic Envelope Creation
 

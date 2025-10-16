@@ -7,11 +7,11 @@
 
     <!-- Package Metadata -->
     <PackageId>HiveLLM.Umicp</PackageId>
-    <Version>0.1.3</Version>
+    <Version>0.2.0</Version>
     <Authors>HiveLLM Team</Authors>
     <Company>HiveLLM</Company>
     <Product>UMICP C# SDK</Product>
-    <Description>Universal Matrix Intelligent Communication Protocol (UMICP) - Production-ready C# bindings for high-performance AI model communication. Features SIMD-accelerated matrix operations, WebSocket/HTTP transport, compression, peer-to-peer multiplexing, service discovery, and connection pooling.</Description>
+    <Description>Universal Matrix Intelligent Communication Protocol (UMICP) - Production-ready C# bindings for high-performance AI model communication with tool discovery. Features SIMD-accelerated matrix operations, WebSocket/HTTP transport, compression, peer-to-peer multiplexing, service discovery, connection pooling, and MCP-compatible tool discovery.</Description>
     <Copyright>Copyright (c) 2025 HiveLLM</Copyright>
     <PackageLicenseExpression>MIT</PackageLicenseExpression>
     <PackageProjectUrl>https://github.com/hivellm/umicp</PackageProjectUrl>
@@ -20,7 +20,7 @@
     <PackageTags>umicp;ai;communication;protocol;websocket;matrix;simd;compression;p2p;hivellm;machine-learning;interoperability</PackageTags>
     <PackageReadmeFile>README.md</PackageReadmeFile>
     <PackageIcon>icon.png</PackageIcon>
-    <PackageReleaseNotes>Beta release v0.1.3 with full BIP-05 compliance. Features: Envelope system, SIMD matrix operations, WebSocket/HTTP client/server, compression (Gzip/Deflate), peer-to-peer communication, service discovery, connection pooling. Production testing in progress.</PackageReleaseNotes>
+    <PackageReleaseNotes>v0.2.0: Tool Discovery + Native Types. Features: MCP-compatible tool discovery (IDiscoverableService interface), native JSON types in capabilities (Dictionary&lt;string, object&gt;), JSON Schema support, operation introspection. BREAKING: No breaking changes (C# already had object type support). 114 tests passing.</PackageReleaseNotes>
 
     <!-- Documentation -->
     <GenerateDocumentationFile>true</GenerateDocumentationFile>
