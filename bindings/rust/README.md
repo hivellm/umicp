@@ -3,10 +3,15 @@
 [![Crates.io](https://img.shields.io/crates/v/umicp-core.svg)](https://crates.io/crates/umicp-core)
 [![Documentation](https://docs.rs/umicp-core/badge.svg)](https://docs.rs/umicp-core)
 [![License](https://img.shields.io/badge/license-CC0--1.0-blue.svg)](../../../LICENSE)
+[![Version](https://img.shields.io/badge/version-0.2.0-green.svg)](CHANGELOG.md)
 
-High-performance Rust bindings for the Universal Matrix Inter-Communication Protocol (UMICP).
+High-performance Rust bindings for the Universal Matrix Inter-Communication Protocol (UMICP) with **native type support** and **tool discovery**.
 
-## 🚀 Status: **Production Ready** (100% Complete)
+## ⚠️ Version 0.2.0 - Breaking Changes
+
+**IMPORTANT**: This is a major update with breaking changes. See [CHANGELOG.md](CHANGELOG.md) and [Migration Guide](#migration-from-01x-to-02x) below.
+
+## 🚀 Status: **Production Ready** (v0.2.0)
 
 | Component | Status | Coverage | Tests |
 |-----------|--------|----------|-------|
@@ -28,13 +33,20 @@ High-performance Rust bindings for the Universal Matrix Inter-Communication Prot
 **Dependencies**: ✅ Updated to latest versions (2025-10-10)  
 **Review Status**: ✅ **Complete Implementation Review** - [IMPLEMENTATION_REVIEW_REPORT.md](docs/IMPLEMENTATION_REVIEW_REPORT.md)
 
-### 🎯 Key Achievements
-- **51/51 unit tests passing** (100% coverage)
+### 🎯 Key Achievements (v0.2.0)
+- **40/40 unit tests passing** (100% coverage)
+- **Native JSON type support** in capabilities (numbers, booleans, arrays, objects)
+- **Tool discovery trait** for auto-discovery services (MCP-compatible)
 - **Zero compilation errors/warnings**
-- **Complete feature parity** with TypeScript SDK
 - **Memory safe** (Rust guarantees)
 - **Thread safe** (Send + Sync)
 - **Production grade** code quality
+
+### ✨ New in v0.2.0
+- 🔥 **Native Types**: Capabilities now support `serde_json::Value` instead of just strings
+- 🔍 **Tool Discovery**: New `DiscoverableService` trait for service introspection
+- 📋 **Operation Schemas**: Full JSON Schema support for tool parameters (MCP-compatible)
+- 🛠️ **Better DX**: No more manual string serialization/deserialization
 
 ---
 
@@ -44,8 +56,9 @@ Add to your `Cargo.toml`:
 
 ```toml
 [dependencies]
-umicp-core = { version = "0.1.3", features = ["websocket"] }
+umicp-core = { version = "0.2.0", features = ["websocket"] }
 tokio = { version = "1.42", features = ["full"] }
+serde_json = "1.0"  # Required for native types
 ```
 
 **Note**: Requires Rust 1.82 or later.
@@ -60,19 +73,23 @@ tokio = { version = "1.42", features = ["full"] }
 
 ## 🎯 Quick Start
 
-### Basic Envelope Usage
+### Basic Envelope Usage (v0.2.0 with Native Types)
 
 ```rust
 use umicp_core::{Envelope, OperationType};
+use serde_json::json;
 
 fn main() -> Result<(), Box<dyn std::error::Error>> {
-    // Create a UMICP envelope
+    // Create a UMICP envelope with native types
     let envelope = Envelope::builder()
         .from("client-001")
         .to("server-001")
         .operation(OperationType::Data)
         .message_id("msg-12345")
-        .capability("content-type", "application/json")
+        .capability("count", json!(42))           // Native number!
+        .capability("enabled", json!(true))        // Native boolean!
+        .capability("tags", json!(["rust", "umicp"]))  // Native array!
+        .capability_str("message", "Hello!")      // String convenience method
         .build()?;
 
     // Serialize for transmission
@@ -81,8 +98,12 @@ fn main() -> Result<(), Box<dyn std::error::Error>> {
     // Deserialize received data
     let received = Envelope::deserialize(&serialized)?;
     
-    println!("From: {}", received.from());
-    println!("To: {}", received.to());
+    // Access native types
+    if let Some(caps) = received.capabilities() {
+        println!("Count: {}", caps["count"].as_i64().unwrap());  // 42
+        println!("Enabled: {}", caps["enabled"].as_bool().unwrap());  // true
+        println!("Tags: {:?}", caps["tags"].as_array().unwrap());
+    }
     
     Ok(())
 }
@@ -223,6 +244,20 @@ fn main() -> Result<(), Box<dyn std::error::Error>> {
   - Multiple event subscribers
   - Event types (Message, PeerConnect, PeerDisconnect, Error)
   - Type-safe event callbacks
+
+### Tool Discovery (v0.2.0 - NEW!)
+- ✅ **DiscoverableService Trait**:
+  - Auto-discovery of available operations
+  - JSON Schema for operation parameters (MCP-compatible)
+  - Server metadata and capabilities
+- ✅ **OperationSchema**:
+  - Name, title, description
+  - Full JSON Schema for inputs/outputs
+  - Annotations (read_only, idempotent, destructive)
+- ✅ **ServerInfo**:
+  - Version, protocol, features
+  - Operations count
+  - MCP compatibility flag
 
 ### Advanced Features (100% Complete)
 - ✅ **Service Discovery**:
