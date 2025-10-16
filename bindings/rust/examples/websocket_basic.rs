@@ -41,6 +41,7 @@ async fn main() -> anyhow::Result<()> {
     Ok(())
 }
 
+#[cfg(feature = "websocket")]
 async fn run_server() -> anyhow::Result<()> {
     let mut server = WebSocketServer::new("127.0.0.1:20081")?;
 
@@ -52,6 +53,7 @@ async fn run_server() -> anyhow::Result<()> {
     Ok(())
 }
 
+#[cfg(feature = "websocket")]
 async fn run_client() -> anyhow::Result<()> {
     println!("📱 Client: Connecting to ws://127.0.0.1:20081");
 
