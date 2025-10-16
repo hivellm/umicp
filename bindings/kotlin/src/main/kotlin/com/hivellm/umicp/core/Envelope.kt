@@ -5,7 +5,6 @@ import com.google.gson.JsonSyntaxException
 import com.hivellm.umicp.types.OperationType
 import com.hivellm.umicp.types.SerializationException
 import com.hivellm.umicp.types.ValidationException
-import kotlinx.serialization.Serializable
 import java.security.MessageDigest
 import java.util.*
 
