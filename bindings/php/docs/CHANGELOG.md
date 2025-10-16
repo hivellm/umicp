@@ -5,40 +5,84 @@ All notable changes to the UMICP PHP bindings will be documented in this file.
 The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/),
 and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
-## [0.2.0] - 2025-10-16
+## [0.2.1] - 2025-10-16
 
-### 🎉 **PRODUCTION RELEASE - TOOL DISCOVERY & ENHANCED FEATURES**
+### Added - Tool Discovery
 
-**Grade: A+ (Excellent)** | **Coverage: 95%** | **Status: Production Ready**
+- **Tool Discovery**: MCP-compatible tool discovery system
+  - `DiscoverableService` interface for automatic tool introspection
+  - `OperationSchema` class with JSON Schema support (using PHP 8.1+ readonly properties)
+  - `ServerInfo` class for server metadata
+  - `DiscoveryHelpers` utility class for generating MCP-compatible responses
+  - `SimpleDiscoverableService` reference implementation
+- **Tests**: 16 new comprehensive tool discovery tests
 
-#### ✅ New Features Added
+### Changed - Documentation Fix
 
-##### 🔍 **Tool Discovery System** (7 new classes)
-- **ToolDiscovery** - Full BIP-05 tool discovery implementation
-  - Operation schema definition and validation
-  - Server information management
-  - Service registration and discovery
-  - Capability matching and filtering
-- **OperationSchema** - Define tool operations with parameters
-- **ServerInfo** - Server metadata and capability broadcasting
-- **ServiceDiscovery** - Automatic service detection
-- **Builder patterns** - Fluent API for schema and server info creation
-- **15+ Unit Tests** - 100% passing ✅
+- **PHPDoc Updates**: Fixed incorrect type hints in `Envelope.php`
+  - Line 55: `@param array<string, string>` → `@param array<string, mixed>`
+  - Line 208: `@param array<string, string>` → `@param array<string, mixed>`
+  - Note: PHP arrays already supported mixed types, this was a documentation-only fix
 
-#### 🔧 **Enhanced Features**
-- Updated documentation to reflect v0.2.0
-- Improved README with current version info
-- Enhanced composer.json metadata
-- Better PSR-12 compliance
+### Note on Native Types
 
-#### 📦 **Distribution**
-- Ready for Packagist publication
-- Complete package validation
-- All tests passing (115+ tests)
-- Production-grade stability
+- PHP binding already supported mixed types natively (arrays support any type)
+- No code changes required for native type support
+- Only PHPDoc annotations needed correction
 
-### Migration from 0.1.x
-No breaking changes. All existing code continues to work.
+### Migration Guide
+
+No migration needed! This is a purely additive release. New Tool Discovery features are optional.
+
+### Example Usage
+
+```php
+<?php
+use UMICP\Discovery\{DiscoverableService, OperationSchema, ServerInfo, SimpleDiscoverableService};
+
+class MyService implements DiscoverableService {
+    private array $operations;
+    
+    public function __construct() {
+        $this->operations = [
+            new OperationSchema(
+                name: 'search',
+                inputSchema: [
+                    'type' => 'object',
+                    'properties' => [
+                        'query' => ['type' => 'string']
+                    ]
+                ],
+                title: 'Search Operation',
+                description: 'Searches the database'
+            )
+        ];
+    }
+    
+    public function listOperations(): array {
+        return $this->operations;
+    }
+    
+    public function getSchema(string $name): ?OperationSchema {
+        foreach ($this->operations as $op) {
+            if ($op->name === $name) {
+                return $op;
+            }
+        }
+        return null;
+    }
+    
+    public function getServerInfo(): ServerInfo {
+        return new ServerInfo(
+            server: 'my-service',
+            version: '1.0.0',
+            protocol: 'UMICP/1.0',
+            mcpCompatible: true,
+            operationsCount: count($this->operations)
+        );
+    }
+}
+```
 
 ## [0.1.2] - 2025-10-10
 

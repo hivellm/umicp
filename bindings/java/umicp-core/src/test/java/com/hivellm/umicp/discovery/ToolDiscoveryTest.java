@@ -1,198 +1,261 @@
 package com.hivellm.umicp.discovery;
 
+import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 
-import java.util.List;
-import java.util.Map;
+import java.util.*;
 
-import static org.assertj.core.api.Assertions.assertThat;
+import static org.junit.jupiter.api.Assertions.*;
 
-class TestService implements DiscoverableService {
-    @Override
-    public List<OperationSchema> listOperations() {
-        return List.of(
-            OperationSchema.builder("search_vectors", Map.of(
-                "type", "object",
-                "properties", Map.of(
-                    "collection", Map.of("type", "string"),
-                    "query", Map.of("type", "string"),
-                    "limit", Map.of("type", "integer", "default", 10)
-                ),
-                "required", List.of("collection", "query")
-            ))
-            .withTitle("Search Vectors")
-            .withDescription("Search for semantically similar content")
-            .withAnnotations(Map.of("read_only", true))
-            .build(),
-
-            OperationSchema.builder("create_collection", Map.of(
-                "type", "object",
-                "properties", Map.of(
-                    "name", Map.of("type", "string"),
-                    "dimension", Map.of("type", "integer")
-                ),
-                "required", List.of("name", "dimension")
-            ))
-            .withTitle("Create Collection")
-            .build()
-        );
-    }
-
-    @Override
-    public ServerInfo getServerInfo() {
-        return ServerInfo.builder("test-service", "1.0.0", "UMICP/0.2")
-            .withFeatures(List.of("discovery", "search"))
-            .withOperationsCount(2)
-            .withMcpCompatible(true)
-            .build();
-    }
-}
-
+/**
+ * Tests for Tool Discovery functionality.
+ */
 class ToolDiscoveryTest {
 
-    @Test
-    void testOperationSchemaCreation() {
-        OperationSchema schema = OperationSchema.builder(
-            "test_op",
-            Map.of("type", "object")
-        ).build();
+    private List<OperationSchema> operations;
+    private ServerInfo serverInfo;
+    private SimpleDiscoverableService service;
 
-        assertThat(schema.getName()).isEqualTo("test_op");
-        assertThat(schema.getInputSchema()).containsEntry("type", "object");
+    @BeforeEach
+    void setUp() {
+        Map<String, Object> addInputSchema = new HashMap<>();
+        addInputSchema.put("type", "object");
+        Map<String, Object> properties = new HashMap<>();
+        properties.put("a", Map.of("type", "number"));
+        properties.put("b", Map.of("type", "number"));
+        addInputSchema.put("properties", properties);
+
+        OperationSchema addOp = new OperationSchema.Builder("add", addInputSchema)
+                .withTitle("Add Numbers")
+                .withDescription("Adds two numbers together")
+                .build();
+
+        Map<String, Object> multiplyInputSchema = new HashMap<>();
+        multiplyInputSchema.put("type", "object");
+
+        OperationSchema multiplyOp = new OperationSchema("multiply", multiplyInputSchema);
+
+        operations = Arrays.asList(addOp, multiplyOp);
+
+        serverInfo = new ServerInfo.Builder("math-service", "1.0.0", "UMICP/1.0")
+                .withMcpCompatible(true)
+                .build();
+
+        service = new SimpleDiscoverableService(operations, serverInfo);
+    }
+
+    @Test
+    void testOperationSchemaBasic() {
+        Map<String, Object> inputSchema = new HashMap<>();
+        inputSchema.put("type", "string");
+
+        OperationSchema schema = new OperationSchema("test_op", inputSchema);
+
+        assertEquals("test_op", schema.getName());
+        assertNotNull(schema.getInputSchema());
+        assertNull(schema.getTitle());
+        assertNull(schema.getDescription());
     }
 
     @Test
     void testOperationSchemaBuilder() {
-        OperationSchema schema = OperationSchema.builder("test", Map.of("type", "object"))
-            .withTitle("Test Operation")
-            .withDescription("A test")
-            .withAnnotations(Map.of("read_only", true))
-            .build();
+        Map<String, Object> inputSchema = Map.of("type", "object");
+        Map<String, Object> outputSchema = Map.of("type", "boolean");
+        Map<String, Object> annotations = Map.of("version", "1.0", "deprecated", false);
 
-        assertThat(schema.getTitle()).isEqualTo("Test Operation");
-        assertThat(schema.getDescription()).isEqualTo("A test");
-        assertThat(schema.getAnnotations()).containsEntry("read_only", true);
+        OperationSchema schema = new OperationSchema.Builder("complex_op", inputSchema)
+                .withTitle("Complex Operation")
+                .withDescription("A complex test operation")
+                .withOutputSchema(outputSchema)
+                .withAnnotations(annotations)
+                .build();
+
+        assertEquals("complex_op", schema.getName());
+        assertEquals("Complex Operation", schema.getTitle());
+        assertEquals("A complex test operation", schema.getDescription());
+        assertNotNull(schema.getOutputSchema());
+        assertNotNull(schema.getAnnotations());
     }
 
     @Test
-    void testServerInfoCreation() {
-        ServerInfo info = ServerInfo.builder("my-service", "1.0.0", "UMICP/0.2").build();
+    void testOperationSchemaInvalidName() {
+        Map<String, Object> inputSchema = Map.of("type", "object");
 
-        assertThat(info.getServer()).isEqualTo("my-service");
-        assertThat(info.getVersion()).isEqualTo("1.0.0");
-        assertThat(info.getProtocol()).isEqualTo("UMICP/0.2");
+        assertThrows(IllegalArgumentException.class, () ->
+            new OperationSchema("", inputSchema)
+        );
+
+        assertThrows(IllegalArgumentException.class, () ->
+            new OperationSchema(null, inputSchema)
+        );
+    }
+
+    @Test
+    void testServerInfoBasic() {
+        ServerInfo info = new ServerInfo("test-server", "1.0.0", "UMICP/1.0");
+
+        assertEquals("test-server", info.getServer());
+        assertEquals("1.0.0", info.getVersion());
+        assertEquals("UMICP/1.0", info.getProtocol());
+        assertNull(info.getFeatures());
     }
 
     @Test
     void testServerInfoBuilder() {
-        ServerInfo info = ServerInfo.builder("test", "1.0", "UMICP/0.2")
-            .withFeatures(List.of("discovery"))
-            .withOperationsCount(5)
-            .withMcpCompatible(true)
-            .withMetadata(Map.of("region", "us-east"))
-            .build();
+        ServerInfo info = new ServerInfo.Builder("full-server", "2.0.0", "UMICP/2.0")
+                .withFeatures(Arrays.asList("discovery", "streaming", "compression"))
+                .withOperationsCount(42)
+                .withMcpCompatible(true)
+                .withMetadata(Map.of("region", "us-west-2", "tier", "premium"))
+                .build();
 
-        assertThat(info.getFeatures()).contains("discovery");
-        assertThat(info.getOperationsCount()).isEqualTo(5);
-        assertThat(info.getMcpCompatible()).isTrue();
-        assertThat(info.getMetadata()).containsEntry("region", "us-east");
+        assertEquals("full-server", info.getServer());
+        assertEquals("2.0.0", info.getVersion());
+        assertEquals("UMICP/2.0", info.getProtocol());
+        assertEquals(3, info.getFeatures().size());
+        assertEquals(42, info.getOperationsCount());
+        assertTrue(info.getMcpCompatible());
+        assertEquals("us-west-2", info.getMetadata().get("region"));
     }
 
     @Test
-    void testDiscoverableServiceListOperations() {
-        TestService service = new TestService();
-        List<OperationSchema> operations = service.listOperations();
-
-        assertThat(operations).hasSize(2);
-        assertThat(operations.get(0).getName()).isEqualTo("search_vectors");
-        assertThat(operations.get(1).getName()).isEqualTo("create_collection");
-    }
-
-    @Test
-    void testDiscoverableServiceGetSchema() {
-        TestService service = new TestService();
-        OperationSchema schema = service.getSchema("search_vectors");
-
-        assertThat(schema).isNotNull();
-        assertThat(schema.getName()).isEqualTo("search_vectors");
-        assertThat(schema.getTitle()).isEqualTo("Search Vectors");
-    }
-
-    @Test
-    void testDiscoverableServiceGetSchemaNotFound() {
-        TestService service = new TestService();
-        OperationSchema schema = service.getSchema("non_existent");
-
-        assertThat(schema).isNull();
-    }
-
-    @Test
-    void testDiscoverableServiceGetServerInfo() {
-        TestService service = new TestService();
-        ServerInfo info = service.getServerInfo();
-
-        assertThat(info.getServer()).isEqualTo("test-service");
-        assertThat(info.getVersion()).isEqualTo("1.0.0");
-        assertThat(info.getProtocol()).isEqualTo("UMICP/0.2");
-        assertThat(info.getFeatures()).contains("discovery");
-    }
-
-    @Test
-    void testGenerateOperationsResponse() {
-        TestService service = new TestService();
-        Map<String, Object> response = DiscoveryHelpers.generateOperationsResponse(service);
-
-        assertThat(response).containsKey("operations");
-        assertThat(response).containsEntry("count", 2);
-        assertThat(response).containsEntry("protocol", "UMICP/0.2");
-        assertThat(response).containsEntry("mcp_compatible", true);
-    }
-
-    @Test
-    void testGenerateSchemaResponseFound() {
-        TestService service = new TestService();
-        Map<String, Object> response = DiscoveryHelpers.generateSchemaResponse(service, "search_vectors");
-
-        assertThat(response).containsEntry("name", "search_vectors");
-        assertThat(response).containsEntry("title", "Search Vectors");
-        assertThat(response).doesNotContainKey("error");
-    }
-
-    @Test
-    void testGenerateSchemaResponseNotFound() {
-        TestService service = new TestService();
-        Map<String, Object> response = DiscoveryHelpers.generateSchemaResponse(service, "invalid");
-
-        assertThat(response).containsEntry("error", "Operation not found");
-        assertThat(response).containsEntry("operation", "invalid");
-    }
-
-    @Test
-    void testGenerateServerInfoResponse() {
-        TestService service = new TestService();
-        Map<String, Object> response = DiscoveryHelpers.generateServerInfoResponse(service);
-
-        assertThat(response).containsEntry("server", "test-service");
-        assertThat(response).containsEntry("version", "1.0.0");
-        assertThat(response).containsEntry("mcp_compatible", true);
-    }
-
-    @Test
-    void testNativeTypesInCapabilities() {
-        // Test that we can use native types in capabilities
-        Map<String, Object> capabilities = Map.of(
-            "max_tokens", 100,
-            "temperature", 0.7,
-            "enabled", true,
-            "models", List.of("gpt-4", "claude-3"),
-            "config", Map.of("timeout", 30)
+    void testServerInfoInvalidFields() {
+        assertThrows(IllegalArgumentException.class, () ->
+            new ServerInfo("", "1.0.0", "UMICP/1.0")
         );
 
-        assertThat(capabilities.get("max_tokens")).isInstanceOf(Integer.class);
-        assertThat(capabilities.get("temperature")).isInstanceOf(Double.class);
-        assertThat(capabilities.get("enabled")).isInstanceOf(Boolean.class);
-        assertThat(capabilities.get("models")).isInstanceOf(List.class);
-        assertThat(capabilities.get("config")).isInstanceOf(Map.class);
+        assertThrows(IllegalArgumentException.class, () ->
+            new ServerInfo("server", "", "UMICP/1.0")
+        );
+
+        assertThrows(IllegalArgumentException.class, () ->
+            new ServerInfo("server", "1.0.0", "")
+        );
+    }
+
+    @Test
+    void testSimpleDiscoverableServiceListOperations() {
+        List<OperationSchema> ops = service.listOperations();
+
+        assertEquals(2, ops.size());
+        assertEquals("add", ops.get(0).getName());
+        assertEquals("multiply", ops.get(1).getName());
+    }
+
+    @Test
+    void testSimpleDiscoverableServiceGetSchema() {
+        OperationSchema schema = service.getSchema("add");
+
+        assertNotNull(schema);
+        assertEquals("add", schema.getName());
+        assertEquals("Add Numbers", schema.getTitle());
+    }
+
+    @Test
+    void testSimpleDiscoverableServiceGetNonExistentSchema() {
+        OperationSchema schema = service.getSchema("nonexistent");
+
+        assertNull(schema);
+    }
+
+    @Test
+    void testSimpleDiscoverableServiceGetServerInfo() {
+        ServerInfo info = service.getServerInfo();
+
+        assertEquals("math-service", info.getServer());
+        assertEquals("1.0.0", info.getVersion());
+        assertEquals(2, info.getOperationsCount());
+        assertTrue(info.getMcpCompatible());
+    }
+
+    @Test
+    void testSimpleDiscoverableServiceNullOperations() {
+        assertThrows(IllegalArgumentException.class, () ->
+            new SimpleDiscoverableService(null, serverInfo)
+        );
+    }
+
+    @Test
+    void testSimpleDiscoverableServiceNullServerInfo() {
+        assertThrows(IllegalArgumentException.class, () ->
+            new SimpleDiscoverableService(operations, null)
+        );
+    }
+
+    @Test
+    void testDiscoveryHelpersGenerateOperationsResponse() {
+        Map<String, Object> response = DiscoveryHelpers.generateOperationsResponse(service);
+
+        @SuppressWarnings("unchecked")
+        List<OperationSchema> ops = (List<OperationSchema>) response.get("operations");
+        assertEquals(2, ops.size());
+        assertEquals(2, response.get("count"));
+        assertEquals("UMICP/1.0", response.get("protocol"));
+        assertEquals(true, response.get("mcp_compatible"));
+    }
+
+    @Test
+    void testDiscoveryHelpersGenerateSchemaResponseSuccess() {
+        Map<String, Object> response = DiscoveryHelpers.generateSchemaResponse(service, "add");
+
+        assertEquals("add", response.get("name"));
+        assertNotNull(response.get("input_schema"));
+        assertEquals("Add Numbers", response.get("title"));
+        assertNull(response.get("error"));
+    }
+
+    @Test
+    void testDiscoveryHelpersGenerateSchemaResponseError() {
+        Map<String, Object> response = DiscoveryHelpers.generateSchemaResponse(service, "missing");
+
+        assertEquals("Operation not found", response.get("error"));
+        assertEquals("missing", response.get("operation"));
+    }
+
+    @Test
+    void testDiscoveryHelpersGenerateServerInfoResponse() {
+        ServerInfo info = DiscoveryHelpers.generateServerInfoResponse(service);
+
+        assertEquals("math-service", info.getServer());
+        assertEquals("1.0.0", info.getVersion());
+        assertEquals("UMICP/1.0", info.getProtocol());
+        assertEquals(2, info.getOperationsCount());
+    }
+
+    @Test
+    void testEmptyOperations() {
+        SimpleDiscoverableService emptyService = new SimpleDiscoverableService(
+                Collections.emptyList(),
+                new ServerInfo("empty-server", "1.0.0", "UMICP/1.0")
+        );
+
+        assertEquals(0, emptyService.listOperations().size());
+        assertEquals(0, emptyService.getServerInfo().getOperationsCount());
+    }
+
+    @Test
+    void testOperationSchemaWithAllFields() {
+        Map<String, Object> inputSchema = Map.of("type", "object");
+        Map<String, Object> outputSchema = Map.of("type", "string");
+        Map<String, Object> annotations = Map.of("version", "2.0");
+
+        OperationSchema richSchema = new OperationSchema.Builder("rich_op", inputSchema)
+                .withTitle("Rich Operation")
+                .withDescription("A fully documented operation")
+                .withOutputSchema(outputSchema)
+                .withAnnotations(annotations)
+                .build();
+
+        SimpleDiscoverableService richService = new SimpleDiscoverableService(
+                Collections.singletonList(richSchema),
+                serverInfo
+        );
+
+        Map<String, Object> response = DiscoveryHelpers.generateSchemaResponse(richService, "rich_op");
+
+        assertEquals("Rich Operation", response.get("title"));
+        assertEquals("A fully documented operation", response.get("description"));
+        assertNotNull(response.get("output_schema"));
+        assertNotNull(response.get("annotations"));
     }
 }
-

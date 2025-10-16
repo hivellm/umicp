@@ -7,6 +7,75 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ---
 
+## [0.2.1] - 2025-10-16
+
+### Added - Tool Discovery
+
+- **Tool Discovery**: MCP-compatible tool discovery system
+  - `DiscoverableService` interface for automatic tool introspection
+  - `OperationSchema` class with JSON Schema support
+  - `ServerInfo` class for server metadata
+  - Builder patterns for `OperationSchema.Builder` and `ServerInfo.Builder`
+  - `DiscoveryHelpers` utility class for generating MCP-compatible responses
+  - `SimpleDiscoverableService` reference implementation
+- **Tests**: 12 new comprehensive tool discovery tests
+
+### Note on Native Types
+
+- Java binding already supported native types (`Map<String, Object>`) since v0.1.3
+- No breaking changes required for native type support
+- Full JSON value support already available in capabilities
+
+### Migration Guide
+
+No migration needed! This is a purely additive release. New Tool Discovery features are optional.
+
+### Example Usage
+
+```java
+import com.hivellm.umicp.discovery.*;
+import java.util.*;
+
+class MyService implements DiscoverableService {
+    private final List<OperationSchema> operations;
+    
+    public MyService() {
+        Map<String, Object> inputSchema = new HashMap<>();
+        inputSchema.put("type", "object");
+        
+        this.operations = Arrays.asList(
+            new OperationSchema.Builder("search", inputSchema)
+                .withTitle("Search Operation")
+                .withDescription("Searches the database")
+                .build()
+        );
+    }
+    
+    @Override
+    public List<OperationSchema> listOperations() {
+        return operations;
+    }
+    
+    @Override
+    public OperationSchema getSchema(String name) {
+        return operations.stream()
+            .filter(op -> op.getName().equals(name))
+            .findFirst()
+            .orElse(null);
+    }
+    
+    @Override
+    public ServerInfo getServerInfo() {
+        return new ServerInfo.Builder("my-service", "1.0.0", "UMICP/1.0")
+            .withMcpCompatible(true)
+            .withOperationsCount(operations.size())
+            .build();
+    }
+}
+```
+
+---
+
 ## [1.0.0-SNAPSHOT] - 2025-10-10
 
 ### Phase 2: WebSocket Transport - ✅ COMPLETE

@@ -6,49 +6,56 @@ namespace UMICP\Discovery;
 
 /**
  * Simple implementation of DiscoverableService
+ *
+ * @package UMICP\Discovery
  */
 class SimpleDiscoverableService implements DiscoverableService
 {
     /**
-     * @param OperationSchema[] $operations
+     * @param array<OperationSchema> $operations
+     * @param ServerInfo $serverInfo
      */
     public function __construct(
         private readonly array $operations,
         private readonly ServerInfo $serverInfo
-    ) {
-    }
+    ) {}
 
+    /**
+     * @return array<OperationSchema>
+     */
     public function listOperations(): array
     {
         return $this->operations;
     }
 
+    /**
+     * @param string $name
+     * @return OperationSchema|null
+     */
     public function getSchema(string $name): ?OperationSchema
     {
-        foreach ($this->operations as $operation) {
-            if ($operation->name === $name) {
-                return $operation;
+        foreach ($this->operations as $op) {
+            if ($op->name === $name) {
+                return $op;
             }
         }
 
         return null;
     }
 
+    /**
+     * @return ServerInfo
+     */
     public function getServerInfo(): ServerInfo
     {
-        $info = $this->serverInfo;
-        $count = count($this->operations);
-
-        // Update operations count
         return new ServerInfo(
-            $info->server,
-            $info->version,
-            $info->protocol,
-            $info->features,
-            $count,
-            $info->mcp_compatible,
-            $info->metadata
+            server: $this->serverInfo->server,
+            version: $this->serverInfo->version,
+            protocol: $this->serverInfo->protocol,
+            features: $this->serverInfo->features,
+            operationsCount: count($this->operations),
+            mcpCompatible: $this->serverInfo->mcpCompatible,
+            metadata: $this->serverInfo->metadata
         );
     }
 }
-

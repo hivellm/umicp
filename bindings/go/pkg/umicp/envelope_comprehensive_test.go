@@ -158,7 +158,7 @@ func TestEnvelopeCapabilityOverwrite(t *testing.T) {
 }
 
 func TestEnvelopeEmptyFrom(t *testing.T) {
-	env, err := NewEnvelope().
+	_, err := NewEnvelope().
 		To("receiver").
 		Build()
 
@@ -166,7 +166,7 @@ func TestEnvelopeEmptyFrom(t *testing.T) {
 }
 
 func TestEnvelopeEmptyTo(t *testing.T) {
-	env, err := NewEnvelope().
+	_, err := NewEnvelope().
 		From("sender").
 		Build()
 

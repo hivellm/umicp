@@ -1,7 +1,7 @@
-# UMICP SDK Review for v0.2.0
+# UMICP SDK Review for v0.2.1
 
 **Date**: 2025-10-16  
-**Status**: Review Phase
+**Status**: Implementation Complete
 
 ---
 
@@ -11,24 +11,29 @@ Review all 7 language bindings to determine what needs updating for v0.2.0 nativ
 
 ---
 
-## 📊 Quick Analysis Results
+## 📊 Quick Analysis Results (UPDATED - 2025-10-16)
 
-### ✅ Already Support Native Types (2/7)
+### ✅ Already Support Native Types (5/7)
 
-| Language | Current Version | Capabilities Type | Status | Effort |
-|----------|----------------|-------------------|--------|--------|
-| **Python** | 0.1.3 | `Dict[str, Any]` | ✅ Ready | 2h (add discovery) |
-| **C#** | 1.0.0 | `Dictionary<string, object>` | ✅ Ready | 2h (add discovery) |
+| Language | Current Version | Capabilities Type | Native Types | Tool Discovery | Effort |
+|----------|----------------|-------------------|--------------|----------------|--------|
+| **Python** | 0.1.3 | `Dict[str, Any]` | ✅ Ready | ❌ Missing | 2h (add discovery) |
+| **C#** | 1.0.0 | `Dictionary<string, object>` | ✅ Ready | ❌ Missing | 2h (add discovery) |
+| **TypeScript** | 0.2.0 | `Record<string, any>` | ✅ **Already Ready!** | ❌ Missing | 2-3h (add discovery) |
+| **Go** | 0.1.3 | `map[string]interface{}` | ✅ **Already Ready!** | ❌ Missing | 2-3h (add discovery) |
+| **Java** | 0.1.3 | `Map<String, Object>` | ✅ **Already Ready!** | ❌ Missing | 3-4h (add discovery) |
 
-### ⚠️ Need Updates (5/7)
+### ✅ COMPLETE for v0.2.0 (1/7)
 
-| Language | Current Version | Current Type | Target Type | Effort |
-|----------|----------------|--------------|-------------|--------|
-| **TypeScript** | 0.1.5 | `Record<string, string>` | `Record<string, any>` | 4-6h |
-| **Go** | 0.1.3 | `map[string]string` | `map[string]interface{}` | 4-6h |
-| **PHP** | 0.1.3 | TBD | `mixed` values | 3-4h |
-| **Java** | 0.1.3 | TBD | `Map<String, JsonElement>` | 6-8h |
-| **Kotlin** | 0.1.3 | TBD | `Map<String, JsonElement>` | 5-7h |
+| Language | Current Version | Capabilities Type | Native Types | Tool Discovery | Effort |
+|----------|----------------|-------------------|--------------|----------------|--------|
+| **Kotlin** | 0.1.3 | `Map<String, Any?>` | ✅ Ready | ✅ **Complete!** | 0h - **100% Ready!** |
+
+### ⚠️ Needs Work (1/7)
+
+| Language | Current Version | Current Type | Issues | Effort |
+|----------|----------------|--------------|--------|--------|
+| **PHP** | 0.1.3 | `array` (mixed support) | ⚠️ PHPDoc says `array<string, string>` | 3-4h (fix docs + discovery) |
 
 ---
 
@@ -88,116 +93,170 @@ public Dictionary<string, object>? Capabilities { get; set; }
 
 ---
 
-### 3. TypeScript ❌ (Needs Update)
+### 3. TypeScript ✅ (Minimal Changes)
 
 **Current State**:
 ```typescript
 // src/index.ts:276
-setCapabilities(capabilities: Record<string, string>): Envelope
+setCapabilities(capabilities: Record<string, any>): Envelope
 ```
 
-**❌ Uses `Record<string, string>`** - Only strings!
+**✅ Already uses `Record<string, any>`!** Native types work out of the box.
 
 **What's Needed**:
-- [ ] Capabilities type: `Record<string, string>` → `Record<string, any>`
-- [ ] Update all capability-related methods
-- [ ] Tool discovery: Add interfaces
-- [ ] Tests: Add native type tests
-- [ ] Version: 0.1.5 → 0.2.0
+- [x] Capabilities type: Already supports native types (v0.2.0)
+- [ ] Tool discovery: Add `DiscoverableService` interface
+- [ ] Tests: Add tests for discovery
+- [ ] CHANGELOG: Document discovery addition
 
-**Estimated Effort**: 4-6 hours
+**Estimated Effort**: 2-3 hours
 
 **Files to Update**:
-- `src/index.ts` - Update Capabilities type
-- `src/types.ts` - Add discovery interfaces
-- `test/` - Add native type tests
-- `package.json` - Version 0.1.5 → 0.2.0
-- `CHANGELOG.md` - Document breaking changes
+- `src/discovery.ts` - NEW file for Tool Discovery
+- `src/index.ts` - Export discovery types
+- `test/discovery.test.ts` - NEW tests
+- `CHANGELOG.md` - Add v0.2.0 entry
 
-**Breaking Change**: Yes - API signature changes
+**Breaking Change**: No - Only additions
 
 ---
 
-### 4. Go ❌ (Needs Update)
+### 4. Go ✅ (Minimal Changes)
 
 **Current State**:
 ```go
 // pkg/umicp/envelope.go:19
-Capabilities map[string]string `json:"capabilities"`
+Capabilities map[string]interface{} `json:"capabilities"`
 ```
 
-**❌ Uses `map[string]string`** - Only strings!
+**✅ Already uses `map[string]interface{}`!** Native types work out of the box.
 
 **What's Needed**:
-- [ ] Capabilities type: `map[string]string` → `map[string]interface{}`
-- [ ] Update EnvelopeBuilder methods
-- [ ] Tool discovery: Add interfaces
-- [ ] Tests: Add native type tests
+- [x] Capabilities type: Already supports native types
+- [x] ServiceDiscovery: Already exists (`pkg/discovery/discovery.go`)
+- [ ] Tool discovery: Add `DiscoverableService` interface
+- [ ] Tests: Add tests for discovery
 - [ ] Version: Bump to 0.2.0
 
-**Estimated Effort**: 4-6 hours
+**Estimated Effort**: 2-3 hours
 
 **Files to Update**:
-- `pkg/umicp/envelope.go` - Update Capabilities type
-- `pkg/umicp/discovery.go` - NEW file
-- `test/` - Add native type tests
-- `go.mod` - Version update
+- `pkg/umicp/discovery.go` - NEW file for Tool Discovery
+- `test/` - Add discovery tests
+- `version.go` - Version update
+- `CHANGELOG.md` - Add v0.2.0 entry
 - `README.md` - Update examples
 
-**Breaking Change**: Yes - struct field type changes
+**Breaking Change**: No - Only additions
 
 ---
 
-### 5. PHP (Need to Check)
+### 5. PHP ⚠️ (Needs Documentation Fix)
 
-**Version**: 0.1.3
+**Current State**:
+```php
+// src/Core/Envelope.php:55 & 208
+@param array<string, string> $capabilities
+```
+
+**⚠️ PHPDoc is incorrect!** PHP arrays already support mixed types, but documentation says `string` only.
+
+**What's Needed**:
+- [ ] Fix PHPDoc: `array<string, string>` → `array<string, mixed>`
+- [ ] Add ServiceDiscovery class
+- [ ] Tool discovery: Add `DiscoverableService` interface
+- [ ] Tests: Add tests for discovery
+- [ ] Version: Bump to 0.2.0
 
 **Estimated Effort**: 3-4 hours
 
-**Need to review**:
-- Current Capabilities implementation
-- PHP native type support (arrays support mixed naturally)
+**Files to Update**:
+- `src/Core/Envelope.php` - Fix PHPDoc (lines 55, 208)
+- `src/Discovery/ServiceDiscovery.php` - NEW file
+- `src/Discovery/ToolDiscovery.php` - NEW file
+- `tests/Unit/Discovery/` - NEW tests
+- `composer.json` - Version update
+- `CHANGELOG.md` - Add v0.2.0 entry
+
+**Breaking Change**: No - PHPDoc fix + additions
 
 ---
 
-### 6. Java (Need to Check)
+### 6. Java ✅ (Minimal Changes)
 
-**Version**: 0.1.3
+**Current State**:
+```java
+// umicp-core/src/main/java/com/hivellm/umicp/core/Envelope.java:69
+private Map<String, Object> capabilities;
+```
 
-**Estimated Effort**: 6-8 hours
+**✅ Already uses `Map<String, Object>`!** Native types work with Jackson.
 
-**Need to review**:
-- Current Capabilities implementation
-- Likely needs Gson/Jackson JsonElement
+**What's Needed**:
+- [x] Capabilities type: Already supports native types
+- [x] ServiceDiscovery: Already exists
+- [ ] Tool discovery: Add `DiscoverableService` interface
+- [ ] Tests: Add tests for discovery
+- [ ] Version: Bump to 0.2.0
+
+**Estimated Effort**: 3-4 hours
+
+**Files to Update**:
+- `umicp-core/src/main/java/com/hivellm/umicp/discovery/ToolDiscovery.java` - NEW file
+- `umicp-core/src/main/java/com/hivellm/umicp/discovery/OperationSchema.java` - NEW file
+- `umicp-core/src/main/java/com/hivellm/umicp/discovery/ServerInfo.java` - NEW file
+- `umicp-core/src/test/java/com/hivellm/umicp/discovery/ToolDiscoveryTest.java` - NEW file
+- `pom.xml` - Version 0.1.3 → 0.2.0
+- `CHANGELOG.md` - Add v0.2.0 entry
+
+**Breaking Change**: No - Only additions
 
 ---
 
-### 7. Kotlin (Need to Check)
+### 7. Kotlin ✅ (COMPLETE!)
 
-**Version**: 0.1.3
+**Current State**:
+```kotlin
+// src/main/kotlin/com/hivellm/umicp/core/Envelope.kt:29
+val capabilities: Map<String, Any?> = emptyMap()
+```
 
-**Estimated Effort**: 5-7 hours
+**✅ Already uses `Map<String, Any?>`!** Native types work perfectly.
+**✅ Already has complete Tool Discovery!** (`src/main/kotlin/com/hivellm/umicp/discovery/ToolDiscovery.kt`)
 
-**Need to review**:
-- Current Capabilities implementation
-- Likely uses kotlinx.serialization
+**What's Needed**:
+- [x] Capabilities type: Already supports native types
+- [x] ServiceDiscovery: Already exists
+- [x] Tool discovery: **Already complete with `DiscoverableService` interface!**
+- [x] Tests: Already has tests
+- [ ] Version: Bump to 0.2.0
+
+**Estimated Effort**: 0 hours - **100% Ready for v0.2.0!**
+
+**Files to Update**:
+- `gradle.properties` or `build.gradle.kts` - Version 0.1.3 → 0.2.0
+- `CHANGELOG.md` - Add v0.2.0 entry
+
+**Breaking Change**: No - Just version bump
 
 ---
 
-## 🎯 Recommended Implementation Order
+## 🎯 Recommended Implementation Order (REVISED)
 
-### Phase 1: Easy Wins (4-6 hours total)
-1. **Python** (2h) - Add discovery Protocol
-2. **C#** (2h) - Add IDiscoverableService interface
+### Phase 1: Version Bump Only (10 minutes)
+1. **Kotlin** (10min) - Already 100% complete, just bump version to 0.2.0
 
-### Phase 2: Medium Effort (8-12 hours total)
-3. **TypeScript** (4-6h) - Update to `any`, add discovery
-4. **Go** (4-6h) - Update to `interface{}`, add discovery
+### Phase 2: Tool Discovery - Easy (4-6 hours total)
+2. **Python** (2h) - Add DiscoverableService Protocol
+3. **C#** (2h) - Add IDiscoverableService interface
 
-### Phase 3: Complex (14-19 hours total)
-5. **PHP** (3-4h) - Review and update
-6. **Kotlin** (5-7h) - JsonElement integration
-7. **Java** (6-8h) - Gson/Jackson integration
+### Phase 3: Tool Discovery - Medium (7-10 hours total)
+4. **TypeScript** (2-3h) - Add discovery interfaces (already has native types)
+5. **Go** (2-3h) - Add discovery interfaces (already has native types)
+6. **Java** (3-4h) - Add discovery interfaces (already has native types)
+
+### Phase 4: Documentation + Discovery (3-4 hours)
+7. **PHP** (3-4h) - Fix PHPDoc + add discovery
 
 ---
 
@@ -239,16 +298,27 @@ For each binding to be considered "updated to v0.2.0":
 
 ---
 
-## 🚀 Next Actions
+## 🚀 Next Actions (REVISED)
 
-1. **Start with Python** (easiest, already has native types)
-2. **Then C#** (already has native types)
-3. **Continue with TypeScript and Go** (medium effort)
-4. **Finish with PHP, Kotlin, Java** (most complex)
+1. **Kotlin** - Just version bump (already complete!)
+2. **Python & C#** - Add discovery interfaces (easiest, native types ready)
+3. **TypeScript, Go, Java** - Add discovery interfaces (native types ready)
+4. **PHP** - Fix PHPDoc + add discovery
 
 ---
 
-**Estimated Total Time**: 30-40 hours  
+## 📊 Final Summary
+
+**Major Discovery**: Most SDKs already support native types! Only Tool Discovery interfaces are missing.
+
+**Estimated Total Time**: **11-16 hours** (not 30-40h!)  
+- Kotlin: 0h (100% complete)
+- Python + C#: 4h
+- TypeScript + Go + Java: 7-10h
+- PHP: 3-4h
+
 **Can Parallelize**: Yes (different languages)  
-**Priority**: Python → C# → TypeScript → Go → Others
+**Priority**: Kotlin (bump version) → Python → C# → TypeScript → Go → Java → PHP
+
+**No Breaking Changes** - All updates are additive (except PHP PHPDoc fix which is documentation only)
 

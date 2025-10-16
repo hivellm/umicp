@@ -1,37 +1,24 @@
 # Changelog - UMICP TypeScript Binding
 
-## [0.2.0] - 2025-01-16
+## [0.2.1] - 2025-10-16
 
-### Added - Tool Discovery & Native Types
+### Added - Tool Discovery
 - **Tool Discovery**: MCP-compatible tool discovery system
   - `DiscoverableService` interface for automatic tool introspection
-  - `OperationSchema` with JSON Schema support
-  - `ServerInfo` for server metadata
+  - `OperationSchema` with JSON Schema support for operation metadata
+  - `ServerInfo` for server metadata and capabilities
   - Builder patterns: `OperationSchemaBuilder`, `ServerInfoBuilder`
-  - Helper functions for response generation
-- **Native Types**: `Record<string, any>` for capabilities (was `Record<string, string>`)
-  - Support for integers, floats, booleans, arrays, objects, null
-  - Full JSON value support in capabilities
-- **Tests**: 14 new tool discovery tests (124 existing + 14 new = 138 total)
+  - `DiscoveryHelpers` for generating MCP-compatible responses
+  - `SimpleDiscoverableService` reference implementation
+- **Tests**: 10 new comprehensive tool discovery tests
 
-### Changed
-- **BREAKING**: `EnvelopeOptions.capabilities` type changed from `Record<string, string>` to `Record<string, any>`
-- **BREAKING**: `Envelope.setCapabilities()` and `getCapabilities()` now use `Record<string, any>`
-- Updated package description
+### Note on Native Types
+- TypeScript binding already supported native types (`Record<string, any>`) since v0.1.5+
+- No breaking changes required for native type support
+- Full JSON value support already available in capabilities
 
 ### Migration Guide
-```typescript
-// Old (v0.1.5)
-envelope.setCapabilities({ model: "gpt-4", count: "100" });
-
-// New (v0.2.0) - Native types supported
-envelope.setCapabilities({ 
-  model: "gpt-4", 
-  count: 100,
-  enabled: true,
-  ratio: 0.75 
-});
-```
+No migration needed! This is a purely additive release. New Tool Discovery features are optional.
 
 ### Example Usage
 ```typescript

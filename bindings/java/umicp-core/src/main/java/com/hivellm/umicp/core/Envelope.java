@@ -234,7 +234,7 @@ public class Envelope implements AutoCloseable {
      * @return this envelope for method chaining
      */
     @NotNull
-    public Envelope setCapabilities(@Nullable Map<String, String> capabilities) {
+    public Envelope setCapabilities(@Nullable Map<String, Object> capabilities) {
         if (!Objects.equals(this.capabilities, capabilities)) {
             this.capabilities = capabilities != null ? new HashMap<>(capabilities) : new HashMap<>();
             this.dirty = true;

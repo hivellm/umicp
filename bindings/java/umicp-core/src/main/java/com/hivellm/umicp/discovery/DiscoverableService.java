@@ -1,43 +1,41 @@
 package com.hivellm.umicp.discovery;
 
-import org.jetbrains.annotations.NotNull;
-import org.jetbrains.annotations.Nullable;
-
 import java.util.List;
 
 /**
- * Interface for services that support tool discovery
+ * UMICP v0.2.1 Tool Discovery
+ * MCP-compatible automatic tool introspection
+ */
+
+/**
+ * Interface for services that support tool discovery.
+ * Allows automatic introspection of available operations and their schemas.
+ *
+ * @author HiveLLM Team
+ * @version 0.2.1
+ * @since 0.2.1
  */
 public interface DiscoverableService {
 
     /**
-     * List all available operations with their schemas
+     * List all available operations with their schemas.
      *
-     * @return list of operation schemas
+     * @return List of operation schemas
      */
-    @NotNull
     List<OperationSchema> listOperations();
 
     /**
-     * Get schema for a specific operation by name
+     * Get schema for a specific operation by name.
      *
-     * @param name operation name to look up
-     * @return operation schema if found, null otherwise
+     * @param name Operation name
+     * @return Operation schema, or null if not found
      */
-    @Nullable
-    default OperationSchema getSchema(@NotNull String name) {
-        return listOperations().stream()
-                .filter(op -> op.getName().equals(name))
-                .findFirst()
-                .orElse(null);
-    }
+    OperationSchema getSchema(String name);
 
     /**
-     * Get server information and metadata
+     * Get server information and metadata.
      *
-     * @return server information
+     * @return Server information
      */
-    @NotNull
     ServerInfo getServerInfo();
 }
-

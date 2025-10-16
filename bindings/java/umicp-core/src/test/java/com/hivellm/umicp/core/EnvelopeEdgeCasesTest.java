@@ -1,6 +1,8 @@
 package com.hivellm.umicp.core;
 
 import com.hivellm.umicp.types.OperationType;
+import com.hivellm.umicp.types.PayloadType;
+import com.hivellm.umicp.types.EncodingType;
 import com.hivellm.umicp.types.SerializationException;
 import org.junit.jupiter.api.Test;
 

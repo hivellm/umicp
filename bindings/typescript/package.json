@@ -1,6 +1,6 @@
 {
   "name": "@hivellm/umicp",
-  "version": "0.2.0",
+  "version": "0.2.1",
   "description": "UMICP TypeScript/JavaScript bindings with native types and MCP-compatible tool discovery",
   "main": "dist/cjs/index.js",
   "module": "dist/esm/index.js",

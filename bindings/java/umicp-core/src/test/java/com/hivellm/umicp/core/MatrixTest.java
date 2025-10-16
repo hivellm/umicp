@@ -170,8 +170,8 @@ class MatrixTest {
             MatrixResult result = matrix.normalize(vector);
 
             assertThat(result.isSuccess()).isTrue();
-            assertThat(vector[0]).isEqualTo(0.6f, within(DELTA));
-            assertThat(vector[1]).isEqualTo(0.8f, within(DELTA));
+            assertThat(vector[0]).isEqualTo(0.6f, within(0.0001f));
+            assertThat(vector[1]).isEqualTo(0.8f, within(0.0001f));
 
             // Verify magnitude is 1
             double magnitude = Math.sqrt(vector[0] * vector[0] + vector[1] * vector[1]);

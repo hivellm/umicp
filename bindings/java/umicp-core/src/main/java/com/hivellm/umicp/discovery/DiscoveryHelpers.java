@@ -1,33 +1,31 @@
 package com.hivellm.umicp.discovery;
 
-import org.jetbrains.annotations.NotNull;
-
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
-import java.util.stream.Collectors;
 
 /**
- * Helper methods for generating discovery responses
+ * Helper functions for generating discovery responses.
+ * Provides utilities for creating MCP-compatible response formats.
+ *
+ * @author HiveLLM Team
+ * @version 0.2.0
+ * @since 0.2.0
  */
 public class DiscoveryHelpers {
 
-    private DiscoveryHelpers() {
-        // Utility class
-    }
-
     /**
-     * Generate JSON response for _list_operations
+     * Generate JSON response for _list_operations endpoint.
+     *
+     * @param service The discoverable service
+     * @return Map containing operations list and metadata
      */
-    @NotNull
-    public static Map<String, Object> generateOperationsResponse(@NotNull DiscoverableService service) {
+    public static Map<String, Object> generateOperationsResponse(DiscoverableService service) {
         List<OperationSchema> operations = service.listOperations();
         ServerInfo info = service.getServerInfo();
 
         Map<String, Object> response = new HashMap<>();
-        response.put("operations", operations.stream()
-                .map(op -> mapOperationSchema(op))
-                .collect(Collectors.toList()));
+        response.put("operations", operations);
         response.put("count", operations.size());
         response.put("protocol", info.getProtocol());
         response.put("mcp_compatible", info.getMcpCompatible() != null ? info.getMcpCompatible() : false);
@@ -36,51 +34,49 @@ public class DiscoveryHelpers {
     }
 
     /**
-     * Generate JSON response for _get_schema
+     * Generate JSON response for _get_schema endpoint.
+     *
+     * @param service The discoverable service
+     * @param operationName Name of the operation to get schema for
+     * @return Map containing schema or error information
      */
-    @NotNull
-    public static Map<String, Object> generateSchemaResponse(@NotNull DiscoverableService service, @NotNull String operationName) {
+    public static Map<String, Object> generateSchemaResponse(DiscoverableService service, String operationName) {
         OperationSchema schema = service.getSchema(operationName);
 
         if (schema != null) {
-            return mapOperationSchema(schema);
+            Map<String, Object> response = new HashMap<>();
+            response.put("name", schema.getName());
+            response.put("input_schema", schema.getInputSchema());
+
+            if (schema.getTitle() != null) {
+                response.put("title", schema.getTitle());
+            }
+            if (schema.getDescription() != null) {
+                response.put("description", schema.getDescription());
+            }
+            if (schema.getOutputSchema() != null) {
+                response.put("output_schema", schema.getOutputSchema());
+            }
+            if (schema.getAnnotations() != null) {
+                response.put("annotations", schema.getAnnotations());
+            }
+
+            return response;
         }
 
-        Map<String, Object> error = new HashMap<>();
-        error.put("error", "Operation not found");
-        error.put("operation", operationName);
-        return error;
+        Map<String, Object> errorResponse = new HashMap<>();
+        errorResponse.put("error", "Operation not found");
+        errorResponse.put("operation", operationName);
+        return errorResponse;
     }
 
     /**
-     * Generate JSON response for _server_info
+     * Generate JSON response for _server_info endpoint.
+     *
+     * @param service The discoverable service
+     * @return ServerInfo object
      */
-    @NotNull
-    public static Map<String, Object> generateServerInfoResponse(@NotNull DiscoverableService service) {
-        return mapServerInfo(service.getServerInfo());
-    }
-
-    private static Map<String, Object> mapOperationSchema(OperationSchema schema) {
-        Map<String, Object> map = new HashMap<>();
-        map.put("name", schema.getName());
-        if (schema.getTitle() != null) map.put("title", schema.getTitle());
-        if (schema.getDescription() != null) map.put("description", schema.getDescription());
-        map.put("input_schema", schema.getInputSchema());
-        if (schema.getOutputSchema() != null) map.put("output_schema", schema.getOutputSchema());
-        if (schema.getAnnotations() != null) map.put("annotations", schema.getAnnotations());
-        return map;
-    }
-
-    private static Map<String, Object> mapServerInfo(ServerInfo info) {
-        Map<String, Object> map = new HashMap<>();
-        map.put("server", info.getServer());
-        map.put("version", info.getVersion());
-        map.put("protocol", info.getProtocol());
-        if (info.getFeatures() != null) map.put("features", info.getFeatures());
-        if (info.getOperationsCount() != null) map.put("operations_count", info.getOperationsCount());
-        if (info.getMcpCompatible() != null) map.put("mcp_compatible", info.getMcpCompatible());
-        if (info.getMetadata() != null) map.put("metadata", info.getMetadata());
-        return map;
+    public static ServerInfo generateServerInfoResponse(DiscoverableService service) {
+        return service.getServerInfo();
     }
 }
-

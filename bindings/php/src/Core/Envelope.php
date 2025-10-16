@@ -52,7 +52,7 @@ class Envelope
      * @param string|null $to Recipient identifier
      * @param OperationType $operation Operation type
      * @param string|null $messageId Message identifier
-     * @param array<string, string> $capabilities Message metadata
+     * @param array<string, mixed> $capabilities Message metadata
      * @param PayloadHint|null $payloadHint Payload hint
      */
     public function __construct(
@@ -205,7 +205,7 @@ class Envelope
     /**
      * Set capabilities (metadata)
      *
-     * @param array<string, string> $capabilities Key-value metadata
+     * @param array<string, mixed> $capabilities Key-value metadata
      * @return self
      * @throws SerializationException If JSON encoding fails
      */

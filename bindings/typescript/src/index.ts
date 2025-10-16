@@ -513,11 +513,9 @@ export {
   type JSONSchema,
   OperationSchemaBuilder,
   ServerInfoBuilder,
-  generateOperationsResponse,
-  generateSchemaResponse,
-  generateServerInfoResponse,
-  createDiscoverableService,
-} from './tool-discovery.js';
+  DiscoveryHelpers,
+  SimpleDiscoverableService,
+} from './discovery.js';
 
 // Default exports
 export default UMICP;
