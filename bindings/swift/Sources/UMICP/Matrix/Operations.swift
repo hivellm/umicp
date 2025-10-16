@@ -7,13 +7,13 @@ import Accelerate
 /// Matrix and vector operations for UMICP
 public struct MatrixOperations {
     public init() {}
-    
+
     /// Add two vectors
     public func vectorAdd(_ a: [Double], _ b: [Double]) throws -> [Double] {
         guard a.count == b.count else {
             throw UMICPError.validationError("Vector dimensions must match")
         }
-        
+
         #if canImport(Accelerate)
         var result = [Double](repeating: 0, count: a.count)
         var aInput = a
@@ -24,13 +24,13 @@ public struct MatrixOperations {
         return zip(a, b).map { $0 + $1 }
         #endif
     }
-    
+
     /// Subtract two vectors
     public func vectorSubtract(_ a: [Double], _ b: [Double]) throws -> [Double] {
         guard a.count == b.count else {
             throw UMICPError.validationError("Vector dimensions must match")
         }
-        
+
         #if canImport(Accelerate)
         var result = [Double](repeating: 0, count: a.count)
         var aInput = a
@@ -41,7 +41,7 @@ public struct MatrixOperations {
         return zip(a, b).map { $0 - $1 }
         #endif
     }
-    
+
     /// Multiply vector by scalar
     public func vectorScale(_ vector: [Double], scalar: Double) -> [Double] {
         #if canImport(Accelerate)
@@ -54,13 +54,13 @@ public struct MatrixOperations {
         return vector.map { $0 * scalar }
         #endif
     }
-    
+
     /// Calculate dot product of two vectors
     public func dotProduct(_ a: [Double], _ b: [Double]) throws -> Double {
         guard a.count == b.count else {
             throw UMICPError.validationError("Vector dimensions must match")
         }
-        
+
         #if canImport(Accelerate)
         var result: Double = 0
         var aInput = a
@@ -71,7 +71,7 @@ public struct MatrixOperations {
         return zip(a, b).map { $0 * $1 }.reduce(0, +)
         #endif
     }
-    
+
     /// Multiply two matrices
     /// - Parameters:
     ///   - a: First matrix (rows x cols)
@@ -93,12 +93,12 @@ public struct MatrixOperations {
         guard b.count == cols * k else {
             throw UMICPError.validationError("Matrix B dimensions incorrect")
         }
-        
+
         #if canImport(Accelerate)
         var result = [Double](repeating: 0, count: rows * k)
         var aInput = a
         var bInput = b
-        
+
         vDSP_mmulD(
             &aInput, 1,
             &bInput, 1,
@@ -123,7 +123,7 @@ public struct MatrixOperations {
         return result
         #endif
     }
-    
+
     /// Calculate vector magnitude (Euclidean norm)
     public func vectorMagnitude(_ vector: [Double]) -> Double {
         #if canImport(Accelerate)
@@ -135,7 +135,7 @@ public struct MatrixOperations {
         return sqrt(vector.map { $0 * $0 }.reduce(0, +))
         #endif
     }
-    
+
     /// Normalize vector to unit length
     public func vectorNormalize(_ vector: [Double]) throws -> [Double] {
         let magnitude = vectorMagnitude(vector)

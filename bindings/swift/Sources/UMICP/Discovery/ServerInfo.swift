@@ -9,7 +9,7 @@ public struct ServerInfo: Codable, Equatable {
     public var operationsCount: Int?
     public var mcpCompatible: Bool?
     public var metadata: [String: AnyCodable]?
-    
+
     enum CodingKeys: String, CodingKey {
         case server, version
         case `protocol` = "protocol"
@@ -18,7 +18,7 @@ public struct ServerInfo: Codable, Equatable {
         case mcpCompatible = "mcp_compatible"
         case metadata
     }
-    
+
     public init(
         server: String,
         version: String,
@@ -36,35 +36,35 @@ public struct ServerInfo: Codable, Equatable {
         self.mcpCompatible = mcpCompatible
         self.metadata = metadata
     }
-    
+
     /// Builder pattern for features
     public func withFeatures(_ features: [String]) -> ServerInfo {
         var copy = self
         copy.features = features
         return copy
     }
-    
+
     /// Builder pattern for operations count
     public func withOperationsCount(_ count: Int) -> ServerInfo {
         var copy = self
         copy.operationsCount = count
         return copy
     }
-    
+
     /// Builder pattern for MCP compatibility
     public func withMcpCompatible(_ compatible: Bool) -> ServerInfo {
         var copy = self
         copy.mcpCompatible = compatible
         return copy
     }
-    
+
     /// Builder pattern for metadata
     public func withMetadata(_ metadata: [String: AnyCodable]) -> ServerInfo {
         var copy = self
         copy.metadata = metadata
         return copy
     }
-    
+
     /// Convert to dictionary representation
     public func toDictionary() -> [String: Any] {
         var dict: [String: Any] = [
@@ -72,7 +72,7 @@ public struct ServerInfo: Codable, Equatable {
             "version": version,
             "protocol": `protocol`
         ]
-        
+
         if let features = features {
             dict["features"] = features
         }
@@ -85,7 +85,7 @@ public struct ServerInfo: Codable, Equatable {
         if let metadata = metadata {
             dict["metadata"] = metadata.mapValues { $0.value }
         }
-        
+
         return dict
     }
 }

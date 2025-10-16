@@ -19,7 +19,7 @@ class MockDiscoverableService: DiscoverableService {
             )
         ]
     }
-    
+
     func serverInfo() -> ServerInfo {
         return ServerInfo(
             server: "mock-server",
@@ -34,29 +34,29 @@ class MockDiscoverableService: DiscoverableService {
 
 final class DiscoverableServiceTests: XCTestCase {
     var service: MockDiscoverableService!
-    
+
     override func setUp() {
         super.setUp()
         service = MockDiscoverableService()
     }
-    
+
     func testListOperations() {
         let operations = service.listOperations()
         XCTAssertEqual(operations.count, 2)
         XCTAssertEqual(operations[0].name, "search")
         XCTAssertEqual(operations[1].name, "create")
     }
-    
+
     func testGetSchema() {
         let schema = service.getSchema(name: "search")
         XCTAssertNotNil(schema)
         XCTAssertEqual(schema?.name, "search")
         XCTAssertEqual(schema?.title, "Search")
-        
+
         let notFound = service.getSchema(name: "nonexistent")
         XCTAssertNil(notFound)
     }
-    
+
     func testServerInfo() {
         let info = service.serverInfo()
         XCTAssertEqual(info.server, "mock-server")
@@ -64,14 +64,14 @@ final class DiscoverableServiceTests: XCTestCase {
         XCTAssertEqual(info.operationsCount, 2)
         XCTAssertEqual(info.mcpCompatible, true)
     }
-    
+
     func testGenerateOperationsResponse() throws {
         let json = try DiscoveryHelpers.generateOperationsResponse(service: service)
         XCTAssertFalse(json.isEmpty)
         XCTAssertTrue(json.contains("search"))
         XCTAssertTrue(json.contains("create"))
     }
-    
+
     func testGenerateSchemaResponse() throws {
         let json = try DiscoveryHelpers.generateSchemaResponse(
             service: service,
@@ -81,7 +81,7 @@ final class DiscoverableServiceTests: XCTestCase {
         XCTAssertTrue(json.contains("search"))
         XCTAssertTrue(json.contains("Search"))
     }
-    
+
     func testGenerateSchemaResponseNotFound() throws {
         let json = try DiscoveryHelpers.generateSchemaResponse(
             service: service,
@@ -90,7 +90,7 @@ final class DiscoverableServiceTests: XCTestCase {
         XCTAssertTrue(json.contains("error"))
         XCTAssertTrue(json.contains("Operation not found"))
     }
-    
+
     func testGenerateServerInfoResponse() throws {
         let json = try DiscoveryHelpers.generateServerInfoResponse(service: service)
         XCTAssertFalse(json.isEmpty)

@@ -37,15 +37,15 @@ defmodule UMICP.MixProject do
     [
       # JSON encoding/decoding
       {:jason, "~> 1.4"},
-      
+
       # HTTP/2 and WebSocket support
       {:mint, "~> 1.5"},
       {:mint_web_socket, "~> 1.0"},
       {:finch, "~> 0.18"},
-      
+
       # Optional: Numerical Elixir for matrix operations
       {:nx, "~> 0.7", optional: true},
-      
+
       # Development and testing
       {:ex_doc, "~> 0.31", only: :dev, runtime: false},
       {:excoveralls, "~> 0.18", only: :test},
@@ -56,7 +56,7 @@ defmodule UMICP.MixProject do
 
   defp description do
     """
-    UMICP Elixir bindings for high-performance communication and matrix operations 
+    UMICP Elixir bindings for high-performance communication and matrix operations
     with native type support and MCP-compatible tool discovery.
     """
   end

@@ -33,7 +33,7 @@ class ExampleSearchService: DiscoverableService {
             )
         ]
     }
-    
+
     func serverInfo() -> ServerInfo {
         return ServerInfo(
             server: "example-search-service",
@@ -53,9 +53,9 @@ class ExampleSearchService: DiscoverableService {
 // Example usage
 func toolDiscoveryExample() throws {
     print("=== Tool Discovery Example ===\n")
-    
+
     let service = ExampleSearchService()
-    
+
     // List all operations
     print("Available Operations:")
     let operations = service.listOperations()
@@ -65,7 +65,7 @@ func toolDiscoveryExample() throws {
             print("    Description: \(desc)")
         }
     }
-    
+
     // Get specific schema
     print("\nDetailed Schema for 'search':")
     if let schema = service.getSchema(name: "search") {
@@ -74,7 +74,7 @@ func toolDiscoveryExample() throws {
         print("  Description: \(schema.description ?? "none")")
         print("  Input Schema: \(schema.inputSchema)")
     }
-    
+
     // Get server info
     print("\nServer Information:")
     let info = service.serverInfo()
@@ -84,21 +84,21 @@ func toolDiscoveryExample() throws {
     print("  Features: \(info.features?.joined(separator: ", ") ?? "none")")
     print("  Operations Count: \(info.operationsCount ?? 0)")
     print("  MCP Compatible: \(info.mcpCompatible ?? false)")
-    
+
     // Generate JSON responses
     print("\nJSON Responses:")
-    
+
     let opsJson = try DiscoveryHelpers.generateOperationsResponse(service: service)
     print("\nList Operations Response:")
     print(opsJson)
-    
+
     let schemaJson = try DiscoveryHelpers.generateSchemaResponse(
         service: service,
         operationName: "search"
     )
     print("\nGet Schema Response:")
     print(schemaJson)
-    
+
     let infoJson = try DiscoveryHelpers.generateServerInfoResponse(service: service)
     print("\nServer Info Response:")
     print(infoJson)

@@ -4,10 +4,10 @@ import Foundation
 public protocol DiscoverableService {
     /// List all available operations
     func listOperations() -> [OperationSchema]
-    
+
     /// Get schema for a specific operation
     func getSchema(name: String) -> OperationSchema?
-    
+
     /// Get server information
     func serverInfo() -> ServerInfo
 }
@@ -30,7 +30,7 @@ public enum DiscoveryHelpers {
         }
         return json
     }
-    
+
     /// Generate JSON response for get schema
     public static func generateSchemaResponse(service: DiscoverableService, operationName: String) throws -> String {
         if let schema = service.getSchema(name: operationName) {
@@ -52,7 +52,7 @@ public enum DiscoveryHelpers {
             return json
         }
     }
-    
+
     /// Generate JSON response for server info
     public static func generateServerInfoResponse(service: DiscoverableService) throws -> String {
         let info = service.serverInfo()

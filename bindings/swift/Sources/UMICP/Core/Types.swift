@@ -8,7 +8,7 @@ public enum OperationType: UInt8, Codable, CaseIterable {
     case error = 3
     case request = 4
     case response = 5
-    
+
     public var description: String {
         switch self {
         case .data: return "data"
@@ -31,7 +31,7 @@ public enum UMICPError: Error {
     case validationError(String)
     case transportError(String)
     case hashMismatch
-    
+
     public var localizedDescription: String {
         switch self {
         case .invalidEnvelope(let msg):
