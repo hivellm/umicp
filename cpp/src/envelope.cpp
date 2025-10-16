@@ -1,16 +1,20 @@
 /**
  * UMICP Envelope Implementation
  * JSON control plane message handling with canonical serialization
+ *
+ * Version 1.1.0 - Native JSON type support with nlohmann/json
  */
 
 #include "umicp_types.h"
 #include "envelope.h"
-#include <json-c/json.h>
+#include <nlohmann/json.hpp>
 #include <openssl/evp.h>
 #include <chrono>
 #include <iomanip>
 #include <sstream>
 #include <uuid/uuid.h>
+
+using json = nlohmann::json;
 
 namespace umicp {
 
@@ -47,134 +51,115 @@ public:
     }
 
     Result<std::string> serialize() {
-        json_object* root = json_object_new_object();
+        json root;
 
         // Required fields
-        json_object_object_add(root, "v", json_object_new_string(envelope.version.c_str()));
-        json_object_object_add(root, "msg_id", json_object_new_string(envelope.msg_id.c_str()));
-        json_object_object_add(root, "ts", json_object_new_string(envelope.ts.c_str()));
-        json_object_object_add(root, "from", json_object_new_string(envelope.from.c_str()));
-        json_object_object_add(root, "to", json_object_new_string(envelope.to.c_str()));
-        json_object_object_add(root, "op", json_object_new_string(operation_to_string(envelope.op).c_str()));
+        root["v"] = envelope.version;
+        root["msg_id"] = envelope.msg_id;
+        root["ts"] = envelope.ts;
+        root["from"] = envelope.from;
+        root["to"] = envelope.to;
+        root["op"] = operation_to_string(envelope.op);
 
-        // Optional fields
+        // Optional fields - nlohmann/json handles native types automatically!
         if (envelope.capabilities) {
-            json_object* caps = json_object_new_object();
+            json caps_json = json::object();
             for (const auto& [key, value] : *envelope.capabilities) {
-                json_object_object_add(caps, key.c_str(), json_object_new_string(value.c_str()));
+                caps_json[key] = value;  // Direct assignment - supports all JSON types!
             }
-            json_object_object_add(root, "capabilities", caps);
+            root["capabilities"] = caps_json;
         }
 
         if (envelope.schema_uri) {
-            json_object_object_add(root, "schema_uri", json_object_new_string(envelope.schema_uri->c_str()));
+            root["schema_uri"] = *envelope.schema_uri;
         }
 
         if (envelope.accept) {
-            json_object* accept_array = json_object_new_array();
-            for (const auto& type : *envelope.accept) {
-                json_object_array_add(accept_array, json_object_new_string(type.c_str()));
-            }
-            json_object_object_add(root, "accept", accept_array);
+            root["accept"] = *envelope.accept;
         }
 
         if (envelope.payload_hint) {
-            json_object* hint = json_object_new_object();
-            json_object_object_add(hint, "type", json_object_new_string(payload_type_to_string(envelope.payload_hint.value().type).c_str()));
-            if (envelope.payload_hint.value().size) {
-                json_object_object_add(hint, "size", json_object_new_int64(*envelope.payload_hint.value().size));
+            json hint;
+            hint["type"] = payload_type_to_string(envelope.payload_hint->type);
+            if (envelope.payload_hint->size) {
+                hint["size"] = *envelope.payload_hint->size;
             }
-            if (envelope.payload_hint.value().encoding) {
-                json_object_object_add(hint, "encoding", json_object_new_string(encoding_type_to_string(*envelope.payload_hint.value().encoding).c_str()));
+            if (envelope.payload_hint->encoding) {
+                hint["encoding"] = encoding_type_to_string(*envelope.payload_hint->encoding);
             }
-            if (envelope.payload_hint.value().count) {
-                json_object_object_add(hint, "count", json_object_new_int64(*envelope.payload_hint.value().count));
+            if (envelope.payload_hint->count) {
+                hint["count"] = *envelope.payload_hint->count;
             }
-            json_object_object_add(root, "payload_hint", hint);
+            root["payload_hint"] = hint;
         }
 
         if (envelope.payload_refs) {
-            json_object* refs_array = json_object_new_array();
+            json refs_array = json::array();
             for (const auto& ref : *envelope.payload_refs) {
-                json_object* ref_obj = json_object_new_object();
-                json_object_object_add(ref_obj, "stream_id", json_object_new_string(ref.at("stream_id").c_str()));
-                json_object_object_add(ref_obj, "offset", json_object_new_int64(std::stoll(ref.at("offset"))));
-                json_object_object_add(ref_obj, "length", json_object_new_int64(std::stoll(ref.at("length"))));
-                json_object_object_add(ref_obj, "checksum", json_object_new_string(ref.at("checksum").c_str()));
-                json_object_array_add(refs_array, ref_obj);
+                json ref_obj;
+                ref_obj["stream_id"] = ref.at("stream_id");
+                ref_obj["offset"] = std::stoll(ref.at("offset"));
+                ref_obj["length"] = std::stoll(ref.at("length"));
+                ref_obj["checksum"] = ref.at("checksum");
+                refs_array.push_back(ref_obj);
             }
-            json_object_object_add(root, "payload_refs", refs_array);
+            root["payload_refs"] = refs_array;
         }
 
-        const char* json_str = json_object_to_json_string(root);
-        std::string result = json_str;
-
-        json_object_put(root);
-        return Result<std::string>(result);
+        return Result<std::string>(root.dump());
     }
 
     Result<void> deserialize(const std::string& json_str) {
-        json_object* root = json_tokener_parse(json_str.c_str());
-        if (!root) {
-            return Result<void>(ErrorCode::SERIALIZATION_FAILED, "Invalid JSON format");
-        }
+        try {
+            json root = json::parse(json_str);
 
-        // Parse required fields
-        json_object* v_obj;
-        if (json_object_object_get_ex(root, "v", &v_obj)) {
-            envelope.version = json_object_get_string(v_obj);
-        }
-
-        json_object* msg_id_obj;
-        if (json_object_object_get_ex(root, "msg_id", &msg_id_obj)) {
-            envelope.msg_id = json_object_get_string(msg_id_obj);
-        }
-
-        json_object* ts_obj;
-        if (json_object_object_get_ex(root, "ts", &ts_obj)) {
-            envelope.ts = json_object_get_string(ts_obj);
-        }
-
-        json_object* from_obj;
-        if (json_object_object_get_ex(root, "from", &from_obj)) {
-            envelope.from = json_object_get_string(from_obj);
-        }
-
-        json_object* to_obj;
-        if (json_object_object_get_ex(root, "to", &to_obj)) {
-            envelope.to = json_object_get_string(to_obj);
-        }
-
-        json_object* op_obj;
-        if (json_object_object_get_ex(root, "op", &op_obj)) {
-            envelope.op = string_to_operation(json_object_get_string(op_obj));
-        }
-
-        // Parse optional fields
-        json_object* caps_obj;
-        if (json_object_object_get_ex(root, "capabilities", &caps_obj)) {
-            envelope.capabilities = StringMap();
-            json_object_object_foreach(caps_obj, key, val) {
-                (*envelope.capabilities)[key] = json_object_get_string(val);
+            // Parse required fields
+            if (root.contains("v")) {
+                envelope.version = root["v"].get<std::string>();
             }
-        }
-
-        json_object* schema_obj;
-        if (json_object_object_get_ex(root, "schema_uri", &schema_obj)) {
-            envelope.schema_uri = json_object_get_string(schema_obj);
-        }
-
-        json_object* accept_obj;
-        if (json_object_object_get_ex(root, "accept", &accept_obj)) {
-            envelope.accept = std::vector<std::string>();
-            for (size_t i = 0; i < json_object_array_length(accept_obj); i++) {
-                json_object* item = json_object_array_get_idx(accept_obj, i);
-                envelope.accept->push_back(json_object_get_string(item));
+            if (root.contains("msg_id")) {
+                envelope.msg_id = root["msg_id"].get<std::string>();
             }
-        }
+            if (root.contains("ts")) {
+                envelope.ts = root["ts"].get<std::string>();
+            }
+            if (root.contains("from")) {
+                envelope.from = root["from"].get<std::string>();
+            }
+            if (root.contains("to")) {
+                envelope.to = root["to"].get<std::string>();
+            }
+            if (root.contains("op")) {
+                envelope.op = string_to_operation(root["op"].get<std::string>());
+            }
 
-        json_object_put(root);
-        return Result<void>();
+            // Parse optional fields - native types preserved!
+            if (root.contains("capabilities") && root["capabilities"].is_object()) {
+                CapabilitiesMap caps;
+                for (auto& [key, value] : root["capabilities"].items()) {
+                    caps[key] = value;  // Preserves native types!
+                }
+                envelope.capabilities = caps;
+            }
+
+            if (root.contains("schema_uri")) {
+                envelope.schema_uri = root["schema_uri"].get<std::string>();
+            }
+
+            if (root.contains("accept") && root["accept"].is_array()) {
+                envelope.accept = root["accept"].get<std::vector<std::string>>();
+            }
+
+            if (root.contains("payload_hint") && root["payload_hint"].is_object()) {
+                // Parse payload hint (if needed)
+            }
+
+            return Result<void>();
+
+        } catch (const json::exception& e) {
+            return Result<void>(ErrorCode::SERIALIZATION_FAILED,
+                std::string("JSON parse error: ") + e.what());
+        }
     }
 
     Result<void> validate() {
@@ -281,9 +266,33 @@ EnvelopeBuilder& EnvelopeBuilder::message_id(const std::string& msg_id) {
     return *this;
 }
 
-EnvelopeBuilder& EnvelopeBuilder::capabilities(const StringMap& caps) {
+EnvelopeBuilder& EnvelopeBuilder::capabilities(const CapabilitiesMap& caps) {
     impl_->envelope.capabilities = caps;
     return *this;
+}
+
+EnvelopeBuilder& EnvelopeBuilder::capability(const std::string& key, const json& value) {
+    if (!impl_->envelope.capabilities) {
+        impl_->envelope.capabilities = CapabilitiesMap();
+    }
+    (*impl_->envelope.capabilities)[key] = value;
+    return *this;
+}
+
+EnvelopeBuilder& EnvelopeBuilder::capability_str(const std::string& key, const std::string& value) {
+    return capability(key, json(value));
+}
+
+EnvelopeBuilder& EnvelopeBuilder::capability_int(const std::string& key, int64_t value) {
+    return capability(key, json(value));
+}
+
+EnvelopeBuilder& EnvelopeBuilder::capability_bool(const std::string& key, bool value) {
+    return capability(key, json(value));
+}
+
+EnvelopeBuilder& EnvelopeBuilder::capability_double(const std::string& key, double value) {
+    return capability(key, json(value));
 }
 
 EnvelopeBuilder& EnvelopeBuilder::payload_hint(const PayloadHint& hint) {
