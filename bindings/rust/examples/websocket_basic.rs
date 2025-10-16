@@ -113,3 +113,8 @@ async fn run_client() -> anyhow::Result<()> {
     Ok(())
 }
 
+#[cfg(not(feature = "websocket"))]
+fn main() {
+    eprintln!("This example requires the 'websocket' feature.");
+    eprintln!("Run with: cargo run --example websocket_basic --features websocket");
+}

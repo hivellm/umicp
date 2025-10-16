@@ -98,8 +98,8 @@ impl StreamingProcessor {
                 // Perform matrix operations on data
                 if let Some(capabilities) = envelope.capabilities() {
                     if let Some(data_size) = capabilities.get("data_size") {
-                        if let Ok(size) = data_size.parse::<usize>() {
-                            self.process_data_payload(size);
+                        if let Some(size) = data_size.as_u64() {
+                            self.process_data_payload(size as usize);
                         }
                     }
                 }
@@ -400,9 +400,9 @@ fn demonstrate_streaming_processor(processor: Arc<StreamingProcessor>) -> Result
             .to("processor")
             .operation(OperationType::Data)
             .message_id(&uuid::Uuid::new_v4().to_string())
-            .capability("data_size", "100")
-            .capability("sequence", &i.to_string())
-            .capability("timestamp", &chrono::Utc::now().timestamp().to_string())
+            .capability("data_size", json!(100))
+            .capability("sequence", json!(i))
+            .capability("timestamp", json!(chrono::Utc::now().timestamp()))
             .build()?;
 
         processor.add_envelope(envelope);

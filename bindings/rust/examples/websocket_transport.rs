@@ -140,3 +140,9 @@ async fn run_client() -> Result<(), Box<dyn std::error::Error>> {
     println!("👋 Client finished");
     Ok(())
 }
+
+#[cfg(not(feature = "websocket"))]
+fn main() {
+    eprintln!("This example requires the 'websocket' feature.");
+    eprintln!("Run with: cargo run --example websocket_transport --features websocket");
+}

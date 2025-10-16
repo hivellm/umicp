@@ -1,8 +1,7 @@
 [package]
 name = "umicp-core"
-version = "0.2.0"
+version = "0.2.1"
 edition = "2021"
-rust-version = "1.82"
 description = "UMICP Rust bindings for high-performance communication and matrix operations with tool discovery"
 license = "MIT"
 authors = ["HiveLLM AI Collaborative Team"]
@@ -59,5 +58,4 @@ serial_test = "3.2"
 default = []
 websocket = ["tokio", "futures", "async-trait", "tokio-tungstenite", "tungstenite", "tracing"]
 http2 = ["tokio", "futures", "async-trait", "axum", "hyper", "hyper-util", "tower", "reqwest", "tracing"]
-tool-discovery = []
-full = ["websocket", "http2", "tool-discovery"]
+full = ["websocket", "http2"]

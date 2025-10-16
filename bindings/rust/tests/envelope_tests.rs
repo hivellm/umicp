@@ -195,8 +195,8 @@ fn test_builder_pattern() {
         .to("receiver")
         .operation(OperationType::Data)
         .message_id("test-id")
-        .capability("key1", "value1")
-        .capability("key2", "value2")
+        .capability_str("key1", "value1")
+        .capability_str("key2", "value2")
         .build()
         .expect("Failed to build envelope");
 
@@ -206,8 +206,8 @@ fn test_builder_pattern() {
 
     if let Some(caps) = envelope.capabilities() {
         assert_eq!(caps.len(), 2);
-        assert_eq!(caps.get("key1"), Some(&"value1".to_string()));
-        assert_eq!(caps.get("key2"), Some(&"value2".to_string()));
+        assert_eq!(caps.get("key1").unwrap().as_str().unwrap(), "value1");
+        assert_eq!(caps.get("key2").unwrap().as_str().unwrap(), "value2");
     } else {
         panic!("Capabilities not found");
     }
@@ -215,11 +215,12 @@ fn test_builder_pattern() {
 
 #[test]
 fn test_large_capabilities() {
+    use serde_json::json;
     let mut capabilities = std::collections::HashMap::new();
 
     // Add many capabilities
     for i in 0..100 {
-        capabilities.insert(format!("key_{}", i), format!("value_{}", i));
+        capabilities.insert(format!("key_{}", i), json!(format!("value_{}", i)));
     }
 
     let envelope = Envelope::builder()
@@ -243,8 +244,8 @@ fn test_serialize_deserialize_round_trip() {
         .to("receiver-456")
         .operation(OperationType::Data)
         .message_id("msg-unique-001")
-        .capability("test", "round-trip")
-        .capability("version", "1.0")
+        .capability_str("test", "round-trip")
+        .capability_str("version", "1.0")
         .build()
         .expect("Failed to build envelope");
 
