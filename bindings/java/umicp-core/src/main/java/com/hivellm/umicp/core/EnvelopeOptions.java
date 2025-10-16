@@ -42,14 +42,14 @@ public class EnvelopeOptions {
     private final String to;
     private final OperationType operation;
     private final String messageId;
-    private final Map<String, String> capabilities;
+    private final Map<String, Object> capabilities;
     private final PayloadHint payloadHint;
 
     /**
      * Private constructor. Use {@link Builder} to create instances.
      */
     private EnvelopeOptions(String from, String to, OperationType operation,
-                           String messageId, Map<String, String> capabilities,
+                           String messageId, Map<String, Object> capabilities,
                            PayloadHint payloadHint) {
         this.from = from;
         this.to = to;
@@ -105,7 +105,7 @@ public class EnvelopeOptions {
      * @return an unmodifiable view of the capabilities map
      */
     @NotNull
-    public Map<String, String> getCapabilities() {
+    public Map<String, Object> getCapabilities() {
         return new HashMap<>(capabilities);
     }
 
@@ -167,7 +167,7 @@ public class EnvelopeOptions {
         private String to;
         private OperationType operation;
         private String messageId;
-        private Map<String, String> capabilities;
+        private Map<String, Object> capabilities;
         private PayloadHint payloadHint;
 
         /**
@@ -225,25 +225,37 @@ public class EnvelopeOptions {
          * @return this builder
          */
         @NotNull
-        public Builder capabilities(@Nullable Map<String, String> capabilities) {
+        public Builder capabilities(@Nullable Map<String, Object> capabilities) {
             this.capabilities = capabilities != null ? new HashMap<>(capabilities) : null;
             return this;
         }
 
         /**
-         * Adds a single capability.
+         * Adds a single capability with any type.
          *
          * @param key the capability key
          * @param value the capability value
          * @return this builder
          */
         @NotNull
-        public Builder capability(@NotNull String key, @NotNull String value) {
+        public Builder capability(@NotNull String key, @NotNull Object value) {
             if (this.capabilities == null) {
                 this.capabilities = new HashMap<>();
             }
             this.capabilities.put(key, value);
             return this;
+        }
+        
+        /**
+         * Adds a single string capability (helper method).
+         *
+         * @param key the capability key
+         * @param value the capability value
+         * @return this builder
+         */
+        @NotNull
+        public Builder capabilityString(@NotNull String key, @NotNull String value) {
+            return capability(key, value);
         }
 
         /**

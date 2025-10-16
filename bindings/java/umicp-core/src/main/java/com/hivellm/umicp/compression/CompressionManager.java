@@ -69,6 +69,7 @@ public class CompressionManager {
                 case GZIP -> compressGzip(data);
                 case DEFLATE -> compressDeflate(data);
                 case NONE -> data;
+                default -> throw new IllegalArgumentException("Unknown compression type: " + type);
             };
         } catch (IOException e) {
             throw new UMICPException("Compression failed: " + e.getMessage(), e);
@@ -94,6 +95,7 @@ public class CompressionManager {
                 case GZIP -> decompressGzip(data);
                 case DEFLATE -> decompressDeflate(data);
                 case NONE -> data;
+                default -> throw new IllegalArgumentException("Unknown compression type: " + type);
             };
         } catch (IOException e) {
             throw new UMICPException("Decompression failed: " + e.getMessage(), e);
