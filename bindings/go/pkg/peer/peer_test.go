@@ -118,8 +118,8 @@ func TestPeerConnection_Types(t *testing.T) {
 func TestPeerInfo(t *testing.T) {
 	info := &PeerInfo{
 		PeerID:       "peer-123",
-		Metadata:     map[string]string{"key": "value"},
-		Capabilities: map[string]string{"version": "1.0"},
+		Metadata:     map[string]interface{}{"key": "value"},
+		Capabilities: map[string]interface{}{"version": "1.0"},
 		CompletedAt:  time.Now(),
 	}
 

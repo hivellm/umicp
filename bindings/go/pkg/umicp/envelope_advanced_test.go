@@ -20,7 +20,7 @@ func TestEnvelopeBuilder_MessageID(t *testing.T) {
 func TestEnvelopeBuilder_Capabilities(t *testing.T) {
 	builder := NewEnvelope()
 
-	caps := map[string]string{
+	caps := map[string]interface{}{
 		"version": "1.0",
 		"type":    "test",
 		"region":  "us-east-1",
@@ -119,7 +119,7 @@ func TestEnvelopeBuilder_OverrideCapabilities(t *testing.T) {
 		To("receiver").
 		Capability("key1", "value1").
 		Capability("key2", "value2").
-		Capabilities(map[string]string{
+		Capabilities(map[string]interface{}{
 			"key3": "value3",
 			"key4": "value4",
 		}).
@@ -136,7 +136,7 @@ func TestEnvelopeBuilder_EmptyCapabilities(t *testing.T) {
 	env, err := NewEnvelope().
 		From("sender").
 		To("receiver").
-		Capabilities(map[string]string{}).
+		Capabilities(map[string]interface{}{}).
 		Build()
 
 	assert.NoError(t, err)
@@ -292,7 +292,7 @@ func TestEnvelope_SerializeError_InvalidJSON(t *testing.T) {
 		From:      "sender",
 		To:        "receiver",
 		MessageID: "msg-123",
-		Capabilities: map[string]string{
+		Capabilities: map[string]interface{}{
 			"valid": "value",
 		},
 	}

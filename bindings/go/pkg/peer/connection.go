@@ -23,7 +23,7 @@ type PeerConnection struct {
 	Type              PeerType
 	URL               string // For outgoing connections
 	Client            *websocket.Client
-	Metadata          map[string]string
+	Metadata          map[string]interface{}
 	ConnectedAt       time.Time
 	HandshakeComplete bool
 	PeerInfo          *PeerInfo
@@ -32,8 +32,8 @@ type PeerConnection struct {
 // PeerInfo contains information about a peer after handshake
 type PeerInfo struct {
 	PeerID       string
-	Metadata     map[string]string
-	Capabilities map[string]string
+	Metadata     map[string]interface{}
+	Capabilities map[string]interface{}
 	CompletedAt  time.Time
 }
 
