@@ -1,6 +1,8 @@
 /**
  * UMICP Envelope Header
  * JSON control plane message handling
+ *
+ * Version 1.1.0 - Native JSON type support in capabilities
  */
 
 #ifndef UMICP_ENVELOPE_H
@@ -9,6 +11,7 @@
 #include "umicp_types.h"
 #include <memory>
 #include <string>
+#include <nlohmann/json.hpp>
 
 namespace umicp {
 
@@ -25,7 +28,19 @@ public:
     EnvelopeBuilder& to(const std::string& to);
     EnvelopeBuilder& operation(OperationType op);
     EnvelopeBuilder& message_id(const std::string& msg_id);
-    EnvelopeBuilder& capabilities(const StringMap& caps);
+
+    // BREAKING CHANGE (v1.1.0): capabilities now accepts CapabilitiesMap with native JSON types
+    EnvelopeBuilder& capabilities(const CapabilitiesMap& caps);
+
+    // Add a single capability with native JSON value
+    EnvelopeBuilder& capability(const std::string& key, const json& value);
+
+    // Convenience methods for common types (backward compatible)
+    EnvelopeBuilder& capability_str(const std::string& key, const std::string& value);
+    EnvelopeBuilder& capability_int(const std::string& key, int64_t value);
+    EnvelopeBuilder& capability_bool(const std::string& key, bool value);
+    EnvelopeBuilder& capability_double(const std::string& key, double value);
+
     EnvelopeBuilder& payload_hint(const PayloadHint& hint);
 
     Result<Envelope> build();
