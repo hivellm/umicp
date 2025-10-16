@@ -11,15 +11,15 @@ import (
 
 // Envelope represents a UMICP message envelope
 type Envelope struct {
-	From         string            `json:"from"`
-	To           string            `json:"to"`
-	Operation    OperationType     `json:"operation"`
-	MessageID    string            `json:"message_id"`
-	Timestamp    int64             `json:"timestamp"`
-	Capabilities map[string]string `json:"capabilities"`
-	Payload      []byte            `json:"payload,omitempty"`
-	PayloadType  PayloadType       `json:"payload_type,omitempty"`
-	Encoding     EncodingType      `json:"encoding,omitempty"`
+	From         string                 `json:"from"`
+	To           string                 `json:"to"`
+	Operation    OperationType          `json:"operation"`
+	MessageID    string                 `json:"message_id"`
+	Timestamp    int64                  `json:"timestamp"`
+	Capabilities map[string]interface{} `json:"capabilities"`
+	Payload      []byte                 `json:"payload,omitempty"`
+	PayloadType  PayloadType            `json:"payload_type,omitempty"`
+	Encoding     EncodingType           `json:"encoding,omitempty"`
 }
 
 // EnvelopeBuilder provides a builder pattern for creating envelopes
@@ -33,7 +33,7 @@ func NewEnvelope() *EnvelopeBuilder {
 		envelope: &Envelope{
 			MessageID:    uuid.New().String(),
 			Timestamp:    time.Now().UnixMilli(),
-			Capabilities: make(map[string]string),
+			Capabilities: make(map[string]interface{}),
 			Operation:    OperationData,
 		},
 	}
@@ -63,14 +63,20 @@ func (b *EnvelopeBuilder) MessageID(id string) *EnvelopeBuilder {
 	return b
 }
 
-// Capability adds a single capability
-func (b *EnvelopeBuilder) Capability(key, value string) *EnvelopeBuilder {
+// Capability adds a single capability with any type
+func (b *EnvelopeBuilder) Capability(key string, value interface{}) *EnvelopeBuilder {
+	b.envelope.Capabilities[key] = value
+	return b
+}
+
+// CapabilityString adds a string capability (helper)
+func (b *EnvelopeBuilder) CapabilityString(key, value string) *EnvelopeBuilder {
 	b.envelope.Capabilities[key] = value
 	return b
 }
 
 // Capabilities sets all capabilities at once
-func (b *EnvelopeBuilder) Capabilities(caps map[string]string) *EnvelopeBuilder {
+func (b *EnvelopeBuilder) Capabilities(caps map[string]interface{}) *EnvelopeBuilder {
 	b.envelope.Capabilities = caps
 	return b
 }
