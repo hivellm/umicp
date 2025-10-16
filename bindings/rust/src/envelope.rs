@@ -27,7 +27,7 @@ struct EnvelopeData {
     op: String,
     /// Optional capabilities (metadata)
     #[serde(skip_serializing_if = "Option::is_none")]
-    capabilities: Option<HashMap<String, String>>,
+    capabilities: Option<HashMap<String, serde_json::Value>>,
     /// Optional schema URI
     #[serde(skip_serializing_if = "Option::is_none")]
     schema_uri: Option<String>,
@@ -131,9 +131,9 @@ impl Envelope {
         validate_non_empty(&self.message_id, "message_id")?;
 
         if let Some(capabilities) = &self.capabilities {
-            for (key, value) in capabilities {
+            for (key, _value) in capabilities {
                 validate_non_empty(key, "capability key")?;
-                validate_non_empty(value, "capability value")?;
+                // Values can be any JSON type, no need to validate as string
             }
         }
 
@@ -211,14 +211,21 @@ impl Envelope {
         self.capabilities = Some(capabilities);
     }
 
-    /// Add a single capability
-    pub fn add_capability(&mut self, key: &str, value: &str) {
+    /// Add a single capability (with native JSON value)
+    ///
+    /// BREAKING CHANGE (v0.2.0): Now accepts serde_json::Value instead of &str
+    pub fn add_capability(&mut self, key: &str, value: serde_json::Value) {
         if self.capabilities.is_none() {
             self.capabilities = Some(HashMap::new());
         }
         if let Some(caps) = &mut self.capabilities {
-            caps.insert(key.to_string(), value.to_string());
+            caps.insert(key.to_string(), value);
         }
+    }
+
+    /// Add a string capability (convenience method)
+    pub fn add_capability_str(&mut self, key: &str, value: &str) {
+        self.add_capability(key, serde_json::Value::String(value.to_string()));
     }
 
     /// Get schema URI
@@ -389,9 +396,15 @@ impl EnvelopeBuilder {
         self
     }
 
-    /// Add a capability
-    pub fn capability(mut self, key: &str, value: &str) -> Self {
+    /// Add a capability (with native JSON value)
+    pub fn capability(mut self, key: &str, value: serde_json::Value) -> Self {
         self.envelope.add_capability(key, value);
+        self
+    }
+
+    /// Add a string capability (convenience method)
+    pub fn capability_str(mut self, key: &str, value: &str) -> Self {
+        self.envelope.add_capability_str(key, value);
         self
     }
 
@@ -457,7 +470,7 @@ mod tests {
             .from("sender")
             .to("recipient")
             .operation(OperationType::Data)
-            .capability("priority", "high")
+            .capability_str("priority", "high")
             .build()
             .unwrap();
 
@@ -473,7 +486,7 @@ mod tests {
             .from("test-from")
             .to("test-to")
             .operation(OperationType::Data)
-            .capability("test", "value")
+            .capability_str("test", "value")
             .build()
             .unwrap();
 

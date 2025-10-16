@@ -30,7 +30,7 @@ let envelope = Envelope::builder()
     .to("server-001")
     .operation(OperationType::Data)
     .message_id("msg-12345")
-    .capability("content-type", "application/json")
+    .capability_str("content-type", "application/json")
     .build()?;
 
 // Serialize for transmission
@@ -78,7 +78,7 @@ let message = Envelope::builder()
     .to("server")
     .operation(OperationType::Data)
     .message_id("hello-001")
-    .capability("message", "Hello UMICP!")
+    .capability_str("message", "Hello UMICP!")
     .build()?;
 
 #[cfg(feature = "websocket")]
@@ -128,6 +128,7 @@ pub mod error;
 pub mod utils;
 pub mod events;
 pub mod discovery;
+pub mod tool_discovery;
 pub mod pool;
 pub mod load_balancer;
 
@@ -150,6 +151,7 @@ pub use types::*;
 pub use error::*;
 pub use events::{EventEmitter, EventType, EventData, EventListener};
 pub use discovery::{ServiceDiscovery, ServiceInfo};
+pub use tool_discovery::{DiscoverableService, OperationSchema, ServerInfo};
 pub use load_balancer::{LoadBalancer, LoadBalancingStrategy, BackendEndpoint, LoadBalancerStats, ConnectionGuard};
 
 #[cfg(feature = "websocket")]

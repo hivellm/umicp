@@ -262,8 +262,11 @@ impl Default for TransportConfig {
     }
 }
 
-/// Envelope capabilities (key-value metadata)
-pub type Capabilities = HashMap<String, String>;
+/// Envelope capabilities (key-value metadata with native types)
+///
+/// BREAKING CHANGE (v0.2.0): Changed from HashMap<String, String> to HashMap<String, Value>
+/// to support native JSON types (numbers, booleans, arrays, objects).
+pub type Capabilities = HashMap<String, serde_json::Value>;
 
 /// Accepted content types
 pub type AcceptTypes = Vec<String>;
