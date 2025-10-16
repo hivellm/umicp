@@ -5,6 +5,16 @@ All notable changes to the UMICP Python bindings will be documented in this file
 The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/),
 and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
+## [0.2.0] - 2025-10-16
+
+### Changed
+- **License Metadata**: Updated `pyproject.toml` license field to use proper format `{text = "MIT"}` for better PyPI compatibility
+- **License Classifier**: Added explicit MIT license classifier to project metadata
+
+### Fixed
+- Fixed PyPI upload issues related to license field formatting
+- Resolved metadata validation errors for PyPI compliance
+
 ## [0.1.0] - 2025-10-10
 
 ### Added

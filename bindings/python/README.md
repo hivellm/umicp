@@ -6,7 +6,7 @@
 
 High-performance Python bindings for the Universal Matrix Inter-Communication Protocol (UMICP).
 
-## 🚀 Status: **Production Release** (v0.1.3)
+## 🚀 Status: **Production Release** (v0.2.0)
 
 | Component | Status | Description |
 |-----------|--------|-------------|
@@ -35,7 +35,7 @@ High-performance Python bindings for the Universal Matrix Inter-Communication Pr
 pip install umicp-python
 
 # Or install specific version
-pip install umicp-python==0.1.3
+pip install umicp-python==0.2.0
 
 # Install from source
 git clone https://github.com/hivellm/umicp
@@ -459,9 +459,9 @@ Contributions are welcome! Please see [CONTRIBUTING.md](../../CONTRIBUTING.md) f
 
 ---
 
-**Version**: 0.1.3  
+**Version**: 0.2.0  
 **Status**: Production Release  
-**Released**: October 11, 2025  
+**Released**: October 16, 2025  
 **Python**: 3.9+  
 **PyPI**: https://pypi.org/project/umicp-python/  
 **Repository**: https://github.com/hivellm/umicp
