@@ -14,7 +14,7 @@ func TestPeer_SendHello(t *testing.T) {
 	t.Run("SendHello to outgoing peer - error case", func(t *testing.T) {
 		peer := NewPeer(PeerConfig{
 			PeerID: "sender-peer",
-			Metadata: map[string]string{
+			Metadata: map[string]interface{}{
 				"version": "1.0",
 				"region":  "us-east-1",
 			},
@@ -34,7 +34,7 @@ func TestPeer_SendHello(t *testing.T) {
 	t.Run("SendHello structure validation", func(t *testing.T) {
 		peer := NewPeer(PeerConfig{
 			PeerID: "sender-peer-2",
-			Metadata: map[string]string{
+			Metadata: map[string]interface{}{
 				"version": "2.0",
 				"env":     "production",
 			},
@@ -121,7 +121,7 @@ func TestPeer_WaitForHandshake_Success(t *testing.T) {
 func TestPeer_HandleHello(t *testing.T) {
 	peer := NewPeer(PeerConfig{
 		PeerID: "receiver-peer",
-		Metadata: map[string]string{
+		Metadata: map[string]interface{}{
 			"version": "1.0",
 		},
 	})
@@ -199,7 +199,7 @@ func TestPeer_HandleHello_Integration(t *testing.T) {
 		PeerConfig{
 			PeerID:       "peer-1",
 			AutoProtocol: true,
-			Metadata: map[string]string{
+			Metadata: map[string]interface{}{
 				"name": "Peer 1",
 			},
 		},
@@ -212,7 +212,7 @@ func TestPeer_HandleHello_Integration(t *testing.T) {
 
 	peer2 := NewPeer(PeerConfig{
 		PeerID: "peer-2",
-		Metadata: map[string]string{
+		Metadata: map[string]interface{}{
 			"name": "Peer 2",
 		},
 	})
@@ -332,14 +332,14 @@ func TestHandshake_FullFlow(t *testing.T) {
 	// Test the full handshake flow between two peers
 	peer1 := NewPeer(PeerConfig{
 		PeerID: "peer-alpha",
-		Metadata: map[string]string{
+		Metadata: map[string]interface{}{
 			"role": "initiator",
 		},
 	})
 
 	peer2 := NewPeer(PeerConfig{
 		PeerID: "peer-beta",
-		Metadata: map[string]string{
+		Metadata: map[string]interface{}{
 			"role": "responder",
 		},
 	})

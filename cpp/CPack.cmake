@@ -5,7 +5,7 @@ set(CPACK_PACKAGE_VENDOR "HiveLLM")
 set(CPACK_PACKAGE_DESCRIPTION_SUMMARY "UMICP C++ Development Library")
 set(CPACK_PACKAGE_DESCRIPTION "UMICP C++ library with headers and CMake config for development")
 set(CPACK_PACKAGE_HOMEPAGE_URL "https://github.com/hivellm/umicp")
-set(CPACK_PACKAGE_CONTACT "HiveLLM Team <team@hivellm.com>")
+set(CPACK_PACKAGE_CONTACT "HiveLLM Team <team@hivellm.org>")
 
 # Version
 set(CPACK_PACKAGE_VERSION_MAJOR "0")

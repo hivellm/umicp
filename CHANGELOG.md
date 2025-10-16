@@ -4,6 +4,116 @@ All notable changes to UMICP will be documented in this file.
 
 This is the **BIP-05 implementation** for HiveLLM's standardized inter-model communication protocol.
 
+## [0.2.0] - 2025-10-16
+
+### 🎉 Major Release - Native Types & Tool Discovery + 2 New SDKs
+
+#### 🆕 New Language Bindings
+
+##### Swift SDK v0.2.0
+- **Status**: ✅ Production-ready
+- **Platform**: macOS 12+, iOS 15+, Linux
+- **Files**: 27 files (10 sources, 8 tests, 3 examples)
+- **Code**: 2,067 lines
+- **Tests**: 100+ XCTests (780 lines)
+- **Features**:
+  - ✅ Native JSON types with AnyCodable wrapper
+  - ✅ MCP-compatible tool discovery
+  - ✅ WebSocket + HTTP/2 transport (async/await)
+  - ✅ SIMD matrix operations (Accelerate framework)
+  - ✅ Cross-platform support
+  - ✅ Zero external dependencies
+  - ✅ Swift Package Manager integration
+
+##### Elixir SDK v0.2.0
+- **Status**: ✅ Production-ready
+- **Platform**: Elixir 1.15+, OTP 25+
+- **Files**: 21 files (9 lib, 5 tests, 3 examples)
+- **Code**: 950 lines
+- **Tests**: 100+ ExUnit tests (632 lines)
+- **Features**:
+  - ✅ Native Elixir terms (no wrappers needed)
+  - ✅ MCP-compatible tool discovery (behaviors)
+  - ✅ WebSocket (GenServer) + HTTP/2 (Finch)
+  - ✅ Pure Elixir matrix operations
+  - ✅ OTP integration (supervision, behaviors)
+  - ✅ Pipe-friendly API
+  - ✅ Mix package ready for Hex.pm
+
+#### 🔄 Breaking Changes - All Existing SDKs Updated to v0.2.0
+
+##### Native JSON Type Support
+All 8 existing SDKs updated to support native types in capabilities:
+- **C++ Core**: `std::unordered_map<std::string, nlohmann::json>` (migrated from json-c)
+- **Rust**: `HashMap<String, serde_json::Value>`
+- **Python**: `Dict[str, Any]` (already supported)
+- **C#**: `Dictionary<string, JsonElement>`
+- **TypeScript**: `Record<string, any>`
+- **Go**: `map[string]interface{}`
+- **PHP**: `array<string, mixed>`
+- **Java**: `Map<String, Object>`
+- **Kotlin**: `Map<String, Any?>`
+
+##### MCP-Compatible Tool Discovery
+All 8 existing SDKs now implement tool discovery:
+- `OperationSchema` - JSON Schema for operations
+- `ServerInfo` - Service metadata
+- `DiscoverableService` - Auto-discovery interface/trait/protocol/behavior
+- Full compatibility with Model Context Protocol (MCP)
+
+#### 📊 Updated Test Coverage
+
+Total Tests Across All SDKs: **1,186+ tests** (+200 from Swift & Elixir)
+
+| SDK | Version | Tests | Status |
+|-----|---------|-------|--------|
+| C++ Core | 0.2.0 | 102 | ✅ 100% |
+| Rust | 0.2.0 | 112 | ✅ 100% |
+| Python | 0.2.0 | 147 | ✅ 100% |
+| C# | 0.2.0 | 128 | ✅ 100% |
+| TypeScript | 0.2.0 | 209 | ✅ 100% |
+| Go | 0.2.0 | 85 | ✅ 100% |
+| PHP | 0.2.0 | 113 | ✅ 100% |
+| Kotlin | 0.2.0 | 90 | ✅ 84% |
+| **Swift** | **0.2.0** | **100+** | **✅ 100%** |
+| **Elixir** | **0.2.0** | **100+** | **✅ 100%** |
+| Java | 0.2.0 | Core done | 🚧 Tests WIP |
+
+#### 🎯 Migration Guide
+
+##### Capabilities Type Change
+```swift
+// Old (v0.1.x)
+capabilities: [String: String]
+
+// New (v0.2.0)
+capabilities: [String: AnyCodable]  // Swift
+capabilities: %{String.t() => term()}  // Elixir
+```
+
+##### Backward Compatibility
+All SDKs provide helper methods for string capabilities:
+- Swift: `capabilityString(_:value:)`
+- Elixir: Native term support (backward compatible)
+
+#### 📚 Documentation Updates
+- All READMEs updated with v0.2.0 examples
+- All CHANGELOGs updated with breaking changes
+- New design documents for native types
+- Swift and Elixir quick start guides
+
+#### 🚀 Release Information
+
+**Total Deliverables:**
+- 11 language SDKs (9 production-ready, 1 WIP)
+- 1,186+ tests
+- 52 commits in this release
+- Complete MCP compatibility
+
+**Branch**: feat/tool-discovery-native-types
+
+---
+
 ## [0.1.3] - 2025-10-10
 
 ### 📦 Version Alignment Update

@@ -185,7 +185,7 @@ export interface EnvelopeOptions {
   to?: string;
   operation?: OperationType;
   messageId?: string;
-  capabilities?: Record<string, string>;
+  capabilities?: Record<string, any>;
   payloadHint?: PayloadHint;
 }
 
@@ -273,7 +273,7 @@ export class Envelope {
     return this;
   }
 
-  setCapabilities(capabilities: Record<string, string>): Envelope {
+  setCapabilities(capabilities: Record<string, any>): Envelope {
     this.nativeEnvelope.setCapabilities(capabilities);
     return this;
   }
@@ -318,7 +318,7 @@ export class Envelope {
     return this.nativeEnvelope.getMessageId();
   }
 
-  getCapabilities(): Record<string, string> {
+  getCapabilities(): Record<string, any> {
     return this.nativeEnvelope.getCapabilities();
   }
 
@@ -504,6 +504,18 @@ export {
   type PeerConnection,
   type PeerInfo,
 } from './transports/websocket-transport.js';
+
+// Tool Discovery exports (v0.2.0)
+export {
+  type OperationSchema,
+  type ServerInfo,
+  type DiscoverableService,
+  type JSONSchema,
+  OperationSchemaBuilder,
+  ServerInfoBuilder,
+  DiscoveryHelpers,
+  SimpleDiscoverableService,
+} from './discovery.js';
 
 // Default exports
 export default UMICP;

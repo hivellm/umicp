@@ -73,10 +73,11 @@ func (p *Peer) handleControlMessage(env *umicp.Envelope, peerConn *PeerConnectio
 // handleHello handles HELLO messages
 func (p *Peer) handleHello(env *umicp.Envelope, peerConn *PeerConnection) {
 	// Extract peer info from HELLO
+	peerID, _ := env.Capabilities["peer_id"].(string)
 	peerInfo := &PeerInfo{
-		PeerID:       env.Capabilities["peer_id"],
-		Metadata:     make(map[string]string),
-		Capabilities: make(map[string]string),
+		PeerID:       peerID,
+		Metadata:     make(map[string]interface{}),
+		Capabilities: make(map[string]interface{}),
 		CompletedAt:  time.Now(),
 	}
 
@@ -126,10 +127,11 @@ func (p *Peer) handleAckMessage(env *umicp.Envelope, peerConn *PeerConnection) {
 
 	if msgType == "hello_ack" {
 		// Extract peer info from ACK
+		peerID, _ := env.Capabilities["peer_id"].(string)
 		peerInfo := &PeerInfo{
-			PeerID:       env.Capabilities["peer_id"],
-			Metadata:     make(map[string]string),
-			Capabilities: make(map[string]string),
+			PeerID:       peerID,
+			Metadata:     make(map[string]interface{}),
+			Capabilities: make(map[string]interface{}),
 			CompletedAt:  time.Now(),
 		}
 

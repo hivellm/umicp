@@ -16,7 +16,7 @@ type PeerConfig struct {
 	PeerID           string
 	AutoProtocol     bool
 	HandshakeTimeout time.Duration
-	Metadata         map[string]string
+	Metadata         map[string]interface{}
 }
 
 // ServerConfig contains server configuration for peer
@@ -44,7 +44,7 @@ func NewPeer(config PeerConfig) *Peer {
 		config.HandshakeTimeout = 10 * time.Second
 	}
 	if config.Metadata == nil {
-		config.Metadata = make(map[string]string)
+		config.Metadata = make(map[string]interface{})
 	}
 
 	return &Peer{
@@ -71,7 +71,7 @@ func NewPeerWithServer(config PeerConfig, serverConfig ServerConfig) (*Peer, err
 			ID:          conn.ID,
 			Type:        PeerTypeIncoming,
 			ConnectedAt: time.Now(),
-			Metadata:    make(map[string]string),
+			Metadata:    make(map[string]interface{}),
 		}
 		peer.peers.Store(conn.ID, peerConn)
 
@@ -129,7 +129,7 @@ func (p *Peer) Start(ctx context.Context) error {
 }
 
 // ConnectToPeer connects to a remote peer
-func (p *Peer) ConnectToPeer(ctx context.Context, url string, metadata map[string]string) (string, error) {
+func (p *Peer) ConnectToPeer(ctx context.Context, url string, metadata map[string]interface{}) (string, error) {
 	clientConfig := websocket.DefaultClientConfig()
 	clientConfig.URL = url
 

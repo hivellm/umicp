@@ -2,7 +2,7 @@
 # Based on BIP-05 Universal Matrix Intelligent Communication Protocol
 
 cmake_minimum_required(VERSION 3.16)
-project(UMICP VERSION 1.0.0 LANGUAGES CXX C)
+project(UMICP VERSION 0.2.0 LANGUAGES CXX C)
 
 # Set C++ standard
 set(CMAKE_CXX_STANDARD 17)
@@ -31,8 +31,15 @@ endif()
 # Dependencies
 find_package(PkgConfig REQUIRED)
 
+# nlohmann/json for native JSON type support (v1.1.0+)
+include(FetchContent)
+FetchContent_Declare(
+    nlohmann_json
+    URL https://github.com/nlohmann/json/releases/download/v3.11.3/json.tar.xz
+)
+FetchContent_MakeAvailable(nlohmann_json)
+
 # Required packages
-pkg_check_modules(JSON REQUIRED json-c)
 pkg_check_modules(ZLIB REQUIRED zlib)
 pkg_check_modules(OPENSSL REQUIRED openssl)
 pkg_check_modules(CURL REQUIRED libcurl)
@@ -47,7 +54,6 @@ pkg_check_modules(LZ4 liblz4)
 # Include directories
 include_directories(
     ${CMAKE_CURRENT_SOURCE_DIR}/include
-    ${JSON_INCLUDE_DIRS}
     ${ZLIB_INCLUDE_DIRS}
     ${OPENSSL_INCLUDE_DIRS}
     ${CURL_INCLUDE_DIRS}
@@ -57,7 +63,6 @@ include_directories(
 
 # Link directories
 link_directories(
-    ${JSON_LIBRARY_DIRS}
     ${ZLIB_LIBRARY_DIRS}
     ${OPENSSL_LIBRARY_DIRS}
     ${CURL_LIBRARY_DIRS}
@@ -120,8 +125,10 @@ set(UMICP_HEADERS
 
 # Create static library
 add_library(umicp_static STATIC ${UMICP_SOURCES} ${UMICP_HEADERS})
-target_link_libraries(umicp_static
-    ${JSON_LIBRARIES}
+target_link_libraries(umicp_static PUBLIC
+    nlohmann_json::nlohmann_json
+)
+target_link_libraries(umicp_static PRIVATE
     ${ZLIB_LIBRARIES}
     ${OPENSSL_LIBRARIES}
     ${CURL_LIBRARIES}
@@ -131,8 +138,10 @@ target_link_libraries(umicp_static
 
 # Create shared library
 add_library(umicp_shared SHARED ${UMICP_SOURCES} ${UMICP_HEADERS})
-target_link_libraries(umicp_shared
-    ${JSON_LIBRARIES}
+target_link_libraries(umicp_shared PUBLIC
+    nlohmann_json::nlohmann_json
+)
+target_link_libraries(umicp_shared PRIVATE
     ${ZLIB_LIBRARIES}
     ${OPENSSL_LIBRARIES}
     ${CURL_LIBRARIES}
@@ -143,7 +152,7 @@ target_link_libraries(umicp_shared
 # Create FFI shared library (for language bindings via FFI)
 add_library(umicp_core SHARED ${UMICP_SOURCES} ${UMICP_FFI_SOURCES} ${UMICP_HEADERS})
 target_link_libraries(umicp_core
-    ${JSON_LIBRARIES}
+    nlohmann_json::nlohmann_json
     ${ZLIB_LIBRARIES}
     ${OPENSSL_LIBRARIES}
     ${CURL_LIBRARIES}
@@ -232,10 +241,12 @@ add_library(UMICP::static ALIAS umicp_static)
 add_library(UMICP::shared ALIAS umicp_shared)
 
 # Export targets
-export(TARGETS umicp_static umicp_shared
-    FILE UMICPTargets.cmake
-    NAMESPACE UMICP::
-)
+# Note: Temporarily disabled until nlohmann_json export issue is resolved
+# TODO: Fix export to include nlohmann_json or use find_package
+# export(TARGETS umicp_static umicp_shared
+#     FILE UMICPTargets.cmake
+#     NAMESPACE UMICP::
+# )
 
 # Generate and install CMake package config
 include(CMakePackageConfigHelpers)

@@ -15,7 +15,7 @@ Example:
     >>> serialized = envelope.to_json()
 """
 
-__version__ = "0.1.3"
+__version__ = "0.2.0"
 __author__ = "HiveLLM AI Collaborative Team"
 __license__ = "MIT"
 
@@ -53,6 +53,14 @@ from umicp.peer.handshake import HandshakeProtocol
 # Advanced features
 from umicp.events import EventEmitter, Event, EventType
 from umicp.discovery import ServiceDiscovery, ServiceInfo
+from umicp.tool_discovery import (
+    DiscoverableService,
+    OperationSchema,
+    ServerInfo as ToolServerInfo,
+    generate_operations_response,
+    generate_schema_response,
+    generate_server_info_response,
+)
 from umicp.pool import ConnectionPool, PoolConfig
 from umicp.compression import Compression, CompressionType, CompressionError
 
@@ -95,6 +103,14 @@ __all__ = [
     "EventType",
     "ServiceDiscovery",
     "ServiceInfo",
+    # Tool Discovery (v0.2.0)
+    "DiscoverableService",
+    "OperationSchema",
+    "ToolServerInfo",
+    "generate_operations_response",
+    "generate_schema_response",
+    "generate_server_info_response",
+    # Pool
     "ConnectionPool",
     "PoolConfig",
     # Compression

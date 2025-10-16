@@ -33,7 +33,7 @@ func TestPeerConnection(t *testing.T) {
 			ID:                "peer-001",
 			Type:              PeerTypeOutgoing,
 			URL:               "ws://localhost:8080",
-			Metadata:          make(map[string]string),
+			Metadata:          make(map[string]interface{}),
 			ConnectedAt:       time.Now(),
 			HandshakeComplete: false,
 		}
@@ -50,7 +50,7 @@ func TestPeerConnection(t *testing.T) {
 	})
 
 	t.Run("Connection with metadata", func(t *testing.T) {
-		metadata := map[string]string{
+		metadata := map[string]interface{}{
 			"region": "us-east-1",
 			"env":    "production",
 		}
@@ -72,8 +72,8 @@ func TestPeerConnection(t *testing.T) {
 	t.Run("Connection with peer info", func(t *testing.T) {
 		peerInfo := &PeerInfo{
 			PeerID:       "remote-peer",
-			Metadata:     make(map[string]string),
-			Capabilities: make(map[string]string),
+			Metadata:     make(map[string]interface{}),
+			Capabilities: make(map[string]interface{}),
 			CompletedAt:  time.Now(),
 		}
 
@@ -97,8 +97,8 @@ func TestPeerInfoStruct(t *testing.T) {
 	t.Run("Create peer info", func(t *testing.T) {
 		info := &PeerInfo{
 			PeerID:       "peer-001",
-			Metadata:     make(map[string]string),
-			Capabilities: make(map[string]string),
+			Metadata:     make(map[string]interface{}),
+			Capabilities: make(map[string]interface{}),
 			CompletedAt:  time.Now(),
 		}
 
@@ -116,11 +116,11 @@ func TestPeerInfoStruct(t *testing.T) {
 	t.Run("Peer info with metadata", func(t *testing.T) {
 		info := &PeerInfo{
 			PeerID: "peer-002",
-			Metadata: map[string]string{
+			Metadata: map[string]interface{}{
 				"version": "1.0.0",
 				"type":    "processor",
 			},
-			Capabilities: map[string]string{
+			Capabilities: map[string]interface{}{
 				"matrix_ops": "true",
 				"websocket":  "true",
 			},

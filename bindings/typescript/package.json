@@ -1,7 +1,7 @@
 {
   "name": "@hivellm/umicp",
-  "version": "0.1.5",
-  "description": "UMICP TypeScript/JavaScript bindings for C++ core",
+  "version": "0.2.1",
+  "description": "UMICP TypeScript/JavaScript bindings with native types and MCP-compatible tool discovery",
   "main": "dist/cjs/index.js",
   "module": "dist/esm/index.js",
   "types": "dist/cjs/index.d.ts",

@@ -5,6 +5,85 @@ All notable changes to the UMICP PHP bindings will be documented in this file.
 The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/),
 and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
+## [0.2.1] - 2025-10-16
+
+### Added - Tool Discovery
+
+- **Tool Discovery**: MCP-compatible tool discovery system
+  - `DiscoverableService` interface for automatic tool introspection
+  - `OperationSchema` class with JSON Schema support (using PHP 8.1+ readonly properties)
+  - `ServerInfo` class for server metadata
+  - `DiscoveryHelpers` utility class for generating MCP-compatible responses
+  - `SimpleDiscoverableService` reference implementation
+- **Tests**: 16 new comprehensive tool discovery tests
+
+### Changed - Documentation Fix
+
+- **PHPDoc Updates**: Fixed incorrect type hints in `Envelope.php`
+  - Line 55: `@param array<string, string>` → `@param array<string, mixed>`
+  - Line 208: `@param array<string, string>` → `@param array<string, mixed>`
+  - Note: PHP arrays already supported mixed types, this was a documentation-only fix
+
+### Note on Native Types
+
+- PHP binding already supported mixed types natively (arrays support any type)
+- No code changes required for native type support
+- Only PHPDoc annotations needed correction
+
+### Migration Guide
+
+No migration needed! This is a purely additive release. New Tool Discovery features are optional.
+
+### Example Usage
+
+```php
+<?php
+use UMICP\Discovery\{DiscoverableService, OperationSchema, ServerInfo, SimpleDiscoverableService};
+
+class MyService implements DiscoverableService {
+    private array $operations;
+    
+    public function __construct() {
+        $this->operations = [
+            new OperationSchema(
+                name: 'search',
+                inputSchema: [
+                    'type' => 'object',
+                    'properties' => [
+                        'query' => ['type' => 'string']
+                    ]
+                ],
+                title: 'Search Operation',
+                description: 'Searches the database'
+            )
+        ];
+    }
+    
+    public function listOperations(): array {
+        return $this->operations;
+    }
+    
+    public function getSchema(string $name): ?OperationSchema {
+        foreach ($this->operations as $op) {
+            if ($op->name === $name) {
+                return $op;
+            }
+        }
+        return null;
+    }
+    
+    public function getServerInfo(): ServerInfo {
+        return new ServerInfo(
+            server: 'my-service',
+            version: '1.0.0',
+            protocol: 'UMICP/1.0',
+            mcpCompatible: true,
+            operationsCount: count($this->operations)
+        );
+    }
+}
+```
+
 ## [0.1.2] - 2025-10-10
 
 ### 🎉 **FFI INTEGRATION & NEW FEATURES**

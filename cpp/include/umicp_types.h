@@ -3,6 +3,7 @@
  * Type definitions and constants
  *
  * Based on BIP-05 specifications
+ * Version 0.2.0 - Native JSON type support
  */
 
 #ifndef UMICP_TYPES_H
@@ -15,6 +16,7 @@
 #include <memory>
 #include <optional>
 #include <chrono>
+#include <nlohmann/json.hpp>
 
 namespace umicp {
 
@@ -140,6 +142,15 @@ struct PayloadHint {
 
 // Type aliases
 using ByteBuffer = std::vector<uint8_t>;
+using json = nlohmann::json;
+
+// BREAKING CHANGE (v0.2.0): Capabilities now support native JSON types
+// Before: StringMap = std::unordered_map<std::string, std::string>
+// After:  CapabilitiesMap = std::unordered_map<std::string, json>
+using CapabilitiesMap = std::unordered_map<std::string, json>;
+
+// Note: StringMap still used for HTTP headers and other string-only maps
+// For Envelope capabilities, use CapabilitiesMap instead
 using StringMap = std::unordered_map<std::string, std::string>;
 using JsonObject = std::unordered_map<std::string, std::string>; // Simplified for MVP
 
@@ -151,7 +162,7 @@ struct Envelope {
     std::string from;
     std::string to;
     OperationType op;
-    std::optional<StringMap> capabilities;
+    std::optional<CapabilitiesMap> capabilities;
     std::optional<std::string> schema_uri;
     std::optional<std::vector<std::string>> accept;
     std::optional<PayloadHint> payload_hint;
@@ -164,13 +175,13 @@ struct Envelope {
     void set_to(const std::string& t) { to = t; }
     void set_operation(OperationType o) { op = o; }
     void set_message_id(const std::string& id) { msg_id = id; }
-    void set_capabilities(const StringMap& caps) { capabilities = caps; }
+    void set_capabilities(const CapabilitiesMap& caps) { capabilities = caps; }
 
     std::string get_from() const { return from; }
     std::string get_to() const { return to; }
     OperationType get_operation() const { return op; }
     std::string get_message_id() const { return msg_id; }
-    StringMap get_capabilities() const { return capabilities.value_or(StringMap{}); }
+    CapabilitiesMap get_capabilities() const { return capabilities.value_or(CapabilitiesMap{}); }
 
     // Serialization helper (requires envelope.h to be included)
     std::string to_json() const;

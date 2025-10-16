@@ -83,7 +83,7 @@ class EnvelopeOptionsTest {
     @Test
     @DisplayName("Should set capabilities as map")
     void testCapabilitiesMap() {
-        Map<String, String> caps = new HashMap<>();
+        Map<String, Object> caps = new HashMap<>();
         caps.put("version", "1.0");
         caps.put("encoding", "utf-8");
 
@@ -97,7 +97,7 @@ class EnvelopeOptionsTest {
     @Test
     @DisplayName("Should combine map and individual capabilities")
     void testMixedCapabilities() {
-        Map<String, String> caps = new HashMap<>();
+        Map<String, Object> caps = new HashMap<>();
         caps.put("key1", "value1");
 
         EnvelopeOptions options = EnvelopeOptions.builder()
@@ -120,7 +120,7 @@ class EnvelopeOptionsTest {
             .capability("key", "value")
             .build();
 
-        Map<String, String> caps = options.getCapabilities();
+        Map<String, Object> caps = options.getCapabilities();
         caps.put("new-key", "new-value");
 
         // Original should not be affected

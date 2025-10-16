@@ -19,7 +19,7 @@ We take security seriously. If you discover a security vulnerability in the UMIC
 
 Instead, please report them via one of the following methods:
 
-1. **Email**: Send details to **security@hivellm.ai**
+1. **Email**: Send details to **team@hivellm.org**
 2. **GitHub Security Advisory**: Use the [GitHub Security Advisory](https://github.com/hivellm/umicp/security/advisories/new) feature
 
 ### What to Include
@@ -104,5 +104,5 @@ We acknowledge security researchers who responsibly disclose vulnerabilities:
 ---
 
 **Last Updated**: October 10, 2025
-**Contact**: security@hivellm.ai
+**Contact**: team@hivellm.org
 

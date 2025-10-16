@@ -5,7 +5,6 @@ import com.google.gson.JsonSyntaxException
 import com.hivellm.umicp.types.OperationType
 import com.hivellm.umicp.types.SerializationException
 import com.hivellm.umicp.types.ValidationException
-import kotlinx.serialization.Serializable
 import java.security.MessageDigest
 import java.util.*
 
@@ -18,9 +17,8 @@ import java.util.*
  * @property messageId Unique message identifier
  * @property timestamp Message timestamp (Unix epoch milliseconds)
  * @property payloadHint Optional payload metadata
- * @property capabilities Optional key-value capabilities
+ * @property capabilities Optional key-value capabilities (supports native JSON types)
  */
-@Serializable
 data class Envelope(
     val from: String,
     val to: String,
@@ -28,7 +26,7 @@ data class Envelope(
     val messageId: String = UUID.randomUUID().toString(),
     val timestamp: Long = System.currentTimeMillis(),
     val payloadHint: PayloadHint? = null,
-    val capabilities: Map<String, String> = emptyMap()
+    val capabilities: Map<String, Any?> = emptyMap()
 ) {
     /**
      * Validate the envelope
@@ -100,7 +98,7 @@ data class Envelope(
         messageId(this@Envelope.messageId)
         timestamp(this@Envelope.timestamp)
         payloadHint?.let { payloadHint(it) }
-        capabilities.forEach { (k, v) -> capability(k, v) }
+        capabilities.forEach { (k, v) -> if (v != null) capability(k, v) }
     }
 
     /**
@@ -113,7 +111,7 @@ data class Envelope(
         private var messageId: String = UUID.randomUUID().toString()
         private var timestamp: Long = System.currentTimeMillis()
         private var payloadHint: PayloadHint? = null
-        private val capabilities: MutableMap<String, String> = mutableMapOf()
+        private val capabilities: MutableMap<String, Any?> = mutableMapOf()
 
         fun from(from: String) = apply { this.from = from }
         fun to(to: String) = apply { this.to = to }
@@ -121,8 +119,9 @@ data class Envelope(
         fun messageId(messageId: String) = apply { this.messageId = messageId }
         fun timestamp(timestamp: Long) = apply { this.timestamp = timestamp }
         fun payloadHint(hint: PayloadHint) = apply { this.payloadHint = hint }
-        fun capability(key: String, value: String) = apply { this.capabilities[key] = value }
-        fun capabilities(caps: Map<String, String>) = apply { this.capabilities.putAll(caps) }
+        fun capability(key: String, value: Any) = apply { this.capabilities[key] = value }
+        fun capabilityString(key: String, value: String) = apply { this.capabilities[key] = value }
+        fun capabilities(caps: Map<String, Any?>) = apply { this.capabilities.putAll(caps) }
 
         fun build() = Envelope(
             from = from,

@@ -66,7 +66,7 @@ public class Envelope implements AutoCloseable {
     private String to;
     private OperationType operation;
     private String messageId;
-    private Map<String, String> capabilities;
+    private Map<String, Object> capabilities;
     private PayloadHint payloadHint;
 
     // For tracking changes to compute hash
@@ -234,7 +234,7 @@ public class Envelope implements AutoCloseable {
      * @return this envelope for method chaining
      */
     @NotNull
-    public Envelope setCapabilities(@Nullable Map<String, String> capabilities) {
+    public Envelope setCapabilities(@Nullable Map<String, Object> capabilities) {
         if (!Objects.equals(this.capabilities, capabilities)) {
             this.capabilities = capabilities != null ? new HashMap<>(capabilities) : new HashMap<>();
             this.dirty = true;
@@ -249,7 +249,7 @@ public class Envelope implements AutoCloseable {
      */
     @NotNull
     @JsonProperty("capabilities")
-    public Map<String, String> getCapabilities() {
+    public Map<String, Object> getCapabilities() {
         return new HashMap<>(capabilities);
     }
 
@@ -261,12 +261,24 @@ public class Envelope implements AutoCloseable {
      * @return this envelope for method chaining
      */
     @NotNull
-    public Envelope addCapability(@NotNull String key, @NotNull String value) {
+    public Envelope addCapability(@NotNull String key, @NotNull Object value) {
         if (!value.equals(capabilities.get(key))) {
             capabilities.put(key, value);
             this.dirty = true;
         }
         return this;
+    }
+
+    /**
+     * Adds or updates a single string capability (helper method).
+     *
+     * @param key the capability key
+     * @param value the capability value
+     * @return this envelope for method chaining
+     */
+    @NotNull
+    public Envelope addCapabilityString(@NotNull String key, @NotNull String value) {
+        return addCapability(key, value);
     }
 
     /**

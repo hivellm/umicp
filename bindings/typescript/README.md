@@ -1,8 +1,7 @@
 # UMICP TypeScript Bindings
 
-[![npm version](https://badge.fury.io/js/%40umicp%2Fcore.svg)](https://badge.fury.io/js/%40umicp%2Fcore)
+[![npm version](https://badge.fury.io/js/%40hivellm%2Fumicp.svg)](https://badge.fury.io/js/%40hivellm%2Fumicp)
 [![License: MIT](https://img.shields.io/badge/License-MIT-yellow.svg)](https://opensource.org/licenses/MIT)
-[![Tests](https://github.com/hivellm/umicp/workflows/tests/badge.svg)](https://github.com/hivellm/umicp/actions)
 
 TypeScript bindings for the Universal Matrix Inter-Communication Protocol (UMICP), providing high-performance communication and matrix operations for distributed systems, federated learning, and real-time applications.
 
@@ -20,7 +19,9 @@ TypeScript bindings for the Universal Matrix Inter-Communication Protocol (UMICP
 ## 📦 Installation
 
 ```bash
-npm install @hivellm/umicp@0.1.1
+npm install @hivellm/umicp
+# or
+npm install @hivellm/umicp@0.2.0
 ```
 
 ### Prerequisites
@@ -42,7 +43,9 @@ const envelope = UMICP.createEnvelope({
   messageId: 'msg-12345',
   capabilities: {
     'content-type': 'application/json',
-    'priority': 'high'
+    'priority': 'high',
+    'max_tokens': 100,  // Native number
+    'streaming': true   // Native boolean
   }
 });
 
@@ -263,13 +266,13 @@ envelope.setFrom(from: string): Envelope
 envelope.setTo(to: string): Envelope
 envelope.setOperation(op: OperationType): Envelope
 envelope.setMessageId(id: string): Envelope
-envelope.setCapabilities(caps: Record<string, string>): Envelope
+envelope.setCapabilities(caps: Record<string, any>): Envelope
 
 envelope.getFrom(): string
 envelope.getTo(): string
 envelope.getOperation(): OperationType
 envelope.getMessageId(): string
-envelope.getCapabilities(): Record<string, string>
+envelope.getCapabilities(): Record<string, any>
 
 envelope.serialize(): string
 envelope.validate(): boolean

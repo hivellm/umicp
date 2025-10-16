@@ -206,19 +206,19 @@ impl ServiceDiscovery {
                 .to("broadcast")
                 .operation(OperationType::Control)
                 .message_id(&format!("discovery-{}", uuid::Uuid::new_v4()))
-                .capability("type", "discovery")
-                .capability("service_name", &service.name)
-                .capability("service_address", &service.address)
-                .capability("service_version", &service.version);
+                .capability_str("type", "discovery")
+                .capability_str("service_name", &service.name)
+                .capability_str("service_address", &service.address)
+                .capability_str("service_version", &service.version);
 
             // Add capabilities
             for cap in &service.capabilities {
-                envelope = envelope.capability(&format!("cap:{}", cap), "true");
+                envelope = envelope.capability_str(&format!("cap:{}", cap), "true");
             }
 
             // Add metadata
             for (key, value) in &service.metadata {
-                envelope = envelope.capability(&format!("meta:{}", key), value);
+                envelope = envelope.capability_str(&format!("meta:{}", key), value);
             }
 
             envelope.build().ok()
@@ -232,14 +232,20 @@ impl ServiceDiscovery {
         // Check if it's a discovery message
         if caps.get("type").map(|v| v == "discovery").unwrap_or(false) {
             let service_id = envelope.from().to_string();
-            let name = caps.get("service_name").cloned().unwrap_or_default();
-            let address = caps.get("service_address").cloned().unwrap_or_default();
+            let name = caps.get("service_name")
+                .and_then(|v| v.as_str())
+                .unwrap_or("")
+                .to_string();
+            let address = caps.get("service_address")
+                .and_then(|v| v.as_str())
+                .unwrap_or("")
+                .to_string();
 
             let mut service = ServiceInfo::new(service_id, name, address);
 
             // Parse version
             if let Some(version) = caps.get("service_version") {
-                service.version = version.clone();
+                service.version = version.as_str().unwrap_or("").to_string();
             }
 
             // Parse capabilities (cap:*)
@@ -252,7 +258,11 @@ impl ServiceDiscovery {
             // Parse metadata (meta:*)
             for (key, value) in caps.iter() {
                 if let Some(meta_key) = key.strip_prefix("meta:") {
-                    service.add_metadata(meta_key.to_string(), value.clone());
+                    let value_str = match value {
+                        serde_json::Value::String(s) => s.clone(),
+                        other => other.to_string(),
+                    };
+                    service.add_metadata(meta_key.to_string(), value_str);
                 }
             }
 

@@ -1,189 +1,74 @@
-# Changelog
+# Changelog - UMICP TypeScript Binding
 
-All notable changes to the UMICP TypeScript bindings will be documented in this file.
+## [0.2.1] - 2025-10-16
 
-The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/),
-and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
+### Added - Tool Discovery
+- **Tool Discovery**: MCP-compatible tool discovery system
+  - `DiscoverableService` interface for automatic tool introspection
+  - `OperationSchema` with JSON Schema support for operation metadata
+  - `ServerInfo` for server metadata and capabilities
+  - Builder patterns: `OperationSchemaBuilder`, `ServerInfoBuilder`
+  - `DiscoveryHelpers` for generating MCP-compatible responses
+  - `SimpleDiscoverableService` reference implementation
+- **Tests**: 10 new comprehensive tool discovery tests
 
-## [0.1.5] - 2025-10-15
-
-### Fixed
-- **BREAKING FIX**: Removed local build requirements during installation
-- Package now ships with pre-compiled native binaries for all platforms
-- No longer requires C++ build tools, Python, or Visual Studio on client machines
-- Installation is now instant and never fails due to build issues
-- Added tsconfig files to published package for reference
-
-### Changed
-- Removed install, postinstall, and prepare scripts completely
-- prepublishOnly now only builds TypeScript (not native code)
-- Native binaries (umicp_core.node) are pre-compiled and included in package
-- Significantly faster installation (< 1 second vs minutes)
-- Works on systems without build tools
-
-### Technical
-- Pre-compiled binaries for: Linux x64, macOS x64/ARM64, Windows x64
-- Native addon build only required for development/publishing
-- Distribution includes build/Release/umicp_core.node for each platform
-
-## [Unreleased]
-
-### Added
-- Comprehensive end-to-end integration test suite
-- Advanced WebSocket transport layer with connection management
-- Real-world scenario testing (IoT, financial transactions)
-- Federated learning workflow validation
-- Performance and load testing capabilities
-- Utility functions for safe envelope creation
-- Detailed test documentation and architecture guide
-
-### Changed
-- **BREAKING**: Improved envelope serialization/deserialization handling
-- Enhanced WebSocket transport with proper connection lifecycle management
-- Optimized test execution time by 96% (from 127s to 5.1s)
-- Strengthened type safety in envelope creation from JSON messages
-- Improved error handling and resource cleanup
-
-### Fixed
-- **Critical**: Resolved "Number expected" errors in envelope operation type handling
-- Fixed WebSocket connection state management issues
-- Corrected envelope serialization for large payloads (10KB+)
-- Resolved Jest hanging issues with proper connection cleanup
-- Fixed bidirectional communication message handling
-- Corrected NaN errors in payload size parsing
-
-### Removed
-- Removed problematic connection loss and reconnection tests (causing 60s+ timeouts)
-- Eliminated unnecessary timeout delays in test execution
-- Removed protocol negotiation tests (temporarily for performance optimization)
-
-## [1.0.0] - 2024-XX-XX
-
-### Added
-- Initial TypeScript bindings for UMICP protocol
-- Core envelope creation and serialization functionality
-- Basic WebSocket transport implementation
-- Matrix operations support
-- Security and validation features
-
-### Core Features
-- **Envelope Management**: Create, serialize, and validate UMICP envelopes
-- **Transport Layer**: WebSocket-based communication with heartbeat and reconnection
-- **Matrix Operations**: Linear algebra operations for ML/AI workloads
-- **Type Safety**: Full TypeScript support with strict typing
-- **Error Handling**: Comprehensive error handling and validation
-
-### Test Coverage
-- Unit tests for envelope operations
-- Integration tests for transport layer
-- Performance tests for matrix operations
-- Security tests for input validation
-- Regression tests for stability
-
-### Performance Metrics
-- **Envelope Creation**: ~1ms per envelope
-- **Serialization**: ~8ms for complex envelopes
-- **Matrix Operations**: SIMD-optimized for performance
-- **WebSocket Transport**: <100ms connection establishment
-- **Memory Management**: Efficient resource utilization
-
-### Supported Platforms
-- Node.js 14+
-- TypeScript 4.5+
-- Windows, macOS, Linux
-
----
-
-## Test Suite Improvements (Latest)
-
-### Performance Optimizations
-- **96% faster execution**: Reduced from 127s to 5.1s
-- **100% pass rate**: All 10 e2e tests now passing
-- **Eliminated timeouts**: Removed problematic 60s+ test delays
-- **Optimized delays**: Reduced wait times from 500ms to 10-50ms
-
-### Reliability Improvements
-- **Fixed envelope creation**: Resolved "Number expected" TypeScript errors
-- **Improved connection handling**: Better WebSocket lifecycle management
-- **Enhanced cleanup**: Proper resource disposal to prevent Jest hanging
-- **Type safety**: Added utility functions for safe envelope creation
-
-### Test Categories
-1. **Envelope Serialization** (106ms)
-2. **Connection Management** (37ms)
-3. **Basic Communication** (42-44ms)
-4. **Performance Testing** (546-568ms)
-5. **Federated Learning** (545ms each)
-6. **Real-world Scenarios** (558ms-1080ms)
-
-### Architecture Improvements
-- **Event-driven design**: Proper EventEmitter usage for message handling
-- **Connection pooling**: Support for multiple concurrent connections
-- **Error resilience**: Graceful handling of connection errors and edge cases
-- **Resource management**: Automatic cleanup and memory management
-
-### Developer Experience
-- **Fast feedback**: Sub-6 second test execution for rapid development
-- **Clear documentation**: Comprehensive test architecture documentation
-- **Debug-friendly**: Removed blocking timeouts for easier debugging
-- **Type-safe utilities**: Helper functions for common operations
-
-### Future Roadmap
-- [ ] Protocol negotiation implementation
-- [ ] Advanced reconnection logic
-- [ ] Stress testing with larger payloads
-- [ ] Multi-node federated learning scenarios
-- [ ] Performance monitoring and metrics
-
----
-
-## Breaking Changes
-
-### v1.0.0 → v1.1.0 (Unreleased)
-- **Transport Layer**: Enhanced WebSocket implementation may require connection code updates
-- **Envelope Creation**: Stricter type validation may catch previously uncaught errors
-- **Test Dependencies**: Updated test utilities may require import changes
+### Note on Native Types
+- TypeScript binding already supported native types (`Record<string, any>`) since v0.1.5+
+- No breaking changes required for native type support
+- Full JSON value support already available in capabilities
 
 ### Migration Guide
-```typescript
-// Old envelope creation (may fail with type errors)
-const envelope = UMICP.createEnvelope({
-  operation: message.op // Could be string, causing "Number expected" error
-});
+No migration needed! This is a purely additive release. New Tool Discovery features are optional.
 
-// New safe envelope creation
-const envelope = createEnvelopeFromMessage(message); // Handles type conversion
+### Example Usage
+```typescript
+import { 
+  DiscoverableService, 
+  OperationSchemaBuilder,
+  ServerInfoBuilder 
+} from '@hivellm/umicp';
+
+class MyService implements DiscoverableService {
+  listOperations() {
+    return [
+      new OperationSchemaBuilder('search', {
+        type: 'object',
+        properties: { query: { type: 'string' } }
+      })
+      .withTitle('Search')
+      .withDescription('Search for content')
+      .build()
+    ];
+  }
+  
+  getSchema(name: string) {
+    return this.listOperations().find(op => op.name === name) || null;
+  }
+  
+  getServerInfo() {
+    return new ServerInfoBuilder('my-service', '1.0.0', 'UMICP/0.2')
+      .withMcpCompatible(true)
+      .build();
+  }
+}
 ```
 
-## Security Updates
+## [0.1.5] - 2025-01-10
 
-### Input Validation
-- Enhanced validation for envelope fields
-- Protection against JSON injection attempts
-- Sanitization of capability values
-- Numeric overflow protection
+### Added
+- StreamableHTTP transport support
+- WebSocket peer-to-peer communication
+- Full BIP-05 compliance
+- Matrix operations with SIMD acceleration
 
-### Resource Protection
-- Memory exhaustion prevention
-- Rate limiting support
-- Connection limit enforcement
-- Payload size validation
+### Fixed
+- Various stability improvements
+- Memory leak fixes
 
-## Dependencies
+## [0.1.0] - 2024-12-01
 
-### Runtime Dependencies
-- `ws`: WebSocket library for Node.js transport
-- Native modules for matrix operations (C++ bindings)
-
-### Development Dependencies
-- `jest`: Testing framework
-- `typescript`: TypeScript compiler
-- `@types/*`: Type definitions
-
-## Contributing
-
-See [CONTRIBUTING.md](./CONTRIBUTING.md) for development setup and contribution guidelines.
-
-## License
-
-This project is licensed under the MIT License - see the [LICENSE](./LICENSE) file for details.
+### Added
+- Initial TypeScript binding release
+- Basic envelope system
+- Matrix operations
+- Transport layer

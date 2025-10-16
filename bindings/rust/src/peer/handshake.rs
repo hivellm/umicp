@@ -115,8 +115,8 @@ impl HandshakeMessage {
             .to("*")
             .operation(OperationType::Control)
             .message_id(&format!("handshake-{}", uuid::Uuid::new_v4()))
-            .capability("handshake", &format!("{:?}", self.msg_type))
-            .capability("payload", &json)
+            .capability_str("handshake", &format!("{:?}", self.msg_type))
+            .capability_str("payload", &json)
             .build()
     }
 
@@ -218,16 +218,18 @@ impl HandshakeProtocol {
         let mut envelope = msg.to_envelope()?;
 
         // Set 'to' field to the sender of HELLO
+        let payload_str = envelope.capabilities()
+            .and_then(|c| c.get("payload"))
+            .and_then(|v| v.as_str())
+            .unwrap_or("");
+
         envelope = Envelope::builder()
             .from(envelope.from())
             .to(&hello.peer_id)
             .operation(envelope.operation())
             .message_id(envelope.message_id())
-            .capability("handshake", "Ack")
-            .capability("payload", envelope.capabilities()
-                .and_then(|c| c.get("payload"))
-                .map(|s| s.as_str())
-                .unwrap_or(""))
+            .capability_str("handshake", "Ack")
+            .capability_str("payload", payload_str)
             .build()?;
 
         Ok(envelope)
