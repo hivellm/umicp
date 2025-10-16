@@ -114,7 +114,7 @@ docs/
 
 - **Issues**: https://github.com/hivellm/umicp/issues
 - **Discussions**: https://github.com/hivellm/umicp/discussions
-- **Email**: support@hivellm.com
+- **Email**: team@hivellm.org
 
 ---
 

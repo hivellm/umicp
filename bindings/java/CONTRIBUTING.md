@@ -386,7 +386,7 @@ We follow [Semantic Versioning](https://semver.org/):
 
 - **Issues**: https://github.com/hivellm/umicp/issues
 - **Discussions**: https://github.com/hivellm/umicp/discussions
-- **Email**: dev@hivellm.org
+- **Email**: team@hivellm.org
 
 Thank you for contributing! 🎉
 

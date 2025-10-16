@@ -8,7 +8,7 @@ defmodule UMICP.MixProject do
     [
       app: :umicp,
       version: @version,
-      elixir: "~> 1.15",
+      elixir: "~> 1.14",
       start_permanent: Mix.env() == :prod,
       deps: deps(),
       description: description(),
@@ -43,8 +43,8 @@ defmodule UMICP.MixProject do
       {:mint_web_socket, "~> 1.0"},
       {:finch, "~> 0.18"},
 
-      # Optional: Numerical Elixir for matrix operations
-      {:nx, "~> 0.7", optional: true},
+      # Optional: Numerical Elixir for matrix operations (disabled for testing with Elixir 1.14)
+      # {:nx, "~> 0.7", optional: true},
 
       # Development and testing
       {:ex_doc, "~> 0.31", only: :dev, runtime: false},

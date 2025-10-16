@@ -397,7 +397,7 @@ MIT License - See [LICENSE](LICENSE) file for details.
 
 - Open an issue on GitHub
 - Join our Discord community
-- Email: support@hivellm.ai
+- Email: team@hivellm.org
 
 ---
 

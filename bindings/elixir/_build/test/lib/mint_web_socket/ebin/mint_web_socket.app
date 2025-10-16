@@ -1,0 +1,12 @@
+{application,mint_web_socket,
+             [{applications,[kernel,stdlib,elixir,logger,mint]},
+              {description,"HTTP/1 and HTTP/2 WebSocket support for Mint"},
+              {modules,['Elixir.Mint.WebSocket',
+                        'Elixir.Mint.WebSocket.Extension',
+                        'Elixir.Mint.WebSocket.Frame',
+                        'Elixir.Mint.WebSocket.PerMessageDeflate',
+                        'Elixir.Mint.WebSocket.UpgradeFailureError',
+                        'Elixir.Mint.WebSocket.Utils',
+                        'Elixir.Mint.WebSocketError']},
+              {registered,[]},
+              {vsn,"1.0.4"}]}.
