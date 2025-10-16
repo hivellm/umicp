@@ -78,13 +78,13 @@ fn main() -> Result<(), Box<dyn std::error::Error>> {
         .to("broadcast")
         .operation(OperationType::Control)
         .message_id("discovery-123")
-        .capability("type", "discovery")
-        .capability("service_name", "Network Service")
-        .capability("service_address", "ws://localhost:8082")
-        .capability("service_version", "1.0.0")
-        .capability("cap:network", "true")
-        .capability("cap:routing", "true")
-        .capability("meta:region", "eu-west-1")
+        .capability_str("type", "discovery")
+        .capability_str("service_name", "Network Service")
+        .capability_str("service_address", "ws://localhost:8082")
+        .capability_str("service_version", "1.0.0")
+        .capability_str("cap:network", "true")
+        .capability_str("cap:routing", "true")
+        .capability_str("meta:region", "eu-west-1")
         .build()?;
 
     if let Some(discovered) = discovery.parse_discovery_envelope(&discovery_envelope) {

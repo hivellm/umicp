@@ -19,8 +19,8 @@ fn main() -> Result<(), Box<dyn std::error::Error>> {
         .to("server-001")
         .operation(OperationType::Data)
         .message_id(&uuid::Uuid::new_v4().to_string())
-        .capability("content-type", "application/json")
-        .capability("priority", "high")
+        .capability_str("content-type", "application/json")
+        .capability_str("priority", "high")
         .build()?;
 
     println!("   From: {}", envelope.from());
@@ -86,7 +86,7 @@ fn main() -> Result<(), Box<dyn std::error::Error>> {
             .to("example-server")
             .operation(op)
             .message_id(&uuid::Uuid::new_v4().to_string())
-            .capability("example", "true")
+            .capability_str("example", "true")
             .build()?;
 
         println!("   Operation: {:?} -> Hash: {}",

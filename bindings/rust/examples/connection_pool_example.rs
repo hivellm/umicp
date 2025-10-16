@@ -4,11 +4,12 @@
 Demonstrates connection pooling for efficient resource management.
 */
 
-#![cfg(feature = "websocket")]
-
+#[cfg(feature = "websocket")]
 use umicp_core::{ConnectionPool, PoolConfig};
+#[cfg(feature = "websocket")]
 use std::time::Duration;
 
+#[cfg(feature = "websocket")]
 #[tokio::main]
 async fn main() -> Result<(), Box<dyn std::error::Error>> {
     println!("=== UMICP Connection Pool Example ===\n");
@@ -95,3 +96,8 @@ async fn main() -> Result<(), Box<dyn std::error::Error>> {
     Ok(())
 }
 
+#[cfg(not(feature = "websocket"))]
+fn main() {
+    eprintln!("This example requires the 'websocket' feature.");
+    eprintln!("Run with: cargo run --example connection_pool_example --features websocket");
+}

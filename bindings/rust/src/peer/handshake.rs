@@ -124,7 +124,7 @@ impl HandshakeMessage {
     pub fn from_envelope(envelope: &Envelope) -> Result<Self> {
         let payload = envelope
             .capabilities()
-            .and_then(|caps| caps.get("payload").map(|s| s.as_str()))
+            .and_then(|caps| caps.get("payload").and_then(|s| s.as_str()))
             .ok_or_else(|| UmicpError::validation("Missing handshake payload".to_string()))?;
 
         serde_json::from_str(payload)

@@ -12,6 +12,8 @@ use parking_lot::RwLock;
 use tokio::time::{sleep, Duration};
 #[cfg(feature = "websocket")]
 use umicp_core::{EventEmitter, EventType, EventData, Envelope, OperationType, PeerInfo};
+#[cfg(feature = "websocket")]
+use serde_json::json;
 
 #[cfg(feature = "websocket")]
 #[tokio::main]
@@ -105,7 +107,7 @@ async fn main() -> Result<(), Box<dyn std::error::Error>> {
         .from("peer-001")
         .to("server")
         .operation(OperationType::Data)
-        .capability("content", "Hello from peer!")
+        .capability("content", json!("Hello from peer!"))
         .build()?;
 
     emitter.emit_message(envelope, "peer-001".to_string());
@@ -116,7 +118,7 @@ async fn main() -> Result<(), Box<dyn std::error::Error>> {
         .from("peer-002")
         .to("server")
         .operation(OperationType::Data)
-        .capability("content", "Second message")
+        .capability("content", json!("Second message"))
         .build()?;
 
     emitter.emit_message(envelope2, "peer-002".to_string());
@@ -145,7 +147,7 @@ async fn main() -> Result<(), Box<dyn std::error::Error>> {
         .from("peer-async")
         .to("server")
         .operation(OperationType::Data)
-        .capability("content", "Async message")
+        .capability("content", json!("Async message"))
         .build()?;
 
     emitter.emit_async(EventType::Message, EventData::Message {
@@ -176,7 +178,7 @@ async fn main() -> Result<(), Box<dyn std::error::Error>> {
         .from("final")
         .to("server")
         .operation(OperationType::Data)
-        .capability("content", "Final message")
+        .capability("content", json!("Final message"))
         .build()?;
 
     emitter.emit_message(envelope4, "final".to_string());
@@ -185,5 +187,11 @@ async fn main() -> Result<(), Box<dyn std::error::Error>> {
     println!("\n✅ Event system demonstration complete!");
 
     Ok(())
+}
+
+#[cfg(not(feature = "websocket"))]
+fn main() {
+    eprintln!("This example requires the 'websocket' feature.");
+    eprintln!("Run with: cargo run --example event_system --features websocket");
 }
 

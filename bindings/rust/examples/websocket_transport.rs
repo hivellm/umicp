@@ -5,9 +5,14 @@ This example demonstrates how to use the WebSocket transport layer for
 real-time communication with UMICP envelopes.
 */
 
+#[cfg(feature = "websocket")]
 use std::sync::Arc;
+#[cfg(feature = "websocket")]
 use tokio::sync::Mutex;
+#[cfg(feature = "websocket")]
 use umicp_core::{Envelope, OperationType, WebSocketClient, WebSocketServer};
+#[cfg(feature = "websocket")]
+use serde_json::json;
 
 // WebSocket transport example - requires websocket feature
 
@@ -61,8 +66,8 @@ async fn run_server() -> Result<(), Box<dyn std::error::Error>> {
                 .to(envelope.from())
                 .operation(OperationType::Ack)
                 .message_id(format!("ack-{}", envelope.message_id()).as_str())
-                .capability("status", "received")
-                .capability("server_time", &chrono::Utc::now().to_rfc3339())
+                .capability("status", json!("received"))
+                .capability("server_time", json!(chrono::Utc::now().to_rfc3339()))
                 .build().unwrap();
 
             // Send response
@@ -119,10 +124,10 @@ async fn run_client() -> Result<(), Box<dyn std::error::Error>> {
             .to("server")
             .operation(OperationType::Data)
             .message_id(format!("test-msg-{}", i).as_str())
-            .capability("message_type", "test")
-            .capability("sequence", &i.to_string())
-            .capability("timestamp", &chrono::Utc::now().to_rfc3339())
-            .capability("data", &format!("Hello from Rust client! Message #{}", i))
+            .capability("message_type", json!("test"))
+            .capability("sequence", json!(i))
+            .capability("timestamp", json!(chrono::Utc::now().to_rfc3339()))
+            .capability("data", json!(format!("Hello from Rust client! Message #{}", i)))
             .build()?;
 
         client.send(message).await?;
@@ -139,4 +144,10 @@ async fn run_client() -> Result<(), Box<dyn std::error::Error>> {
 
     println!("👋 Client finished");
     Ok(())
+}
+
+#[cfg(not(feature = "websocket"))]
+fn main() {
+    eprintln!("This example requires the 'websocket' feature.");
+    eprintln!("Run with: cargo run --example websocket_transport --features websocket");
 }

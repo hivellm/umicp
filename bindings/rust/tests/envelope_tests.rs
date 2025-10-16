@@ -19,9 +19,10 @@ fn test_create_envelope_with_default_values() {
 
 #[test]
 fn test_create_envelope_with_custom_options() {
+    use serde_json::json;
     let mut capabilities = std::collections::HashMap::new();
-    capabilities.insert("compression".to_string(), "gzip".to_string());
-    capabilities.insert("encryption".to_string(), "aes256".to_string());
+    capabilities.insert("compression".to_string(), json!("gzip"));
+    capabilities.insert("encryption".to_string(), json!("aes256"));
 
     let envelope = Envelope::builder()
         .from("test-sender")
@@ -37,8 +38,8 @@ fn test_create_envelope_with_custom_options() {
     assert_eq!(envelope.message_id(), "msg-123");
 
     if let Some(caps) = envelope.capabilities() {
-        assert_eq!(caps.get("compression"), Some(&"gzip".to_string()));
-        assert_eq!(caps.get("encryption"), Some(&"aes256".to_string()));
+        assert_eq!(caps.get("compression").unwrap().as_str().unwrap(), "gzip");
+        assert_eq!(caps.get("encryption").unwrap().as_str().unwrap(), "aes256");
     } else {
         panic!("Capabilities not found");
     }
@@ -110,10 +111,11 @@ fn test_handle_payload_hints() {
 
 #[test]
 fn test_handle_capabilities() {
+    use serde_json::json;
     let mut capabilities = std::collections::HashMap::new();
-    capabilities.insert("binary_support".to_string(), "true".to_string());
-    capabilities.insert("compression".to_string(), "gzip,brotli".to_string());
-    capabilities.insert("formats".to_string(), "cbor,msgpack".to_string());
+    capabilities.insert("binary_support".to_string(), json!("true"));
+    capabilities.insert("compression".to_string(), json!("gzip,brotli"));
+    capabilities.insert("formats".to_string(), json!("cbor,msgpack"));
 
     let envelope = Envelope::builder()
         .from("sender")
@@ -125,9 +127,9 @@ fn test_handle_capabilities() {
     assert!(envelope.validate().is_ok());
 
     if let Some(caps) = envelope.capabilities() {
-        assert_eq!(caps.get("binary_support"), Some(&"true".to_string()));
-        assert_eq!(caps.get("compression"), Some(&"gzip,brotli".to_string()));
-        assert_eq!(caps.get("formats"), Some(&"cbor,msgpack".to_string()));
+        assert_eq!(caps.get("binary_support").unwrap().as_str().unwrap(), "true");
+        assert_eq!(caps.get("compression").unwrap().as_str().unwrap(), "gzip,brotli");
+        assert_eq!(caps.get("formats").unwrap().as_str().unwrap(), "cbor,msgpack");
     } else {
         panic!("Capabilities not found");
     }
@@ -195,8 +197,8 @@ fn test_builder_pattern() {
         .to("receiver")
         .operation(OperationType::Data)
         .message_id("test-id")
-        .capability("key1", "value1")
-        .capability("key2", "value2")
+        .capability_str("key1", "value1")
+        .capability_str("key2", "value2")
         .build()
         .expect("Failed to build envelope");
 
@@ -206,8 +208,8 @@ fn test_builder_pattern() {
 
     if let Some(caps) = envelope.capabilities() {
         assert_eq!(caps.len(), 2);
-        assert_eq!(caps.get("key1"), Some(&"value1".to_string()));
-        assert_eq!(caps.get("key2"), Some(&"value2".to_string()));
+        assert_eq!(caps.get("key1").unwrap().as_str().unwrap(), "value1");
+        assert_eq!(caps.get("key2").unwrap().as_str().unwrap(), "value2");
     } else {
         panic!("Capabilities not found");
     }
@@ -215,11 +217,12 @@ fn test_builder_pattern() {
 
 #[test]
 fn test_large_capabilities() {
+    use serde_json::json;
     let mut capabilities = std::collections::HashMap::new();
 
     // Add many capabilities
     for i in 0..100 {
-        capabilities.insert(format!("key_{}", i), format!("value_{}", i));
+        capabilities.insert(format!("key_{}", i), json!(format!("value_{}", i)));
     }
 
     let envelope = Envelope::builder()
@@ -243,8 +246,8 @@ fn test_serialize_deserialize_round_trip() {
         .to("receiver-456")
         .operation(OperationType::Data)
         .message_id("msg-unique-001")
-        .capability("test", "round-trip")
-        .capability("version", "1.0")
+        .capability_str("test", "round-trip")
+        .capability_str("version", "1.0")
         .build()
         .expect("Failed to build envelope");
 

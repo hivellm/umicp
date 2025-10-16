@@ -7,6 +7,7 @@ for embeddings, transformer states, and distributed model coordination.
 
 use umicp_core::{Envelope, Matrix, OperationType};
 use serde::{Serialize, Deserialize};
+use serde_json::json;
 use std::collections::HashMap;
 
 /// AI Model embedding data structure
@@ -212,14 +213,14 @@ impl TransformerCommunication {
             .to(target)
             .operation(OperationType::Data)
             .message_id(&uuid::Uuid::new_v4().to_string())
-            .capability("message_type", "embedding_transfer")
-            .capability("model_name", &data.model_name)
-            .capability("layer_index", &data.layer_index.to_string())
-            .capability("sequence_length", &data.sequence_length.to_string())
-            .capability("embedding_dim", &data.embedding_dim.to_string())
-            .capability("data_size", &json_data.len().to_string())
-            .capability("compression", "none")
-            .capability("format", "json")
+            .capability_str("message_type", "embedding_transfer")
+            .capability_str("model_name", &data.model_name)
+            .capability("layer_index", json!(data.layer_index))
+            .capability("sequence_length", json!(data.sequence_length))
+            .capability("embedding_dim", json!(data.embedding_dim))
+            .capability("data_size", json!(json_data.len()))
+            .capability_str("compression", "none")
+            .capability_str("format", "json")
             .build()?)
     }
 
@@ -230,11 +231,11 @@ impl TransformerCommunication {
             .to(target)
             .operation(OperationType::Data)
             .message_id(&uuid::Uuid::new_v4().to_string())
-            .capability("message_type", "attention_sharing")
-            .capability("sequence_length", &sequence_length.to_string())
-            .capability("num_heads", &num_heads.to_string())
-            .capability("attention_size", &attention_weights.len().to_string())
-            .capability("attention_shape", &format!("{}x{}x{}", sequence_length, sequence_length, num_heads))
+            .capability_str("message_type", "attention_sharing")
+            .capability("sequence_length", json!(sequence_length))
+            .capability("num_heads", json!(num_heads))
+            .capability("attention_size", json!(attention_weights.len()))
+            .capability_str("attention_shape", &format!("{}x{}x{}", sequence_length, sequence_length, num_heads))
             .build()?)
     }
 
@@ -242,16 +243,16 @@ impl TransformerCommunication {
     fn process_embedding_envelope(&self, envelope: &Envelope) -> Result<EmbeddingData, Box<dyn std::error::Error>> {
         let capabilities = envelope.capabilities().ok_or("No capabilities found")?;
 
-        if capabilities.get("message_type").map(|s| s.as_str()) != Some("embedding_transfer") {
+        if capabilities.get("message_type").and_then(|s| s.as_str()) != Some("embedding_transfer") {
             return Err("Not an embedding transfer envelope".into());
         }
 
         // In a real implementation, you'd extract the binary data
         // For this example, we'll create mock data based on capabilities
-        let model_name = capabilities.get("model_name").ok_or("Missing model_name")?.clone();
-        let layer_index: usize = capabilities.get("layer_index").ok_or("Missing layer_index")?.parse()?;
-        let sequence_length: usize = capabilities.get("sequence_length").ok_or("Missing sequence_length")?.parse()?;
-        let embedding_dim: usize = capabilities.get("embedding_dim").ok_or("Missing embedding_dim")?.parse()?;
+        let model_name = capabilities.get("model_name").ok_or("Missing model_name")?.as_str().ok_or("Invalid model_name")?.to_string();
+        let layer_index: usize = capabilities.get("layer_index").ok_or("Missing layer_index")?.as_u64().ok_or("Invalid layer_index")? as usize;
+        let sequence_length: usize = capabilities.get("sequence_length").ok_or("Missing sequence_length")?.as_u64().ok_or("Invalid sequence_length")? as usize;
+        let embedding_dim: usize = capabilities.get("embedding_dim").ok_or("Missing embedding_dim")?.as_u64().ok_or("Invalid embedding_dim")? as usize;
 
         // Create mock embedding data
         let mut embeddings = vec![0.0f32; sequence_length * embedding_dim];

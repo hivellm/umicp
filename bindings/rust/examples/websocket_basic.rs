@@ -7,6 +7,8 @@ Demonstrates basic WebSocket communication using UMICP Rust bindings.
 #[cfg(feature = "websocket")]
 use umicp_core::{Envelope, OperationType, WebSocketClient, WebSocketServer};
 #[cfg(feature = "websocket")]
+use serde_json::json;
+#[cfg(feature = "websocket")]
 use std::time::Duration;
 #[cfg(feature = "websocket")]
 use tokio::time::sleep;
@@ -39,6 +41,7 @@ async fn main() -> anyhow::Result<()> {
     Ok(())
 }
 
+#[cfg(feature = "websocket")]
 async fn run_server() -> anyhow::Result<()> {
     let mut server = WebSocketServer::new("127.0.0.1:20081")?;
 
@@ -50,6 +53,7 @@ async fn run_server() -> anyhow::Result<()> {
     Ok(())
 }
 
+#[cfg(feature = "websocket")]
 async fn run_client() -> anyhow::Result<()> {
     println!("📱 Client: Connecting to ws://127.0.0.1:20081");
 
@@ -71,8 +75,8 @@ async fn run_client() -> anyhow::Result<()> {
         .to("rust-server")
         .operation(OperationType::Data)
         .message_id("msg-001")
-        .capability("message", "Hello from Rust client!")
-        .capability("test", "basic-websocket")
+        .capability("message", json!("Hello from Rust client!"))
+        .capability("test", json!("basic-websocket"))
         .build()?;
 
     client.send(envelope).await?;
@@ -87,8 +91,8 @@ async fn run_client() -> anyhow::Result<()> {
         .to("rust-server")
         .operation(OperationType::Data)
         .message_id("msg-002")
-        .capability("message", "Second message!")
-        .capability("sequence", "2")
+        .capability("message", json!("Second message!"))
+        .capability("sequence", json!(2))
         .build()?;
 
     client.send(envelope2).await?;
@@ -113,3 +117,8 @@ async fn run_client() -> anyhow::Result<()> {
     Ok(())
 }
 
+#[cfg(not(feature = "websocket"))]
+fn main() {
+    eprintln!("This example requires the 'websocket' feature.");
+    eprintln!("Run with: cargo run --example websocket_basic --features websocket");
+}

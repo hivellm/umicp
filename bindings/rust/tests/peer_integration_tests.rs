@@ -2,6 +2,8 @@
 # Peer System Integration Tests
 */
 
+#![cfg(feature = "websocket")]
+
 use parking_lot::RwLock;
 use std::sync::Arc;
 use tokio::time::{sleep, Duration};

@@ -7,6 +7,7 @@
 use umicp_core::{Envelope, OperationType, WebSocketClient, WebSocketServer};
 use std::time::Duration;
 use tokio::time::{sleep, timeout};
+use serde_json::json;
 
 // Helper to get a random available port
 fn get_test_port() -> u16 {
@@ -90,7 +91,7 @@ async fn test_send_message_client_to_server() {
         .to("test-server")
         .operation(OperationType::Data)
         .message_id("test-001")
-        .capability("message", "Hello from client!")
+        .capability("message", json!("Hello from client!"))
         .build()
         .expect("Failed to build envelope");
 
@@ -135,7 +136,7 @@ async fn test_multiple_messages() {
             .to("server")
             .operation(OperationType::Data)
             .message_id(&format!("msg-{:03}", i))
-            .capability("sequence", &i.to_string())
+            .capability("sequence", json!(i))
             .build()
             .expect("Failed to build envelope");
 
@@ -272,7 +273,7 @@ async fn test_large_message() {
     for i in 0..500 {
         capabilities.insert(
             format!("key_{}", i),
-            format!("value_with_some_long_content_{}", i),
+            json!(format!("value_with_some_long_content_{}", i)),
         );
     }
 

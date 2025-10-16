@@ -19,7 +19,7 @@ mod tests {
             .to("test-receiver")
             .operation(OperationType::Data)
             .message_id(&valid_uuid)
-            .capability("test", "value")
+            .capability_str("test", "value")
             .build()
             .unwrap();
 
@@ -113,14 +113,14 @@ mod tests {
         let envelope = Envelope::builder()
             .from("sender")
             .to("receiver")
-            .capability("priority", "high")
-            .capability("content-type", "application/json")
+            .capability_str("priority", "high")
+            .capability_str("content-type", "application/json")
             .build()
             .unwrap();
 
         let capabilities = envelope.capabilities().unwrap();
-        assert_eq!(capabilities.get("priority").unwrap(), "high");
-        assert_eq!(capabilities.get("content-type").unwrap(), "application/json");
+        assert_eq!(capabilities.get("priority").unwrap().as_str().unwrap(), "high");
+        assert_eq!(capabilities.get("content-type").unwrap().as_str().unwrap(), "application/json");
         assert_eq!(capabilities.len(), 2);
     }
 
@@ -157,7 +157,7 @@ mod tests {
             .from("sender")
             .to("receiver")
             .operation(OperationType::Data)
-            .capability("test", "value")
+            .capability_str("test", "value")
             .build()
             .unwrap();
 
@@ -175,7 +175,7 @@ mod tests {
             .from("sender")
             .to("receiver")
             .operation(OperationType::Data)
-            .capability("test", "different")
+            .capability_str("test", "different")
             .build()
             .unwrap();
 
@@ -207,8 +207,8 @@ mod tests {
             .to("receiver")
             .operation(OperationType::Data)
             .message_id(&valid_uuid)
-            .capability("key1", "value1")
-            .capability("key2", "value2")
+            .capability_str("key1", "value1")
+            .capability_str("key2", "value2")
             .build()
             .unwrap();
 
