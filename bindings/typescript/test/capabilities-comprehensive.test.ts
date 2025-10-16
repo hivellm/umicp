@@ -7,7 +7,7 @@ import { describe, it, expect } from 'vitest';
 import { Envelope, OperationType } from '../src/index';
 
 describe('Capabilities - Native Types Comprehensive', () => {
-  
+
   describe('Integer Types', () => {
     it('should handle positive integers', () => {
       const capabilities: Record<string, any> = { max_tokens: 100 };
@@ -112,7 +112,7 @@ describe('Capabilities - Native Types Comprehensive', () => {
 
   describe('Object Types', () => {
     it('should handle simple objects', () => {
-      const capabilities: Record<string, any> = { 
+      const capabilities: Record<string, any> = {
         config: { timeout: 30, retries: 3 }
       };
       expect(capabilities.config.timeout).toBe(30);
@@ -250,7 +250,7 @@ describe('Capabilities - Native Types Comprehensive', () => {
       const caps = { max_tokens: 100 };
       const json = JSON.stringify(caps);
       const parsed = JSON.parse(json);
-      
+
       expect(parsed.max_tokens).toBe(100);
     });
 
@@ -258,7 +258,7 @@ describe('Capabilities - Native Types Comprehensive', () => {
       const caps = { temperature: 0.7 };
       const json = JSON.stringify(caps);
       const parsed = JSON.parse(json);
-      
+
       expect(parsed.temperature).toBeCloseTo(0.7);
     });
 
@@ -266,7 +266,7 @@ describe('Capabilities - Native Types Comprehensive', () => {
       const caps = { enabled: true };
       const json = JSON.stringify(caps);
       const parsed = JSON.parse(json);
-      
+
       expect(parsed.enabled).toBe(true);
     });
 
@@ -274,7 +274,7 @@ describe('Capabilities - Native Types Comprehensive', () => {
       const caps = { models: ['gpt-4', 'claude-3'] };
       const json = JSON.stringify(caps);
       const parsed = JSON.parse(json);
-      
+
       expect(parsed.models).toHaveLength(2);
       expect(parsed.models[0]).toBe('gpt-4');
     });
@@ -283,7 +283,7 @@ describe('Capabilities - Native Types Comprehensive', () => {
       const caps = { config: { timeout: 30 } };
       const json = JSON.stringify(caps);
       const parsed = JSON.parse(json);
-      
+
       expect(parsed.config.timeout).toBe(30);
     });
   });
