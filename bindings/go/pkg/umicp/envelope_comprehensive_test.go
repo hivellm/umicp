@@ -16,7 +16,7 @@ func TestEnvelopeBasicCreation(t *testing.T) {
 		From("sender").
 		To("receiver").
 		Build()
-	
+
 	assert.NoError(t, err)
 	assert.Equal(t, "sender", env.From)
 	assert.Equal(t, "receiver", env.To)
@@ -28,7 +28,7 @@ func TestEnvelopeWithOperation(t *testing.T) {
 		To("receiver").
 		Operation(OperationData).
 		Build()
-	
+
 	assert.NoError(t, err)
 	assert.Equal(t, OperationData, env.Operation)
 }
@@ -39,7 +39,7 @@ func TestEnvelopeWithMessageID(t *testing.T) {
 		To("receiver").
 		MessageID("custom-id-123").
 		Build()
-	
+
 	assert.NoError(t, err)
 	assert.Equal(t, "custom-id-123", env.MessageID)
 }
@@ -49,7 +49,7 @@ func TestEnvelopeAutoMessageID(t *testing.T) {
 		From("sender").
 		To("receiver").
 		Build()
-	
+
 	assert.NoError(t, err)
 	assert.NotEmpty(t, env.MessageID)
 }
@@ -60,7 +60,7 @@ func TestEnvelopeSerializeDeserialize(t *testing.T) {
 		To("receiver").
 		Capability("test", 123).
 		Build()
-	
+
 	assert.NoError(t, err)
 
 	data, err := json.Marshal(original)
@@ -79,7 +79,7 @@ func TestEnvelopeValidation(t *testing.T) {
 		From("sender").
 		To("receiver").
 		Build()
-	
+
 	assert.NoError(t, err)
 	assert.NotNil(t, env)
 }
@@ -125,7 +125,7 @@ func TestEnvelopeOperationTypes(t *testing.T) {
 			To("receiver").
 			Operation(op).
 			Build()
-		
+
 		assert.NoError(t, err)
 		assert.Equal(t, op, env.Operation)
 	}
@@ -161,7 +161,7 @@ func TestEnvelopeEmptyFrom(t *testing.T) {
 	env, err := NewEnvelope().
 		To("receiver").
 		Build()
-	
+
 	assert.Error(t, err) // Go validates from is required
 }
 
@@ -169,7 +169,7 @@ func TestEnvelopeEmptyTo(t *testing.T) {
 	env, err := NewEnvelope().
 		From("sender").
 		Build()
-	
+
 	assert.Error(t, err) // Go validates to is required
 }
 
@@ -348,12 +348,12 @@ func TestEnvelopeComplexNesting(t *testing.T) {
 				"type": "oauth",
 				"credentials": map[string]interface{}{
 					"client_id": "abc123",
-					"scopes": []string{"read", "write"},
+					"scopes":    []string{"read", "write"},
 				},
 			},
 			"settings": map[string]interface{}{
 				"timeout": 30,
-				"retry": true,
+				"retry":   true,
 			},
 		}).
 		Build()
@@ -390,7 +390,7 @@ func TestEnvelopeAllOperationTypes(t *testing.T) {
 			To("r").
 			Operation(op).
 			Build()
-		
+
 		assert.Equal(t, op, env.Operation)
 		assert.Equal(t, name, op.String())
 	}
@@ -408,10 +408,10 @@ func TestEnvelopeCapabilityStringHelper(t *testing.T) {
 
 func TestEnvelopeMultipleBuilds(t *testing.T) {
 	builder := NewEnvelope().From("sender").To("receiver")
-	
+
 	env1, err1 := builder.Build()
 	env2, err2 := builder.Build()
-	
+
 	assert.NoError(t, err1)
 	assert.NoError(t, err2)
 	assert.NotSame(t, env1, env2)
@@ -469,7 +469,7 @@ func TestEnvelopePayloadTypes(t *testing.T) {
 			To("receiver").
 			Payload([]byte("test"), pt).
 			Build()
-		
+
 		assert.NoError(t, err)
 		assert.Equal(t, pt, env.PayloadType)
 	}
@@ -489,7 +489,7 @@ func TestEnvelopeEncodingTypes(t *testing.T) {
 			To("receiver").
 			Encoding(enc).
 			Build()
-		
+
 		assert.NoError(t, err)
 		assert.Equal(t, enc, env.Encoding)
 	}
@@ -598,7 +598,7 @@ func TestEnvelopeCloneIndependence(t *testing.T) {
 		Build()
 
 	cloned := original.Clone()
-	
+
 	// Modify original
 	original.Capabilities["key"] = "modified"
 
@@ -641,11 +641,11 @@ func TestEnvelopeCapabilityNullHandling(t *testing.T) {
 
 func TestEnvelopeCapabilitiesLargeSets(t *testing.T) {
 	builder := NewEnvelope().From("sender").To("receiver")
-	
+
 	for i := 0; i < 50; i++ {
 		builder.Capability("key_"+string(rune('A'+i%26)), i)
 	}
-	
+
 	env, _ := builder.Build()
 	assert.GreaterOrEqual(t, len(env.Capabilities), 26)
 }
@@ -657,4 +657,3 @@ func TestEnvelopeFromToValidation(t *testing.T) {
 	assert.Empty(t, env.From)
 	assert.Empty(t, env.To)
 }
-

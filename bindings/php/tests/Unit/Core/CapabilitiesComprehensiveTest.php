@@ -16,7 +16,7 @@ class CapabilitiesComprehensiveTest extends TestCase
     public function testCapabilitiesIntegerPositive(): void
     {
         $capabilities = ['max_tokens' => 100];
-        
+
         $this->assertIsInt($capabilities['max_tokens']);
         $this->assertEquals(100, $capabilities['max_tokens']);
     }
@@ -43,7 +43,7 @@ class CapabilitiesComprehensiveTest extends TestCase
     public function testCapabilitiesFloatDecimal(): void
     {
         $capabilities = ['temperature' => 0.7];
-        
+
         $this->assertIsFloat($capabilities['temperature']);
         $this->assertEqualsWithDelta(0.7, $capabilities['temperature'], 0.001);
     }
@@ -64,7 +64,7 @@ class CapabilitiesComprehensiveTest extends TestCase
     public function testCapabilitiesBooleanTrue(): void
     {
         $capabilities = ['enabled' => true];
-        
+
         $this->assertIsBool($capabilities['enabled']);
         $this->assertTrue($capabilities['enabled']);
     }
@@ -79,7 +79,7 @@ class CapabilitiesComprehensiveTest extends TestCase
     public function testCapabilitiesStringSimple(): void
     {
         $capabilities = ['model' => 'gpt-4'];
-        
+
         $this->assertIsString($capabilities['model']);
         $this->assertEquals('gpt-4', $capabilities['model']);
     }
@@ -100,7 +100,7 @@ class CapabilitiesComprehensiveTest extends TestCase
     public function testCapabilitiesArrayStrings(): void
     {
         $capabilities = ['models' => ['gpt-4', 'claude-3', 'llama-3']];
-        
+
         $this->assertIsArray($capabilities['models']);
         $this->assertCount(3, $capabilities['models']);
         $this->assertEquals('gpt-4', $capabilities['models'][0]);
@@ -109,7 +109,7 @@ class CapabilitiesComprehensiveTest extends TestCase
     public function testCapabilitiesArrayIntegers(): void
     {
         $capabilities = ['limits' => [10, 20, 30, 40]];
-        
+
         $this->assertCount(4, $capabilities['limits']);
         $this->assertEquals(30, $capabilities['limits'][2]);
     }
@@ -117,7 +117,7 @@ class CapabilitiesComprehensiveTest extends TestCase
     public function testCapabilitiesArrayMixed(): void
     {
         $capabilities = ['mixed' => [1, 'two', true, 4.5]];
-        
+
         $this->assertEquals(1, $capabilities['mixed'][0]);
         $this->assertEquals('two', $capabilities['mixed'][1]);
         $this->assertTrue($capabilities['mixed'][2]);
@@ -127,7 +127,7 @@ class CapabilitiesComprehensiveTest extends TestCase
     public function testCapabilitiesArrayEmpty(): void
     {
         $capabilities = ['empty_array' => []];
-        
+
         $this->assertIsArray($capabilities['empty_array']);
         $this->assertCount(0, $capabilities['empty_array']);
     }
@@ -135,7 +135,7 @@ class CapabilitiesComprehensiveTest extends TestCase
     public function testCapabilitiesArrayNested(): void
     {
         $capabilities = ['nested' => [[1, 2], [3, 4]]];
-        
+
         $this->assertEquals(2, $capabilities['nested'][0][1]);
         $this->assertEquals(3, $capabilities['nested'][1][0]);
     }
@@ -144,7 +144,7 @@ class CapabilitiesComprehensiveTest extends TestCase
     public function testCapabilitiesObjectSimple(): void
     {
         $capabilities = ['config' => ['timeout' => 30, 'retries' => 3]];
-        
+
         $this->assertIsArray($capabilities['config']);
         $this->assertEquals(30, $capabilities['config']['timeout']);
         $this->assertEquals(3, $capabilities['config']['retries']);
@@ -161,7 +161,7 @@ class CapabilitiesComprehensiveTest extends TestCase
                 ]
             ]
         ];
-        
+
         $this->assertEquals('oauth', $capabilities['auth']['type']);
         $this->assertEquals('abc123', $capabilities['auth']['credentials']['client_id']);
     }
@@ -169,7 +169,7 @@ class CapabilitiesComprehensiveTest extends TestCase
     public function testCapabilitiesObjectEmpty(): void
     {
         $capabilities = ['empty_obj' => []];
-        
+
         $this->assertIsArray($capabilities['empty_obj']);
         $this->assertCount(0, $capabilities['empty_obj']);
     }

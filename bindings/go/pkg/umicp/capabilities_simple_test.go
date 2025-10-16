@@ -150,4 +150,3 @@ func TestCapabilitiesBackwardCompatString(t *testing.T) {
 	assert.Equal(t, "gpt-4", caps["model"])
 	assert.Equal(t, "100", caps["count"])
 }
-

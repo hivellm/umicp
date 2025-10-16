@@ -15,7 +15,7 @@ class EnvelopeComprehensiveTest extends TestCase
     public function testEnvelopeCreationBasic(): void
     {
         $capabilities = ['from' => 'sender', 'to' => 'receiver'];
-        
+
         $this->assertEquals('sender', $capabilities['from']);
         $this->assertEquals('receiver', $capabilities['to']);
     }
@@ -155,7 +155,7 @@ class EnvelopeComprehensiveTest extends TestCase
     public function testEnvelopeEmptyCapabilities(): void
     {
         $envelope = ['capabilities' => []];
-        
+
         $this->assertIsArray($envelope['capabilities']);
         $this->assertCount(0, $envelope['capabilities']);
     }
@@ -169,7 +169,7 @@ class EnvelopeComprehensiveTest extends TestCase
     public function testEnvelopeUnicodeInFrom(): void
     {
         $envelope = ['from' => '发送者', 'to' => '接收者'];
-        
+
         $this->assertEquals('发送者', $envelope['from']);
         $this->assertEquals('接收者', $envelope['to']);
     }
@@ -177,7 +177,7 @@ class EnvelopeComprehensiveTest extends TestCase
     public function testEnvelopeSpecialCharactersInFrom(): void
     {
         $envelope = ['from' => 'sender!@#$%', 'to' => 'receiver^&*()'];
-        
+
         $this->assertEquals('sender!@#$%', $envelope['from']);
         $this->assertEquals('receiver^&*()', $envelope['to']);
     }
@@ -186,7 +186,7 @@ class EnvelopeComprehensiveTest extends TestCase
     {
         $longString = str_repeat('a', 1000);
         $envelope = ['from' => $longString];
-        
+
         $this->assertEquals(1000, strlen($envelope['from']));
     }
 
@@ -297,7 +297,7 @@ class EnvelopeComprehensiveTest extends TestCase
     {
         $envelope = ['message' => 'Hello 世界 🌍'];
         $json = json_encode($envelope, JSON_UNESCAPED_UNICODE);
-        
+
         $this->assertStringContainsString('世界', $json);
         $this->assertStringContainsString('🌍', $json);
     }
@@ -306,7 +306,7 @@ class EnvelopeComprehensiveTest extends TestCase
     {
         $envelope = ['from' => 'sender', 'to' => 'receiver'];
         $json = json_encode($envelope, JSON_PRETTY_PRINT);
-        
+
         $this->assertStringContainsString("\n", $json);
     }
 
@@ -330,7 +330,7 @@ class EnvelopeComprehensiveTest extends TestCase
     {
         $caps = ['models' => ['gpt-4']];
         $caps['models'][] = 'claude-3';
-        
+
         $this->assertCount(2, $caps['models']);
     }
 
@@ -339,7 +339,7 @@ class EnvelopeComprehensiveTest extends TestCase
         $caps1 = ['key1' => 'value1'];
         $caps2 = ['key2' => 'value2'];
         $merged = array_merge($caps1, $caps2);
-        
+
         $this->assertCount(2, $merged);
         $this->assertEquals('value1', $merged['key1']);
         $this->assertEquals('value2', $merged['key2']);
@@ -452,7 +452,7 @@ class EnvelopeComprehensiveTest extends TestCase
     {
         $envelope = ['from' => 'sender', 'capabilities' => ['test' => 123]];
         $json = json_encode($envelope);
-        
+
         $this->assertJson($json);
         $this->assertStringContainsString('sender', $json);
         $this->assertStringContainsString('123', $json);
@@ -462,7 +462,7 @@ class EnvelopeComprehensiveTest extends TestCase
     {
         $json = '{"from":"sender","to":"receiver","capabilities":{"test":123}}';
         $envelope = json_decode($json, true);
-        
+
         $this->assertEquals('sender', $envelope['from']);
         $this->assertEquals(123, $envelope['capabilities']['test']);
     }
@@ -502,7 +502,7 @@ class EnvelopeComprehensiveTest extends TestCase
     public function testEnvelopeEmojiSupport(): void
     {
         $envelope = ['from' => '😀', 'capabilities' => ['emoji' => '🚀🎉✨']];
-        
+
         $this->assertEquals('😀', $envelope['from']);
         $this->assertEquals('🚀🎉✨', $envelope['capabilities']['emoji']);
     }
@@ -528,7 +528,7 @@ class EnvelopeComprehensiveTest extends TestCase
     public function testEnvelopeArrayIndexing(): void
     {
         $caps = ['models' => ['gpt-4', 'claude-3', 'llama-3']];
-        
+
         $this->assertEquals('gpt-4', $caps['models'][0]);
         $this->assertEquals('claude-3', $caps['models'][1]);
         $this->assertEquals('llama-3', $caps['models'][2]);
@@ -537,7 +537,7 @@ class EnvelopeComprehensiveTest extends TestCase
     public function testEnvelopeObjectAccess(): void
     {
         $caps = ['config' => ['timeout' => 30, 'retries' => 3]];
-        
+
         $this->assertEquals(30, $caps['config']['timeout']);
         $this->assertEquals(3, $caps['config']['retries']);
     }
@@ -546,7 +546,7 @@ class EnvelopeComprehensiveTest extends TestCase
     {
         $caps = ['models' => ['gpt-4']];
         $caps['models'][] = 'claude-3';
-        
+
         $this->assertCount(2, $caps['models']);
     }
 
@@ -554,7 +554,7 @@ class EnvelopeComprehensiveTest extends TestCase
     {
         $caps = ['config' => ['timeout' => 30]];
         $caps['config']['retries'] = 3;
-        
+
         $this->assertCount(2, $caps['config']);
     }
 
@@ -562,7 +562,7 @@ class EnvelopeComprehensiveTest extends TestCase
     public function testEnvelopeIssetCheck(): void
     {
         $caps = ['key' => 'value'];
-        
+
         $this->assertTrue(isset($caps['key']));
         $this->assertFalse(isset($caps['nonexistent']));
     }
@@ -570,7 +570,7 @@ class EnvelopeComprehensiveTest extends TestCase
     public function testEnvelopeEmptyCheck(): void
     {
         $caps = ['empty' => '', 'zero' => 0, 'false' => false, 'null' => null];
-        
+
         $this->assertTrue(empty($caps['empty']));
         $this->assertTrue(empty($caps['zero']));
         $this->assertTrue(empty($caps['false']));
@@ -582,7 +582,7 @@ class EnvelopeComprehensiveTest extends TestCase
     {
         $caps = ['key1' => 1, 'key2' => 2, 'key3' => 3];
         $keys = array_keys($caps);
-        
+
         $this->assertCount(3, $keys);
         $this->assertContains('key1', $keys);
     }
@@ -591,7 +591,7 @@ class EnvelopeComprehensiveTest extends TestCase
     {
         $caps = ['key1' => 'value1', 'key2' => 'value2'];
         $values = array_values($caps);
-        
+
         $this->assertCount(2, $values);
         $this->assertContains('value1', $values);
     }
@@ -600,7 +600,7 @@ class EnvelopeComprehensiveTest extends TestCase
     {
         $caps = ['int' => 42, 'string' => 'text', 'bool' => true];
         $filtered = array_filter($caps, fn($v) => is_int($v));
-        
+
         $this->assertCount(1, $filtered);
         $this->assertEquals(42, $filtered['int']);
     }
@@ -609,7 +609,7 @@ class EnvelopeComprehensiveTest extends TestCase
     {
         $caps = ['a' => 1, 'b' => 2, 'c' => 3];
         $mapped = array_map(fn($v) => $v * 2, $caps);
-        
+
         $this->assertEquals(2, $mapped['a']);
         $this->assertEquals(4, $mapped['b']);
         $this->assertEquals(6, $mapped['c']);
@@ -621,7 +621,7 @@ class EnvelopeComprehensiveTest extends TestCase
         $caps1 = ['key1' => 'value1'];
         $caps2 = ['key2' => 'value2'];
         $merged = array_merge($caps1, $caps2);
-        
+
         $this->assertCount(2, $merged);
         $this->assertEquals('value1', $merged['key1']);
         $this->assertEquals('value2', $merged['key2']);
@@ -632,7 +632,7 @@ class EnvelopeComprehensiveTest extends TestCase
         $caps1 = ['key' => 'old'];
         $caps2 = ['key' => 'new'];
         $merged = array_merge($caps1, $caps2);
-        
+
         $this->assertEquals('new', $merged['key']);
     }
 
@@ -641,7 +641,7 @@ class EnvelopeComprehensiveTest extends TestCase
     {
         $caps = [];
         $value = $caps['missing'] ?? 'default';
-        
+
         $this->assertEquals('default', $value);
     }
 
@@ -649,7 +649,7 @@ class EnvelopeComprehensiveTest extends TestCase
     {
         $caps = ['key' => null];
         $value = $caps['key'] ?? 'default';
-        
+
         $this->assertEquals('default', $value);
     }
 
@@ -657,7 +657,7 @@ class EnvelopeComprehensiveTest extends TestCase
     public function testEnvelopeLargeArrayPerformance(): void
     {
         $caps = ['vector' => array_fill(0, 10000, 0.5)];
-        
+
         $this->assertCount(10000, $caps['vector']);
         $this->assertEquals(0.5, $caps['vector'][5000]);
     }
