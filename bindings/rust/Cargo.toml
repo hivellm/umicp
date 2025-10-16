@@ -59,4 +59,5 @@ serial_test = "3.2"
 default = []
 websocket = ["tokio", "futures", "async-trait", "tokio-tungstenite", "tungstenite", "tracing"]
 http2 = ["tokio", "futures", "async-trait", "axum", "hyper", "hyper-util", "tower", "reqwest", "tracing"]
-full = ["websocket", "http2"]
+tool-discovery = []
+full = ["websocket", "http2", "tool-discovery"]
