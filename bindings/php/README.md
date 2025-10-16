@@ -11,7 +11,7 @@
 
 ## 🎯 Status
 
-**Version**: 0.1.3 | **Grade**: A+ (Excellent) | **Coverage**: 95%
+**Version**: 0.2.0 | **Grade**: A+ (Excellent) | **Coverage**: 95%
 
 ```
 ✅ Production Ready  ████████████████████ 100% ✅
@@ -19,7 +19,7 @@
 ✅ Packagist Ready   ████████████████████ 100% ✅
 ```
 
-**Latest**: [v1.0.0 Release](docs/CHANGELOG.md) | [API Docs](docs/API_SPECIFICATION.md)
+**Latest**: [v0.2.0 Release](docs/CHANGELOG.md) | [API Docs](docs/API_SPECIFICATION.md)
 
 ---
 
@@ -32,7 +32,7 @@ composer require hivellm/umicp
 # Or add to composer.json
 {
     "require": {
-        "hivellm/umicp": "^0.1"
+        "hivellm/umicp": "^0.2"
     }
 }
 ```
