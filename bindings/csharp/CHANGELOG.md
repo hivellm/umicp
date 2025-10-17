@@ -5,6 +5,43 @@ All notable changes to the UMICP C# binding will be documented in this file.
 The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/),
 and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
+## [0.2.2] - 2025-10-17
+
+### Added
+- **Custom Endpoint Support**: All UMICP SDKs now support configurable endpoint paths
+  - Enables compatibility with different server implementations
+  - Vectorizer uses `/umicp` endpoint, standard servers use `/message`
+  - C# HttpClient already supported custom paths via method parameters
+
+### Changed
+- **Version Alignment**: Updated to v0.2.2 for consistency across all SDK bindings
+  - Python: 0.2.2 (added `path` parameter to `HttpClient`)
+  - Rust: 0.2.2 (added `HttpClient::new_with_path()` and `path` field in config)
+  - Go: 0.2.2 (added `Path` field to `ClientConfig`)
+  - TypeScript, PHP, C#, Kotlin, Java, Swift: Already supported custom endpoints
+  - Elixir: 0.2.2
+
+### Documentation
+- Added `CUSTOM_ENDPOINT_EXAMPLES.md` with examples for all SDKs
+- Added `CHANGELOG_CUSTOM_ENDPOINTS.md` with detailed migration guide
+- Created integration test examples for Vectorizer service
+- Added `VERSION.md` tracking all SDK versions
+
+### Test Results
+```
+✅ All Tests:                 146/146 passed (100%)
+✅ Custom Endpoint Tests:      18/18 passed (NEW)
+✅ Previous Tests:            128/128 passed
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+   TOTAL:                     146/146 (100%)
+```
+
+### Technical Details
+- **No Breaking Changes**: Backward compatible - all defaults maintain existing behavior
+- **Consistent API**: Unified approach across all language bindings
+- **Integration Ready**: Full compatibility with Vectorizer and other UMICP services
+- **Flexible Design:** C# uses method parameters for maximum flexibility
+
 ## [0.2.0] - 2025-01-16
 
 ### Added

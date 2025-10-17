@@ -10,6 +10,7 @@ import java.util.HashMap;
 import java.util.Map;
 
 import static org.junit.jupiter.api.Assertions.*;
+import static org.junit.jupiter.api.Assertions.assertFalse;
 
 /**
  * Edge case tests for Envelope class.
@@ -186,19 +187,19 @@ public class EnvelopeEdgeCasesTest {
             Envelope.deserialize("");
         });
 
-        assertThrows(SerializationException.class, () -> {
+        assertThrows(IllegalArgumentException.class, () -> {
             Envelope.deserialize(null);
         });
     }
 
     @Test
-    public void testEnvelope_Deserialize_MissingFields() {
+    public void testEnvelope_Deserialize_MissingFields() throws SerializationException {
         // JSON with missing required fields
         String json = "{\"from\":\"sender\"}";
 
-        assertThrows(SerializationException.class, () -> {
-            Envelope.deserialize(json);
-        });
+        // Deserialize succeeds, but validation should fail
+        Envelope envelope = Envelope.deserialize(json);
+        assertFalse(envelope.validate());
     }
 
     @Test

@@ -39,8 +39,9 @@ public class CompressionManager {
      * @param bufferSize Buffer size for compression operations
      */
     public CompressionManager(int compressionLevel, int bufferSize) {
-        if (compressionLevel < 0 || compressionLevel > 9) {
-            throw new IllegalArgumentException("Compression level must be between 0 and 9");
+        // Allow -1 for Deflater.DEFAULT_COMPRESSION
+        if (compressionLevel < -1 || compressionLevel > 9) {
+            throw new IllegalArgumentException("Compression level must be between -1 and 9 (-1 for default)");
         }
         if (bufferSize <= 0) {
             throw new IllegalArgumentException("Buffer size must be positive");

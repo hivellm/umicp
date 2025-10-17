@@ -7,7 +7,7 @@
 
     <!-- Package Metadata -->
     <PackageId>HiveLLM.Umicp</PackageId>
-    <Version>0.2.0</Version>
+    <Version>0.2.2</Version>
     <Authors>HiveLLM Team</Authors>
     <Company>HiveLLM</Company>
     <Product>UMICP C# SDK</Product>
@@ -20,7 +20,7 @@
     <PackageTags>umicp;ai;communication;protocol;websocket;matrix;simd;compression;p2p;hivellm;machine-learning;interoperability</PackageTags>
     <PackageReadmeFile>README.md</PackageReadmeFile>
     <PackageIcon>icon.png</PackageIcon>
-    <PackageReleaseNotes>v0.2.0: Tool Discovery + Native Types. Features: MCP-compatible tool discovery (IDiscoverableService interface), native JSON types in capabilities (Dictionary&lt;string, object&gt;), JSON Schema support, operation introspection. BREAKING: No breaking changes (C# already had object type support). 114 tests passing.</PackageReleaseNotes>
+    <PackageReleaseNotes>v0.2.2: Custom Endpoint Support. Features: Configurable endpoint paths for compatibility with different servers (e.g., Vectorizer uses /umicp). All SDKs updated to 0.2.2. No breaking changes - backward compatible with defaults.</PackageReleaseNotes>
 
     <!-- Documentation -->
     <GenerateDocumentationFile>true</GenerateDocumentationFile>

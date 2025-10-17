@@ -2,7 +2,7 @@
 
 [![License](https://img.shields.io/badge/license-MIT-blue.svg)](LICENSE)
 [![.NET](https://img.shields.io/badge/.NET-8.0-purple.svg)](https://dotnet.microsoft.com/)
-[![Version](https://img.shields.io/badge/version-0.2.0-blue.svg)](CHANGELOG.md)
+[![Version](https://img.shields.io/badge/version-0.2.2-blue.svg)](CHANGELOG.md)
 [![BIP-05](https://img.shields.io/badge/BIP--05-Implementation-green.svg)](https://github.com/hivellm/hive-gov/tree/main/bips/BIP-05)
 
 > **Production-Ready** C# bindings for the Universal Matrix Intelligent Communication Protocol (UMICP) with MCP-compatible tool discovery
@@ -37,7 +37,22 @@ dotnet test
 
 ## 🚀 Quick Start
 
-### 🆕 Tool Discovery (v0.2.0)
+### 🆕 Custom Endpoint Support (v0.2.2)
+
+```csharp
+using Umicp.Core.Transport;
+
+// C# HttpClient supports custom endpoints via method parameters
+var client = new HttpClient("http://localhost:8000");
+
+// Send to Vectorizer endpoint
+var response = await client.PostAsync<Envelope>("/umicp", envelope);
+
+// Send to standard UMICP endpoint
+var response2 = await client.PostAsync<Envelope>("/message", envelope);
+```
+
+### 🔧 Tool Discovery (v0.2.0)
 
 ```csharp
 using Umicp.Core.ToolDiscovery;
@@ -402,6 +417,18 @@ MIT License - See [LICENSE](LICENSE) file for details.
 ---
 
 **BIP**: BIP-05 - Universal Matrix Intelligent Communication Protocol
-**Status**: 🚧 Beta Release (C# v0.1.2)
+**Status**: ✅ Production Ready (C# v0.2.2)
 **Repository**: HiveLLM UMICP C# Implementation
+
+## 📝 Version 0.2.2 Release Notes
+
+This release focuses on SDK consistency and custom endpoint support:
+
+- ✅ **All SDKs aligned to version 0.2.2** for easier cross-language compatibility
+- ✅ **Custom endpoint support** - compatible with Vectorizer (`/umicp`) and standard servers (`/message`)
+- ✅ **No breaking changes** - fully backward compatible
+- ✅ **Comprehensive documentation** with examples for all languages
+- ✅ **Integration tests** for Vectorizer service
+
+See [CHANGELOG.md](CHANGELOG.md) for detailed changes.
 

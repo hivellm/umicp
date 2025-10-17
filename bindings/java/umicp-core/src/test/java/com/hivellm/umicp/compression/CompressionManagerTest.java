@@ -78,13 +78,17 @@ class CompressionManagerTest {
 
     @Test
     void testLargeData() throws UMICPException {
-        // Generate 1MB of random data
+        // Generate 1MB of repetitive data (compressible)
         byte[] data = new byte[1024 * 1024];
-        new Random(42).nextBytes(data);
+        for (int i = 0; i < data.length; i++) {
+            data[i] = (byte)(i % 256);
+        }
 
         byte[] compressed = manager.compress(data, CompressionType.GZIP);
         assertNotNull(compressed);
-        assertTrue(compressed.length < data.length); // Should compress
+        assertTrue(compressed.length < data.length, 
+            String.format("Compressed size (%d) should be less than original (%d)", 
+                compressed.length, data.length));
 
         byte[] decompressed = manager.decompress(compressed, CompressionType.GZIP);
         assertArrayEquals(data, decompressed);
@@ -153,7 +157,7 @@ class CompressionManagerTest {
 
     @Test
     void testInvalidCompressionLevel() {
-        assertThrows(IllegalArgumentException.class, () -> new CompressionManager(-1, 8192));
+        assertThrows(IllegalArgumentException.class, () -> new CompressionManager(-2, 8192));
         assertThrows(IllegalArgumentException.class, () -> new CompressionManager(10, 8192));
     }
 

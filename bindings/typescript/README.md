@@ -21,7 +21,7 @@ TypeScript bindings for the Universal Matrix Inter-Communication Protocol (UMICP
 ```bash
 npm install @hivellm/umicp
 # or
-npm install @hivellm/umicp@0.2.0
+npm install @hivellm/umicp@0.2.2
 ```
 
 ### Prerequisites
@@ -218,27 +218,30 @@ console.log('Matrix multiplication:', matrixResult);
 
 ## 🧪 Testing
 
-### Run All Tests
+### Run Core Tests (v0.2.2)
 ```bash
-npm test
+npm test  # Runs 64 core tests (100% pass)
 ```
 
-### Run Specific Test Suites
+**Core Test Suite (no native addon required):**
+- ✅ Envelope tests (22 tests) - Message creation, serialization, validation
+- ✅ HTTP Transport tests (19 tests) - Streamable HTTP, peer connections
+- ✅ Custom Endpoint tests (23 tests) - Vectorizer compatibility
+
+### Run All Tests (requires native addon)
 ```bash
-# End-to-end integration tests
-npm test -- --testPathPattern="e2e.test.ts"
-
-# Performance tests
-npm test -- --testPathPattern="load.test.ts"
-
-# Security tests
-npm test -- --testPathPattern="security.test.ts"
+npm run test:all  # Includes matrix and load tests
 ```
 
-### Test Performance
-- **E2E Tests**: ~5.1 seconds (10 tests, 100% pass rate)
-- **Load Tests**: High-throughput and stress testing
-- **Security Tests**: Input validation and injection protection
+**Additional Tests (require C++ native addon):**
+- Matrix operations (SIMD-optimized)
+- Load/stress tests
+- Security tests
+
+### Test Results (v0.2.2)
+- **Core Suite**: 64/64 tests passing (100%)
+- **Test Duration**: ~3.7 seconds
+- **Coverage**: Envelope, HTTP Transport, Custom Endpoints
 
 ## 📚 API Reference
 
@@ -434,10 +437,12 @@ npm run build
 
 ### Development Scripts
 ```bash
-npm run dev          # Development mode with watch
-npm run build        # Production build
-npm run test         # Run all tests
-npm run test:watch   # Watch mode testing
-npm run lint         # Code linting
+npm run dev           # Development mode with watch
+npm run build         # Production build (TypeScript only)
+npm run build:native  # Build C++ native addon (optional)
+npm run test          # Run core tests (64 tests)
+npm run test:all      # Run all tests (requires native addon)
+npm run test:watch    # Watch mode testing
+npm run lint          # Code linting
 npm run docs         # Generate documentation
 ```

@@ -9,7 +9,7 @@ import os
 
 class UmicpConan(ConanFile):
     name = "umicp"
-    version = "0.1.1"
+    version = "0.2.2"
     license = "MIT"
     author = "HiveLLM Team"
     url = "https://github.com/hivellm/umicp"

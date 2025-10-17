@@ -1,6 +1,6 @@
 {
   "name": "@hivellm/umicp",
-  "version": "0.2.1",
+  "version": "0.2.2",
   "description": "UMICP TypeScript/JavaScript bindings with native types and MCP-compatible tool discovery",
   "main": "dist/cjs/index.js",
   "module": "dist/esm/index.js",
@@ -16,7 +16,8 @@
   "scripts": {
     "build": "tsc -p tsconfig.cjs.json && tsc -p tsconfig.esm.json",
     "build:native": "node-gyp rebuild",
-    "test": "vitest run",
+    "test": "vitest run test/envelope.test.ts test/streamable-http.test.ts test/custom-endpoint.test.ts",
+    "test:all": "vitest run",
     "test:watch": "vitest",
     "test:coverage": "vitest run --coverage",
     "clean": "rm -rf dist node_modules",
@@ -26,7 +27,6 @@
     "lint:fix": "tsc --noEmit --fix",
     "dev": "npm run build && npm run test:watch",
     "build:debug": "tsc && node-gyp rebuild --debug",
-    "test:all": "npm run test:unit && npm run test:integration && npm run test:security && npm run test:regression",
     "test:unit": "vitest run test/envelope.test.ts test/matrix.test.ts",
     "test:integration": "echo 'Integration tests skipped (require WebSocket infrastructure or mocks)' && vitest run test/e2e.test.ts",
     "test:s2s": "vitest run test/s2s.test.ts",

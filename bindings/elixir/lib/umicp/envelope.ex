@@ -7,6 +7,7 @@ defmodule UMICP.Envelope do
   """
 
   @enforce_keys [:from, :to, :operation, :message_id]
+  @derive {Jason.Encoder, except: [:hash]}
   defstruct [
     :from,
     :to,

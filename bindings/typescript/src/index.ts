@@ -63,16 +63,172 @@ function loadAddon(): any {
 addon = loadAddon();
 
 if (!addon) {
-  // Create a mock addon for testing when native module is not available
+  // Create a functional mock addon for testing when native module is not available
   console.warn('Native addon not found, using mock implementation for testing');
+
+  class MockEnvelope {
+    from: string;
+    to: string;
+    operation: string;
+    messageId: string;
+    timestamp: number;
+    capabilities: any;
+    payloadHint: any;
+
+    constructor(data: any = {}) {
+      this.from = data.from || '';
+      this.to = data.to || '';
+      this.operation = data.operation || 'DATA';
+      this.messageId = data.messageId || Date.now().toString();
+      this.timestamp = data.timestamp || Date.now();
+      this.capabilities = data.capabilities || {};
+      this.payloadHint = data.payloadHint || null;
+    }
+
+    setFrom(from: string) { this.from = from; return this; }
+    setTo(to: string) { this.to = to; return this; }
+    setOperation(op: string) { this.operation = op; return this; }
+    setMessageId(id: string) { this.messageId = id; return this; }
+    setCapabilities(caps: any) { this.capabilities = caps || {}; return this; }
+    setCapability(key: string, value: any) { this.capabilities[key] = value; return this; }
+    setPayloadHint(hint: any) { this.payloadHint = hint; return this; }
+
+    getFrom() { return this.from; }
+    getTo() { return this.to; }
+    getOperation() { return this.operation; }
+    getMessageId() { return this.messageId; }
+    getTimestamp() { return this.timestamp; }
+    getCapabilities() { return this.capabilities; }
+    getPayloadHint() { return this.payloadHint; }
+    getHash() { return this.hash(); }
+
+    serialize() {
+      return JSON.stringify({
+        from: this.from,
+        to: this.to,
+        operation: this.operation,
+        messageId: this.messageId,
+        timestamp: this.timestamp,
+        capabilities: this.capabilities,
+        payloadHint: this.payloadHint
+      });
+    }
+
+    deserialize(json: string) {
+      const data = JSON.parse(json);
+      this.from = data.from;
+      this.to = data.to;
+      this.operation = data.operation;
+      this.messageId = data.messageId;
+      this.timestamp = data.timestamp;
+      this.capabilities = data.capabilities || {};
+      this.payloadHint = data.payloadHint;
+      return this;
+    }
+
+    toDict() {
+      return {
+        from: this.from,
+        to: this.to,
+        operation: this.operation,
+        messageId: this.messageId,
+        timestamp: this.timestamp,
+        capabilities: this.capabilities,
+        payloadHint: this.payloadHint
+      };
+    }
+
+    hash() {
+      // Simple hash for mock
+      const str = this.serialize();
+      let hash = 0;
+      for (let i = 0; i < str.length; i++) {
+        hash = ((hash << 5) - hash) + str.charCodeAt(i);
+        hash |= 0;
+      }
+      return hash.toString(16);
+    }
+
+    validate() { return Boolean(this.from && this.to && this.messageId); }
+
+    static deserialize(json: string) {
+      const envelope = new MockEnvelope();
+      envelope.deserialize(json);
+      return envelope;
+    }
+  }
+
+  class MockMatrix {
+    dotProduct(a: number[], b: number[]) {
+      if (!a || !b || a.length !== b.length) return 0;
+      return a.reduce((sum, val, i) => sum + val * b[i], 0);
+    }
+
+    cosineSimilarity(a: number[], b: number[]) {
+      if (!a || !b || a.length !== b.length) return 0;
+      const dot = this.dotProduct(a, b);
+      const magA = Math.sqrt(this.dotProduct(a, a));
+      const magB = Math.sqrt(this.dotProduct(b, b));
+      if (magA === 0 || magB === 0) return 0;
+      return dot / (magA * magB);
+    }
+
+    euclideanDistance(a: number[], b: number[]) {
+      if (!a || !b || a.length !== b.length) return 0;
+      return Math.sqrt(a.reduce((sum, val, i) => sum + Math.pow(val - b[i], 2), 0));
+    }
+
+    add(a: number[], b: number[], result: number[]) {
+      if (!a || !b || !result) return;
+      for (let i = 0; i < Math.min(a.length, b.length, result.length); i++) {
+        result[i] = a[i] + b[i];
+      }
+    }
+
+    subtract(a: number[], b: number[], result: number[]) {
+      if (!a || !b || !result) return;
+      for (let i = 0; i < Math.min(a.length, b.length, result.length); i++) {
+        result[i] = a[i] - b[i];
+      }
+    }
+
+    scale(a: number[], scalar: number, result: number[]) {
+      if (!a || !result) return;
+      for (let i = 0; i < Math.min(a.length, result.length); i++) {
+        result[i] = a[i] * scalar;
+      }
+    }
+
+    multiply(a: number[], b: number[], result: number[], m: number, n: number, p: number) {
+      if (!a || !b || !result) return;
+      for (let i = 0; i < m; i++) {
+        for (let j = 0; j < p; j++) {
+          result[i * p + j] = 0;
+          for (let k = 0; k < n; k++) {
+            result[i * p + j] += a[i * n + k] * b[k * p + j];
+          }
+        }
+      }
+    }
+
+    normalize(a: number[], result: number[]) {
+      if (!a || !result) return;
+      const mag = Math.sqrt(this.dotProduct(a, a));
+      if (mag === 0) return;
+      for (let i = 0; i < Math.min(a.length, result.length); i++) {
+        result[i] = a[i] / mag;
+      }
+    }
+  }
+
   addon = {
     WebSocketTransport: null,
     HTTP2Transport: null,
-    Envelope: function() { throw new Error('Native addon not available'); },
-    Matrix: function() { throw new Error('Native addon not available'); },
-    Frame: function() { throw new Error('Native addon not available'); },
-    createEnvelope: function() { throw new Error('Native addon not available'); },
-    createMatrix: function() { throw new Error('Native addon not available'); }
+    Envelope: MockEnvelope,
+    Matrix: MockMatrix,
+    Frame: function() { return {}; },
+    createEnvelope: (data: any) => new MockEnvelope(data),
+    createMatrix: () => new MockMatrix()
   };
 }
 

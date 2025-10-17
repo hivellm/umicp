@@ -325,3 +325,13 @@ add_custom_target(test_new_networking
     DEPENDS service_discovery_tests connection_pool_tests
     COMMENT "Running Service Discovery and Connection Pool tests"
 )
+
+# Custom Endpoint Tests (v0.2.2)
+add_executable(custom_endpoint_tests test_custom_endpoint.cpp test_main.cpp)
+target_link_libraries(custom_endpoint_tests umicp_static ${GTEST_LIBRARIES} ${GTEST_MAIN_LIBRARIES} ${CURL_LIBRARIES} pthread)
+
+add_custom_target(test_custom_endpoints
+    COMMAND custom_endpoint_tests
+    DEPENDS custom_endpoint_tests
+    COMMENT "Running Custom Endpoint tests (v0.2.2)"
+)

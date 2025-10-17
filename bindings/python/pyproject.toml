@@ -4,7 +4,7 @@ build-backend = "setuptools.build_meta"
 
 [project]
 name = "umicp-python"
-version = "0.2.0"
+version = "0.2.2"
 description = "Python bindings for the Universal Matrix Inter-Communication Protocol (UMICP) with native type support and tool discovery"
 readme = "README.md"
 requires-python = ">=3.9"

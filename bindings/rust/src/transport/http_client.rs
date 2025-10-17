@@ -26,6 +26,8 @@ use std::time::Duration;
 pub struct HttpClientConfig {
     /// Base URL (e.g., http://localhost:3000)
     pub base_url: String,
+    /// Endpoint path (default: "/message", vectorizer uses "/umicp")
+    pub path: String,
     /// Request timeout
     pub timeout: Duration,
     /// Max retries
@@ -36,6 +38,7 @@ impl Default for HttpClientConfig {
     fn default() -> Self {
         Self {
             base_url: String::new(),
+            path: "/message".to_string(),
             timeout: Duration::from_secs(30),
             max_retries: 3,
         }
@@ -80,6 +83,27 @@ impl HttpClient {
         })
     }
 
+    /// Create new HTTP client with custom path
+    pub fn new_with_path(base_url: impl Into<String>, path: impl Into<String>) -> Result<Self> {
+        let client = Client::builder()
+            .http2_prior_knowledge()  // Force HTTP/2
+            .timeout(Duration::from_secs(30))
+            .pool_idle_timeout(Duration::from_secs(90))
+            .pool_max_idle_per_host(10)
+            .build()
+            .map_err(|e| UmicpError::transport(format!("Failed to create client: {}", e)))?;
+
+        Ok(Self {
+            config: HttpClientConfig {
+                base_url: base_url.into(),
+                path: path.into(),
+                ..Default::default()
+            },
+            client,
+            stats: Arc::new(RwLock::new(HttpClientStats::default())),
+        })
+    }
+
     /// Create with custom configuration
     pub fn with_config(config: HttpClientConfig) -> Result<Self> {
         let client = Client::builder()
@@ -99,7 +123,7 @@ impl HttpClient {
 
     /// Send envelope
     pub async fn send(&self, envelope: Envelope) -> Result<serde_json::Value> {
-        let url = format!("{}/message", self.config.base_url);
+        let url = format!("{}{}", self.config.base_url, self.config.path);
 
         self.stats.write().requests_sent += 1;
 

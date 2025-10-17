@@ -15,12 +15,15 @@ class CompressionTest {
 
     @Test
     void testCompressDecompressGzip() throws UMICPException {
-        String original = "Hello, UMICP! This is a test message for compression.";
+        // Use longer, repetitive text to ensure compression
+        String original = "Hello, UMICP! This is a test message for compression. ".repeat(50);
         byte[] data = original.getBytes(StandardCharsets.UTF_8);
 
         byte[] compressed = Compression.compress(data, CompressionType.GZIP);
         assertNotNull(compressed);
-        assertTrue(compressed.length < data.length); // Should be smaller
+        assertTrue(compressed.length < data.length,
+            String.format("GZIP: compressed (%d) should be < original (%d)", 
+                compressed.length, data.length));
 
         byte[] decompressed = Compression.decompress(compressed, CompressionType.GZIP);
         assertArrayEquals(data, decompressed);
@@ -31,12 +34,15 @@ class CompressionTest {
 
     @Test
     void testCompressDecompressDeflate() throws UMICPException {
-        String original = "Hello, UMICP! This is a test message for deflate compression.";
+        // Use longer, repetitive text to ensure compression
+        String original = "Hello, UMICP! This is a test message for deflate compression. ".repeat(50);
         byte[] data = original.getBytes(StandardCharsets.UTF_8);
 
         byte[] compressed = Compression.compress(data, CompressionType.DEFLATE);
         assertNotNull(compressed);
-        assertTrue(compressed.length < data.length);
+        assertTrue(compressed.length < data.length,
+            String.format("DEFLATE: compressed (%d) should be < original (%d)", 
+                compressed.length, data.length));
 
         byte[] decompressed = Compression.decompress(compressed, CompressionType.DEFLATE);
         assertArrayEquals(data, decompressed);
@@ -197,18 +203,22 @@ class CompressionTest {
 
     @Test
     void testGzipVsDeflate() throws UMICPException {
-        String text = "This is a test message that will be compressed using different algorithms.";
+        // Use longer text for reliable compression comparison
+        String text = "This is a test message that will be compressed using different algorithms. ".repeat(20);
         byte[] data = text.getBytes(StandardCharsets.UTF_8);
 
         byte[] gzipCompressed = Compression.compress(data, CompressionType.GZIP);
         byte[] deflateCompressed = Compression.compress(data, CompressionType.DEFLATE);
 
         // Both should compress
-        assertTrue(gzipCompressed.length < data.length);
-        assertTrue(deflateCompressed.length < data.length);
+        assertTrue(gzipCompressed.length < data.length,
+            String.format("GZIP (%d) should be < original (%d)", gzipCompressed.length, data.length));
+        assertTrue(deflateCompressed.length < data.length,
+            String.format("DEFLATE (%d) should be < original (%d)", deflateCompressed.length, data.length));
 
-        // Deflate should be slightly smaller (no headers)
-        assertTrue(deflateCompressed.length < gzipCompressed.length);
+        // Deflate should be slightly smaller (no GZIP headers)
+        assertTrue(deflateCompressed.length < gzipCompressed.length,
+            String.format("DEFLATE (%d) should be < GZIP (%d)", deflateCompressed.length, gzipCompressed.length));
 
         // Both should decompress correctly
         byte[] gzipDecompressed = Compression.decompress(gzipCompressed, CompressionType.GZIP);

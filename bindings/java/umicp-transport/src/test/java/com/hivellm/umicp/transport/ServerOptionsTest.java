@@ -15,7 +15,7 @@ class ServerOptionsTest {
 
         assertEquals("/umicp", options.getPath());
         assertEquals(1000, options.getMaxClients());
-        assertFalse(options.isCompression());
+        assertTrue(options.isCompression()); // Compression is enabled by default
     }
 
     @Test
@@ -24,7 +24,7 @@ class ServerOptionsTest {
 
         assertEquals("/umicp", options.getPath());
         assertEquals(1000, options.getMaxClients());
-        assertFalse(options.isCompression());
+        assertTrue(options.isCompression()); // Compression is enabled by default
     }
 
     @Test
@@ -172,22 +172,19 @@ class ServerOptionsTest {
     }
 
     @Test
-    void testMaxClients_canBeZero() {
-        ServerOptions options = ServerOptions.builder()
-            .maxClients(0)
-            .build();
-
-        assertEquals(0, options.getMaxClients());
+    void testMaxClients_cannotBeZero() {
+        // Test that zero is rejected (must be positive)
+        assertThrows(IllegalArgumentException.class, () -> {
+            ServerOptions.builder().maxClients(0).build();
+        });
     }
 
     @Test
-    void testMaxClients_canBeNegative() {
-        // Test that negative values are accepted (unlimited)
-        ServerOptions options = ServerOptions.builder()
-            .maxClients(-1)
-            .build();
-
-        assertEquals(-1, options.getMaxClients());
+    void testMaxClients_cannotBeNegative() {
+        // Test that negative values are rejected
+        assertThrows(IllegalArgumentException.class, () -> {
+            ServerOptions.builder().maxClients(-1).build();
+        });
     }
 }
 

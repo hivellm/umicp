@@ -2,7 +2,7 @@
              [{applications,[kernel,stdlib,elixir,logger,crypto,jason,mint,
                              mint_web_socket,finch,excoveralls]},
               {description,"UMICP Elixir bindings for high-performance communication and matrix operations\nwith native type support and MCP-compatible tool discovery.\n"},
-              {modules,['Elixir.UMICP',
+              {modules,['Elixir.Jason.Encoder.UMICP.Envelope','Elixir.UMICP',
                         'Elixir.UMICP.Discovery.DiscoverableService',
                         'Elixir.UMICP.Discovery.OperationSchema',
                         'Elixir.UMICP.Discovery.ServerInfo',
@@ -12,4 +12,4 @@
                         'Elixir.UMICP.Transport.HTTP2',
                         'Elixir.UMICP.Transport.WebSocket']},
               {registered,[]},
-              {vsn,"0.2.0"}]}.
+              {vsn,"0.2.2"}]}.

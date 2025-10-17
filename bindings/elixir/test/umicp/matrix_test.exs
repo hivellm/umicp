@@ -61,7 +61,8 @@ defmodule UMICP.Matrix.OperationsTest do
     end
 
     test "returns error for invalid dimensions" do
-      assert {:error, :invalid_dimensions} = Operations.matrix_multiply([1.0, 2.0], [3.0], 2, 1, 1)
+      # (2x2) * (1x1) should fail - column count of A must match row count of B
+      assert {:error, :invalid_dimensions} = Operations.matrix_multiply([1.0, 2.0, 3.0, 4.0], [5.0], 2, 2, 1)
     end
   end
 

@@ -1,5 +1,7 @@
 package com.hivellm.umicp.core;
 
+import com.fasterxml.jackson.annotation.JsonCreator;
+import com.fasterxml.jackson.annotation.JsonProperty;
 import com.hivellm.umicp.types.EncodingType;
 import com.hivellm.umicp.types.PayloadType;
 import org.jetbrains.annotations.NotNull;
@@ -43,7 +45,12 @@ public class PayloadHint {
     /**
      * Private constructor. Use {@link Builder} to create instances.
      */
-    private PayloadHint(PayloadType type, Integer size, EncodingType encoding, Integer count) {
+    @JsonCreator
+    private PayloadHint(
+            @JsonProperty("type") PayloadType type,
+            @JsonProperty("size") Integer size,
+            @JsonProperty("encoding") EncodingType encoding,
+            @JsonProperty("count") Integer count) {
         this.type = type;
         this.size = size;
         this.encoding = encoding;

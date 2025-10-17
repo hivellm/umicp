@@ -1,27 +1,31 @@
 # UMICP Language Bindings - Complete Overview
 
-**Last Updated**: 2025-10-10  
-**Project Status**: ✅ **100% Complete - ALL 8 Bindings Production Ready**  
-**Current Version**: v0.1.2  
-**Latest**: ⭐ v0.1.2 - Kotlin SDK Complete with Coroutines & DSL
+**Last Updated**: 2025-10-17  
+**Project Status**: ✅ **Production Ready - 7 SDKs Tested at 100%**  
+**Current Version**: v0.2.2  
+**Latest**: ⭐ v0.2.2 - Custom Endpoint Support for All SDKs
 
 ---
 
-## 📊 Quick Status Overview
+## 📊 Quick Status Overview (v0.2.2)
 
-| Language | Version | Status | Tests | Coverage | Production Ready |
-|----------|---------|--------|-------|----------|------------------|
-| **C++** | v0.1.2 | ✅ Complete | **241/241 (100%)** | 98% | ✅ YES |
-| **TypeScript** | v0.1.2 | ✅ Complete | 163/163 (100%) | 95% | ✅ YES |
-| **Go** | v0.1.2 | ✅ Complete | 68+/68+ (100%) | 90% | ✅ YES |
-| **Java** | v0.1.2 | ✅ Complete | 380+/380+ (100%) | 97% | ✅ YES |
-| **Kotlin** | v0.1.2 | ✅ Complete | **140+/140+ (100%)** | 96% | ✅ YES 🏆 |
-| **Rust** | v0.1.2 | ✅ Complete | 123/123 (100%) | 100% | ✅ YES |
-| **PHP** | v0.1.2 | ✅ Complete | 145+/145+ (100%) | 95% | ✅ YES |
-| **Python** | v0.1.3 | ✅ Complete | **133/133 (100%)** | 97% | ✅ YES |
+| SDK | Version | Tests | Custom Endpoint | Status |
+|-----|---------|-------|----------------|--------|
+| **C++** | 0.2.2 | 138/138 (100%) | 9 tests ✅ | ✅ Tested |
+| **Rust** | 0.2.2 | 102/102 (100%) | 10 tests ✅ | ✅ Tested |
+| **Python** | 0.2.2 | 162/162 (100%) | 15 tests ✅ | ✅ Tested |
+| **C#** | 0.2.2 | 146/146 (100%) | 18 tests ✅ | ✅ Tested |
+| **Go** | latest | All Passing | 10 tests ✅ | ✅ Tested |
+| **PHP** | latest | 17/17 HTTP | 13 tests ✅ | ✅ Tested |
+| **TypeScript** | 0.2.2 | 64/64 | 23 custom tests ✅ | ✅ Tested |
+| **Java** | 0.2.2 | 290/290 Core (100%) | - | ✅ Tested (Core) |
+| **Kotlin** | 0.2.2 | 90/107 (84%) | - | ⚠️ Partial |
+| **Elixir** | 0.2.2 | 54/54 (100%) | - | ✅ Tested |
+| **Swift** | latest | - | - | ⚠️ No compiler |
 
-**Total**: 8 bindings, **1,438+** tests, **~94.6%** average coverage  
-**Latest Update**: ✅ Python v0.1.3 Published to PyPI (2025-10-11) - Compression support 🎉
+**Tested:** 9.5/11 SDKs (86%), **1063 core tests**, **98.4% success**  
+**Custom Endpoint Tests:** 98/98 (100%)  
+**Latest Update:** ✅ v0.2.2 - Custom endpoint support + 9 SDKs tested
 
 ---
 
@@ -29,7 +33,18 @@
 
 ### TypeScript / Node.js
 ```bash
-npm install @hivellm/umicp@0.1.2
+npm install @hivellm/umicp@0.2.2
+```
+
+### Python
+```bash
+pip install umicp-python==0.2.2
+```
+
+### Rust
+```toml
+[dependencies]
+umicp-core = "0.2.2"
 ```
 
 ### Java
@@ -37,22 +52,23 @@ npm install @hivellm/umicp@0.1.2
 <dependency>
     <groupId>com.hivellm</groupId>
     <artifactId>umicp-core</artifactId>
-    <version>0.1.2</version>
+    <version>0.2.2</version>
 </dependency>
 ```
 
 ### Kotlin
 ```kotlin
 dependencies {
-    implementation("com.hivellm:umicp-kotlin:0.1.2")
+    implementation("com.hivellm.org:umicp:0.2.2")
 }
 ```
 
-### Rust
-```toml
-[dependencies]
-umicp-core = "0.1.2"
+### C#
+```bash
+dotnet add package HiveLLM.Umicp --version 0.2.2
 ```
+
+See `VERSION.md` for all installation methods.
 
 ### Go
 ```bash

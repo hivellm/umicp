@@ -417,9 +417,9 @@ describe('StreamableHTTP Transport', () => {
     let peer3: StreamableHTTPPeer;
 
     afterEach(async () => {
-      if (peer1) await peer1.shutdown();
-      if (peer2) await peer2.shutdown();
-      if (peer3) await peer3.shutdown();
+      if (peer1) await peer1.close();
+      if (peer2) await peer2.close();
+      if (peer3) await peer3.close();
       await new Promise(resolve => setTimeout(resolve, 200));
     });
 

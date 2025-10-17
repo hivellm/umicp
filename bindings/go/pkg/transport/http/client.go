@@ -18,6 +18,7 @@ import (
 // ClientConfig contains HTTP/2 client configuration
 type ClientConfig struct {
 	BaseURL         string
+	Path            string // Endpoint path (default: "/umicp", vectorizer uses "/umicp")
 	Timeout         time.Duration
 	MaxIdleConns    int
 	IdleConnTimeout time.Duration
@@ -26,6 +27,7 @@ type ClientConfig struct {
 // DefaultClientConfig returns default HTTP client configuration
 func DefaultClientConfig() *ClientConfig {
 	return &ClientConfig{
+		Path:            "/umicp",
 		Timeout:         30 * time.Second,
 		MaxIdleConns:    10,
 		IdleConnTimeout: 90 * time.Second,
@@ -51,6 +53,9 @@ func NewClient(config ClientConfig) *Client {
 	}
 	if config.IdleConnTimeout == 0 {
 		config.IdleConnTimeout = 90 * time.Second
+	}
+	if config.Path == "" {
+		config.Path = "/umicp"
 	}
 
 	httpTransport := &http.Transport{
@@ -98,7 +103,7 @@ func (c *Client) Send(ctx context.Context, env *umicp.Envelope) error {
 		return fmt.Errorf("serialization failed: %w", err)
 	}
 
-	req, err := http.NewRequestWithContext(ctx, "POST", c.config.BaseURL+"/umicp", bytes.NewReader(data))
+	req, err := http.NewRequestWithContext(ctx, "POST", c.config.BaseURL+c.config.Path, bytes.NewReader(data))
 	if err != nil {
 		return fmt.Errorf("request creation failed: %w", err)
 	}
