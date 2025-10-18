@@ -73,24 +73,17 @@ dotnet add package HiveLLM.Umicp --version 0.2.2
 
 See `VERSION.md` for all installation methods.
 
-### Go
+### Go (Latest)
 ```bash
-go get github.com/hivellm/umicp-go@v0.1.2
+go get github.com/hivellm/umicp-go@v0.2.3  # Latest with auto URL path detection
+# or
+go get github.com/hivellm/umicp-go@v0.1.2  # Stable
 ```
 
 ### PHP
 ```bash
-composer require hivellm/umicp:0.1.2
+composer require hivellm/umicp:0.2.2
 ```
-
-### Python
-```bash
-pip install umicp-python==0.1.3
-# or from source:
-cd bindings/python
-pip install -e .
-```
-**PyPI**: [https://pypi.org/project/umicp-python/](https://pypi.org/project/umicp-python/)
 
 ---
 
@@ -190,20 +183,21 @@ npm install @hivellm/umicp
 ### 3. Go (Cloud-Native) ✅
 
 **Status**: Production Ready - 100% Feature Parity  
-**Version**: v0.1.2  
+**Version**: v0.2.3 ⭐ Latest  
 **Use Case**: Microservices, cloud deployments, P2P networks
 
 #### Statistics
 - **Files**: 25+ files (~5,200 LOC)
-- **Tests**: 68+ (100% passing)
-- **Coverage**: 90%
+- **Tests**: All passing (100%)
+- **Coverage**: 90%+
 - **Examples**: 9 working examples
 
 #### Features
 - ✅ Pure Go implementation
 - ✅ Goroutine-based concurrency
 - ✅ WebSocket client/server
-- ✅ HTTP/2 transport
+- ✅ HTTP/2 transport with custom endpoints
+- ✅ **Automatic URL path detection** ⭐ NEW (v0.2.3)
 - ✅ Multiplexed peer
 - ✅ Auto-handshake protocol
 - ✅ Service Discovery
@@ -212,7 +206,7 @@ npm install @hivellm/umicp
 
 #### Installation
 ```bash
-go get github.com/hivellm/umicp-go@v0.1.2
+go get github.com/hivellm/umicp-go@v0.2.3  # Latest
 ```
 
 ---
@@ -354,12 +348,12 @@ runBlocking {
 ### 6. Rust (High-Performance) ✅
 
 **Status**: Production Ready - 100% Complete  
-**Version**: v0.1.2  
+**Version**: v0.2.3 ⭐ Latest  
 **Use Case**: Systems programming, high-performance services
 
 #### Statistics
 - **Files**: 14 source files (~4,100 LOC)
-- **Tests**: 123 (100% passing)
+- **Tests**: 108 (100% passing)
 - **Coverage**: 100%
 - **Examples**: 16 working examples
 
@@ -370,7 +364,8 @@ runBlocking {
 - ✅ SIMD matrix operations (ndarray)
 - ✅ Async/await (tokio 1.42)
 - ✅ WebSocket client/server (tokio-tungstenite)
-- ✅ HTTP/2 client (reqwest)
+- ✅ HTTP/2 client with custom endpoints (reqwest)
+- ✅ **Automatic URL path detection** ⭐ NEW (v0.2.3)
 - ✅ HTTP/2 server (axum 0.8)
 - ✅ Multiplexed peer
 - ✅ Service Discovery
@@ -380,7 +375,7 @@ runBlocking {
 #### Installation
 ```toml
 [dependencies]
-umicp-core = { version = "0.1.2", features = ["full"] }
+umicp-core = { version = "0.2.3", features = ["full"] }
 tokio = { version = "1.42", features = ["full"] }
 ```
 
@@ -389,7 +384,7 @@ tokio = { version = "1.42", features = ["full"] }
 ### 6. PHP (Web-Focused) ✅
 
 **Status**: Production Ready  
-**Version**: v0.1.2  
+**Version**: v0.2.2  
 **Use Case**: Web applications, Laravel/Symfony/WordPress integration
 
 #### Statistics
@@ -401,7 +396,8 @@ tokio = { version = "1.42", features = ["full"] }
 #### Features
 - ✅ FFI bindings to C++ core
 - ✅ Pure PHP classes
-- ✅ HTTP client/server (cURL/ReactPHP)
+- ✅ HTTP client/server with custom endpoints (cURL/ReactPHP)
+- ✅ **Custom endpoint support** ⭐ (v0.2.2)
 - ✅ WebSocket support
 - ✅ Compression (GZIP/DEFLATE)
 - ✅ Event system
@@ -410,7 +406,7 @@ tokio = { version = "1.42", features = ["full"] }
 
 #### Installation
 ```bash
-composer require hivellm/umicp:0.1.2
+composer require hivellm/umicp:0.2.2
 ```
 
 ---
@@ -418,13 +414,13 @@ composer require hivellm/umicp:0.1.2
 ### 7. Python (ML/AI-Focused) ✅
 
 **Status**: Production Ready - Published to PyPI  
-**Version**: v0.1.3  
+**Version**: v0.2.2  
 **PyPI**: [umicp-python](https://pypi.org/project/umicp-python/)  
 **Use Case**: AI/ML pipelines, data science, async applications
 
 #### Statistics
 - **Files**: 45+ files (~2,500+ LOC)
-- **Tests**: **133** (100% passing)
+- **Tests**: **162** (100% passing)
 - **Coverage**: **97%**
 - **Examples**: 3 working examples
 
@@ -433,25 +429,26 @@ composer require hivellm/umicp:0.1.2
 - ✅ NumPy integration for matrix operations
 - ✅ Full type hints (PEP 561 compliant)
 - ✅ WebSocket client/server (websockets)
-- ✅ HTTP/2 client (httpx)
+- ✅ HTTP/2 client with custom endpoints (httpx)
+- ✅ **Custom endpoint support** ⭐ NEW (v0.2.2)
 - ✅ HTTP/2 server (aiohttp)
 - ✅ Multiplexed peer architecture
 - ✅ Event system with async handlers
 - ✅ Service Discovery
 - ✅ Connection Pooling
-- ✅ **Compression (GZIP/DEFLATE)** ⭐ NEW
+- ✅ Compression (GZIP/DEFLATE)
 - ✅ Python 3.9+ support
 
 #### Installation
 ```bash
 # From PyPI (recommended)
-pip install umicp-python
+pip install umicp-python==0.2.2
 
 # Or from source
 pip install -e "bindings/python[dev]"
 ```
 
-**Published**: October 11, 2025
+**Latest Release**: October 17, 2025
 
 ---
 
@@ -559,37 +556,38 @@ pip install -e "bindings/python[dev]"
 
 ## 📝 Version History
 
-### v0.1.3 (2025-10-11) - Python PyPI Release 🎉
-- ✅ **Python v0.1.3 Published to PyPI** - https://pypi.org/project/umicp-python/
-  - ✅ Compression support (GZIP/DEFLATE)
-  - ✅ 133 tests passing (100%)
-  - ✅ 97% code coverage
-  - ✅ Complete build & publish infrastructure
-  - ✅ Production-ready release
+### v0.2.3 (2025-10-18) - Automatic URL Path Detection 🎯
+- ✅ **Rust v0.2.3** - Automatic URL path parsing
+  - ✅ Pass full URLs like `http://localhost:15002/umicp` directly
+  - ✅ 6 new tests for path detection
+  - ✅ Fully backward compatible
+  - ✅ 108/108 tests passing (100%)
+- ✅ **Go v0.2.3** - Automatic URL path parsing
+  - ✅ Same automatic path detection as Rust
+  - ✅ 6 new tests for path detection
+  - ✅ All tests passing
 
-### v0.1.2 (2025-10-10) - Complete Release
-- ✅ **C++ Service Discovery & Connection Pooling** - Complete (35 tests, 100% coverage)
-- ✅ **Java Phase 4 Complete** - HTTP/2 & Compression (50 tests, 97% coverage)
-  - ✅ HTTP/2 Client with async support
-  - ✅ GZIP/DEFLATE Compression
-  - ✅ Service Discovery (28 tests)
-  - ✅ Connection Pooling (28 tests)
-- ✅ All SDKs updated to v0.1.2
-- ✅ Rust 100% complete (HTTP/2, Discovery, Pooling)
-- ✅ Go 100% complete (Discovery, Pooling)
-- ✅ PHP production ready
-- ✅ Python production ready
-- ✅ TypeScript production ready
+### v0.2.2 (2025-10-17) - Custom Endpoint Support 🔌
+- ✅ **7 SDKs Updated** - Custom endpoint support for all major SDKs
+  - ✅ Python, Rust, Go, C#, TypeScript, PHP, Java
+  - ✅ 98 custom endpoint tests (100% passing)
+  - ✅ 688+ total tests, 0 failures
+  - ✅ Vectorizer compatibility (`/umicp` endpoint)
+  - ✅ Standard server support (`/message` endpoint)
+  - ✅ No breaking changes
 
-### v0.1.1 (2025-09-10)
-- ✅ TypeScript reference implementation
-- ✅ Java Phase 1 (Core)
-- ✅ Rust initial implementation
-- ✅ Go MVP
-- ✅ PHP initial release
+### v0.2.0 (2025-10-16) - Native Types & Tool Discovery 🎉
+- ✅ **Swift SDK v0.2.0** - Production ready
+- ✅ **Elixir SDK v0.2.0** - Production ready
+- ✅ **All SDKs Updated** - Native JSON type support
+- ✅ **MCP-Compatible Tool Discovery** - All SDKs
 
-### v0.1.0 (2025-09-01)
-- ✅ Initial release
+### v0.1.2 (2025-10-10) - Advanced Features
+- ✅ Service Discovery & Connection Pooling
+- ✅ Java Phase 4 Complete (HTTP/2 & Compression)
+- ✅ C++ advanced features complete
+
+### v0.1.0 (2025-09-01) - Initial Release
 - ✅ C++ core implementation
 - ✅ Basic protocol support
 
@@ -713,24 +711,26 @@ MIT License - See [LICENSE](../LICENSE) file for details.
 
 ## 🎉 Achievements
 
-- ✅ **8 production-ready bindings**
-- ✅ **1,404+ tests** with **96.1% average coverage**
+- ✅ **11 production-ready bindings** (C++, Rust, Python, C#, Go, TypeScript, PHP, Java, Kotlin, Elixir, Swift)
+- ✅ **1,500+ tests** with **96%+ average coverage**
 - ✅ **100% pass rate** across all bindings
-- ✅ **53 working examples**
-- ✅ **Cross-platform** support
+- ✅ **53+ working examples**
+- ✅ **Cross-platform** support (Windows, Linux, macOS)
 - ✅ **Enterprise-grade** quality
-- ✅ **C++ Core**: Service Discovery & Connection Pooling complete
-- ✅ **Java SDK**: Phase 4 complete - HTTP/2 & Compression
-- ✅ **Python SDK**: Published to PyPI 🎉
+- ✅ **Latest Innovation**: Automatic URL path detection (Rust & Go v0.2.3) 🎯
+- ✅ **Custom Endpoints**: Full Vectorizer compatibility (v0.2.2)
+- ✅ **Tool Discovery**: MCP-compatible across all SDKs
+- ✅ **Python SDK**: Published to PyPI 📦
+- ✅ **Multi-language**: 11 languages supported
 
 ---
 
-**Status**: ✅ **ALL 8 BINDINGS PRODUCTION READY** (Kotlin is Most Feature-Complete 🏆)
+**Status**: ✅ **ALL 11 BINDINGS PRODUCTION READY** (Kotlin is Most Feature-Complete 🏆)
 
 **Project**: HiveLLM UMICP  
 **Maintained by**: HiveLLM AI Collaborative Team  
 **Repository**: https://github.com/hivellm/umicp  
 **Python on PyPI**: https://pypi.org/project/umicp-python/
 
-*Last updated: 2025-10-11*
+*Last updated: 2025-10-18*
 
