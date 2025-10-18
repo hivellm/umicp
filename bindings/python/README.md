@@ -6,7 +6,7 @@
 
 High-performance Python bindings for the Universal Matrix Inter-Communication Protocol (UMICP).
 
-## 🚀 Status: **Production Release** (v0.2.0)
+## 🚀 Status: **Production Release** (v0.2.2)
 
 | Component | Status | Description |
 |-----------|--------|-------------|
@@ -35,7 +35,7 @@ High-performance Python bindings for the Universal Matrix Inter-Communication Pr
 pip install umicp-python
 
 # Or install specific version
-pip install umicp-python==0.2.0
+pip install umicp-python==0.2.2
 
 # Install from source
 git clone https://github.com/hivellm/umicp
@@ -459,10 +459,33 @@ Contributions are welcome! Please see [CONTRIBUTING.md](../../CONTRIBUTING.md) f
 
 ---
 
-**Version**: 0.2.0  
+**Version**: 0.2.2  
 **Status**: Production Release  
-**Released**: October 16, 2025  
+**Released**: October 17, 2025  
 **Python**: 3.9+  
 **PyPI**: https://pypi.org/project/umicp-python/  
 **Repository**: https://github.com/hivellm/umicp
+
+## 🆕 Custom Endpoint Support (v0.2.2)
+
+```python
+from umicp import HttpClient
+
+# Method 1: Default endpoint (/message)
+client = HttpClient("http://localhost:8000")
+
+# Method 2: Custom endpoint (e.g., Vectorizer)
+client = HttpClient("http://localhost:8000", path="/umicp")
+
+# Method 3: Explicit path parameter
+client = HttpClient(
+    base_url="http://localhost:8000",
+    path="/custom/endpoint"
+)
+```
+
+**Compatibility:**
+- Vectorizer: Use `path="/umicp"`
+- Standard UMICP servers: Use default `path="/message"` (or omit)
+- No breaking changes - fully backward compatible
 

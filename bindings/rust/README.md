@@ -3,15 +3,17 @@
 [![Crates.io](https://img.shields.io/crates/v/umicp-core.svg)](https://crates.io/crates/umicp-core)
 [![Documentation](https://docs.rs/umicp-core/badge.svg)](https://docs.rs/umicp-core)
 [![License](https://img.shields.io/badge/license-CC0--1.0-blue.svg)](../../../LICENSE)
-[![Version](https://img.shields.io/badge/version-0.2.1-green.svg)](CHANGELOG.md)
+[![Version](https://img.shields.io/badge/version-0.2.3-green.svg)](CHANGELOG.md)
 
-High-performance Rust bindings for the Universal Matrix Inter-Communication Protocol (UMICP) with **native type support** and **tool discovery**.
+High-performance Rust bindings for the Universal Matrix Inter-Communication Protocol (UMICP) with **native type support**, **tool discovery**, and **automatic URL path detection**.
 
-## ⚠️ Version 0.2.1 - Latest Stable Release
+## 🆕 Version 0.2.3 - Latest Release
 
-**IMPORTANT**: Version 0.2.0 introduced breaking changes. See [CHANGELOG.md](CHANGELOG.md) and [Migration Guide](#migration-from-01x-to-02x) below.
+**NEW in 0.2.3**: Automatic URL path detection - pass full URLs like `http://localhost:15002/umicp` directly!  
+**Version 0.2.2**: Added custom endpoint support for Vectorizer compatibility  
+**Version 0.2.0**: Introduced native JSON types and tool discovery (breaking changes)
 
-## 🚀 Status: **Production Ready** (v0.2.1)
+## 🚀 Status: **Production Ready** (v0.2.3)
 
 | Component | Status | Coverage | Tests |
 |-----------|--------|----------|-------|
@@ -19,20 +21,22 @@ High-performance Rust bindings for the Universal Matrix Inter-Communication Prot
 | **Matrix Operations** | ✅ Complete | 100% | 23/23 |
 | **WebSocket Client** | ✅ Complete | 100% | 6/6 |
 | **WebSocket Server** | ✅ Complete | 100% | 5/5 |
-| **HTTP/2 Client** | ✅ Complete | 100% | 10/10 |
+| **HTTP/2 Client** | ✅ Complete | 100% | 16/16 |
 | **Multiplexed Peer** | ✅ Complete | 100% | 9/9 |
 | **Auto-Handshake** | ✅ Complete | 100% | 3/3 |
 | **Event System** | ✅ Complete | 100% | 6/6 |
 | **Service Discovery** | ✅ Complete | 100% | 9/9 |
 | **Connection Pooling** | ✅ Complete | 100% | 5/5 |
+| **Custom Endpoint** | ✅ Complete | 100% | 10/10 |
+| **Auto URL Parsing** | ✅ Complete | 100% | 6/6 |
 
 **Current Progress**: 100% Feature Complete ✅  
-**Tests Passing**: 123/123 tests (100%), 11 ignored (integration/timeout)  
+**Tests Passing**: 108/108 tests (100%)  
 **Production Ready**: ✅ All features implemented and tested  
 **Rust Version**: 1.82+ required (latest stable recommended)  
 **Rust Edition**: 2024  
-**Dependencies**: ✅ Updated to latest versions (2025-10-16)  
-**Review Status**: ✅ **Complete Implementation Review** - [IMPLEMENTATION_REVIEW_REPORT.md](docs/IMPLEMENTATION_REVIEW_REPORT.md)
+**Dependencies**: ✅ Updated to latest versions (2025-10-18)  
+**Latest Feature**: ✅ Automatic URL path detection (v0.2.3)
 
 ### 🎯 Key Achievements
 - **123/123 unit tests passing** (100% coverage, 11 ignored for integration)
@@ -59,7 +63,7 @@ Add to your `Cargo.toml`:
 
 ```toml
 [dependencies]
-umicp-core = { version = "0.2.1", features = ["websocket"] }
+umicp-core = { version = "0.2.3", features = ["websocket"] }
 tokio = { version = "1.42", features = ["full"] }
 serde_json = "1.0"  # Required for native types
 ```
@@ -67,6 +71,22 @@ serde_json = "1.0"  # Required for native types
 **Requirements**: 
 - Rust 1.82 or later
 - Edition 2024
+
+### 🆕 What's New in v0.2.3
+
+**Automatic URL Path Detection:**
+```rust
+// Before (v0.2.2): Manual path separation
+let client = HttpClient::new_with_path("http://localhost:15002", "/umicp")?;
+
+// Now (v0.2.3): Automatic path parsing
+let client = HttpClient::new("http://localhost:15002/umicp")?;
+// Automatically sets: base_url="http://localhost:15002", path="/umicp"
+
+// Still works: Default behavior
+let client = HttpClient::new("http://localhost:3000")?;
+// Automatically sets: base_url="http://localhost:3000", path="/message"
+```
 
 ### Features
 

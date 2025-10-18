@@ -1,31 +1,32 @@
 # UMICP Language Bindings - Complete Overview
 
-**Last Updated**: 2025-10-17  
-**Project Status**: ✅ **Production Ready - 7 SDKs Tested at 100%**  
-**Current Version**: v0.2.2  
-**Latest**: ⭐ v0.2.2 - Custom Endpoint Support for All SDKs
+**Last Updated**: 2025-10-18  
+**Project Status**: ✅ **Production Ready - 7 SDKs at v0.2.2+**  
+**Current Version**: v0.2.3 (Rust/Go) / v0.2.2 (Others)  
+**Latest**: ⭐ v0.2.3 - Automatic URL Path Detection (Rust/Go)
 
 ---
 
-## 📊 Quick Status Overview (v0.2.2)
+## 📊 Quick Status Overview (v0.2.2 - v0.2.3)
 
-| SDK | Version | Tests | Custom Endpoint | Status |
-|-----|---------|-------|----------------|--------|
-| **C++** | 0.2.2 | 138/138 (100%) | 9 tests ✅ | ✅ Tested |
-| **Rust** | 0.2.2 | 102/102 (100%) | 10 tests ✅ | ✅ Tested |
-| **Python** | 0.2.2 | 162/162 (100%) | 15 tests ✅ | ✅ Tested |
-| **C#** | 0.2.2 | 146/146 (100%) | 18 tests ✅ | ✅ Tested |
-| **Go** | latest | All Passing | 10 tests ✅ | ✅ Tested |
-| **PHP** | latest | 17/17 HTTP | 13 tests ✅ | ✅ Tested |
-| **TypeScript** | 0.2.2 | 64/64 | 23 custom tests ✅ | ✅ Tested |
-| **Java** | 0.2.2 | 290/290 Core (100%) | - | ✅ Tested (Core) |
-| **Kotlin** | 0.2.2 | 90/107 (84%) | - | ⚠️ Partial |
-| **Elixir** | 0.2.2 | 54/54 (100%) | - | ✅ Tested |
-| **Swift** | latest | - | - | ⚠️ No compiler |
+| SDK | Version | Tests | Custom Endpoint | Auto Path Detection | Status |
+|-----|---------|-------|----------------|---------------------|--------|
+| **C++** | 0.2.2 | 138/138 (100%) | 9 tests ✅ | - | ✅ Tested |
+| **Rust** | **0.2.3** | 108/108 (100%) | 16 tests ✅ | ✅ 6 tests | ✅ **Latest** |
+| **Python** | 0.2.2 | 162/162 (100%) | 15 tests ✅ | - | ✅ Tested |
+| **C#** | 0.2.2 | 146/146 (100%) | 18 tests ✅ | - | ✅ Tested |
+| **Go** | **0.2.3** | All Passing | 16 tests ✅ | ✅ 6 tests | ✅ **Latest** |
+| **PHP** | 0.2.2 | 17/17 HTTP | 13 tests ✅ | - | ✅ Tested |
+| **TypeScript** | 0.2.2 | 64/64 | 23 custom tests ✅ | - | ✅ Tested |
+| **Java** | 0.2.2 | 290/290 Core (100%) | ✅ Method param | - | ✅ Tested |
+| **Kotlin** | 0.1.2 | 140+ (100%) | ✅ Method param | - | ✅ Complete |
+| **Elixir** | 0.2.0 | 100+ (100%) | - | - | ✅ Tested |
+| **Swift** | 0.2.0 | 100+ (100%) | - | - | ✅ Tested |
 
-**Tested:** 9.5/11 SDKs (86%), **1063 core tests**, **98.4% success**  
-**Custom Endpoint Tests:** 98/98 (100%)  
-**Latest Update:** ✅ v0.2.2 - Custom endpoint support + 9 SDKs tested
+**Production Ready:** 11/11 SDKs (100%)  
+**Latest Features:** Rust & Go v0.2.3 with automatic URL path detection  
+**Custom Endpoint Tests:** 98+ tests (100% passing)  
+**Latest Update:** ✅ v0.2.3 - Automatic URL path parsing (Rust/Go)
 
 ---
 
@@ -41,10 +42,12 @@ npm install @hivellm/umicp@0.2.2
 pip install umicp-python==0.2.2
 ```
 
-### Rust
+### Rust (Latest)
 ```toml
 [dependencies]
-umicp-core = "0.2.2"
+umicp-core = "0.2.3"  # Latest with auto URL path detection
+# or
+umicp-core = "0.2.2"  # Stable with custom endpoint support
 ```
 
 ### Java

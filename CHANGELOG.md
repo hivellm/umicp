@@ -4,6 +4,72 @@ All notable changes to UMICP will be documented in this file.
 
 This is the **BIP-05 implementation** for HiveLLM's standardized inter-model communication protocol.
 
+## [0.2.3] - 2025-10-17
+
+### 🔄 SDK Improvements - Automatic URL Path Detection
+
+**Problem Solved:**
+When passing a full URL with path (e.g., `http://localhost:15002/umicp`), SDKs were incorrectly concatenating the default path, resulting in errors like `http://localhost:15002/umicp/message` (405 Method Not Allowed).
+
+#### Rust SDK v0.2.3
+- Automatic path detection in `HttpClient::new()` 
+- URLs like `http://localhost:15002/umicp` automatically separate base URL and path
+- Maintains backward compatibility with `/message` default
+- 6 comprehensive tests validating path parsing behavior
+
+#### Go SDK v0.2.3
+- Automatic path detection in `NewClient()` 
+- Path in URL takes precedence over explicit `Path` config field
+- Default `/umicp` for URLs without paths
+- 6 comprehensive tests validating path parsing behavior
+
+---
+
+## [0.2.2] - 2025-10-17
+
+### 📦 Custom Endpoint Support - All SDKs
+
+Custom endpoint support added to all UMICP SDKs for compatibility with different servers:
+- Vectorizer uses `/umicp`
+- Standard UMICP servers use `/message`
+
+#### Version Updates
+All SDKs updated to v0.2.2:
+- Rust, Python, C#, Java, Go, TypeScript, PHP: `0.2.2`
+- Kotlin, Elixir, Swift: Maintained at their current stable versions
+
+#### Implementation Changes
+
+**New Implementations:**
+- **Python**: Added `path` parameter to `HttpClient` (default: `/message`)
+- **Rust**: Added `HttpClient::new_with_path()` method + `path` config field (default: `/message`)
+- **Go**: Added `Path` field to `ClientConfig` (default: `/umicp`)
+
+**Already Supported (Verified):**
+- **C++**: `HTTPClientConfig.path` field (default: `/umicp`)
+- **TypeScript**: `path` option in `StreamableHTTPClientOptions` (default: `/umicp`)
+- **PHP**: `path` option in constructor array (default: `/umicp`)
+- **C#**: Endpoint passed as method parameter (per-request)
+- **Java/Kotlin**: Endpoint passed as method parameter
+
+#### Test Results
+**7 SDKs Tested - 100% Success Rate:**
+- C++: 138/138 tests (100%)
+- Rust: 102/102 tests (100%)
+- Python: 162/162 tests (100%)
+- C#: 146/146 tests (100%)
+- Go: All packages passing (100%)
+- PHP: 17/17 HTTP tests (100%)
+- TypeScript: 23/23 custom tests (100%)
+
+**Total: 688+ tests, 0 failures**  
+**Custom Endpoint Tests: 98/98 (100%)**
+
+#### Breaking Changes
+**NONE** - Fully backward compatible
+
+---
+
 ## [0.2.0] - 2025-10-16
 
 ### 🎉 Major Release - Native Types & Tool Discovery + 2 New SDKs
