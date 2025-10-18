@@ -6,6 +6,7 @@ import (
 	"fmt"
 	"io"
 	"net/http"
+	"net/url"
 	"sync"
 	"sync/atomic"
 	"time"
@@ -44,6 +45,9 @@ type Client struct {
 }
 
 // NewClient creates a new HTTP/2 client
+//
+// If the BaseURL contains a path (e.g., "http://localhost:15002/umicp"),
+// it will be automatically extracted and used instead of the default "/umicp".
 func NewClient(config ClientConfig) *Client {
 	if config.Timeout == 0 {
 		config.Timeout = 30 * time.Second
@@ -54,7 +58,26 @@ func NewClient(config ClientConfig) *Client {
 	if config.IdleConnTimeout == 0 {
 		config.IdleConnTimeout = 90 * time.Second
 	}
-	if config.Path == "" {
+
+	// Parse URL to separate base and path automatically
+	if parsedURL, err := url.Parse(config.BaseURL); err == nil && parsedURL.Scheme != "" {
+		// Reconstruct base URL without path
+		base := parsedURL.Scheme + "://" + parsedURL.Host
+		path := parsedURL.Path
+
+		// Use extracted path if present, otherwise default
+		if path == "" || path == "/" {
+			if config.Path == "" {
+				path = "/umicp"
+			} else {
+				path = config.Path
+			}
+		}
+
+		config.BaseURL = base
+		config.Path = path
+	} else if config.Path == "" {
+		// Fallback to default if URL parsing fails
 		config.Path = "/umicp"
 	}
 

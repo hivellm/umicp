@@ -2,7 +2,14 @@
 
 ## [0.2.3] - 2025-10-17
 
-### Rust SDK Improvements
+### SDK Improvements - Automatic URL Path Detection
+
+**Problem Solved:**
+When passing a full URL with path (e.g., `http://localhost:15002/umicp`), SDKs were incorrectly concatenating the default path, resulting in errors like `http://localhost:15002/umicp/message` (405 Method Not Allowed).
+
+---
+
+### Rust SDK v0.2.3
 
 **Automatic Path Detection:**
 - `HttpClient::new()` now automatically parses URLs to extract custom paths
@@ -33,6 +40,46 @@ let client = HttpClient::new("http://localhost:3000")?;
 - Added `url` crate dependency (v2.5)
 - URL parsing in `HttpClient::new()` constructor
 - Fallback to default `/message` for URLs without paths
+
+---
+
+### Go SDK v0.2.3
+
+**Automatic Path Detection:**
+- `NewClient()` now automatically parses URLs to extract custom paths  
+- URLs like `http://localhost:15002/umicp` automatically separate base URL and path
+- Maintains backward compatibility: URLs without paths default to `/umicp`
+- Path in URL takes precedence over explicit `Path` config field
+
+**Example:**
+```go
+// Before: Manual path separation required
+config := ClientConfig{
+    BaseURL: "http://localhost:15002",
+    Path:    "/umicp",
+}
+
+// After: Automatic path detection
+config := ClientConfig{
+    BaseURL: "http://localhost:15002/umicp",
+}
+// Automatically sets: BaseURL="http://localhost:15002", Path="/umicp"
+
+// Still works: Default behavior
+config := ClientConfig{
+    BaseURL: "http://localhost:3000",
+}
+// Automatically sets: BaseURL="http://localhost:3000", Path="/umicp"
+```
+
+**Tests Added:**
+- 6 comprehensive tests validating path parsing behavior
+- Tests cover: custom paths, no path, root path, with port, explicit path override
+- All tests passing (100%)
+
+**Implementation:**
+- URL parsing in `NewClient()` function using `net/url`
+- Fallback to default `/umicp` for URLs without paths
 
 ## [0.2.2] - 2025-10-17
 

@@ -81,6 +81,76 @@ func TestClient_SendNotConnected(t *testing.T) {
 	assert.Contains(t, err.Error(), "not connected")
 }
 
+// Test automatic URL path detection
+func TestNewClient_AutomaticPathDetection(t *testing.T) {
+	tests := []struct {
+		name        string
+		baseURL     string
+		path        string
+		expectedURL string
+		expectedPath string
+	}{
+		{
+			name:         "URL with custom path",
+			baseURL:      "http://localhost:15002/umicp",
+			path:         "",
+			expectedURL:  "http://localhost:15002",
+			expectedPath: "/umicp",
+		},
+		{
+			name:         "URL without path - default",
+			baseURL:      "http://localhost:3000",
+			path:         "",
+			expectedURL:  "http://localhost:3000",
+			expectedPath: "/umicp",
+		},
+		{
+			name:         "URL with root path - default",
+			baseURL:      "http://localhost:3000/",
+			path:         "",
+			expectedURL:  "http://localhost:3000",
+			expectedPath: "/umicp",
+		},
+		{
+			name:         "URL with port and path",
+			baseURL:      "http://127.0.0.1:15002/umicp",
+			path:         "",
+			expectedURL:  "http://127.0.0.1:15002",
+			expectedPath: "/umicp",
+		},
+		{
+			name:         "Explicit path overrides empty URL path",
+			baseURL:      "http://localhost:3000",
+			path:         "/custom",
+			expectedURL:  "http://localhost:3000",
+			expectedPath: "/custom",
+		},
+		{
+			name:         "URL path takes precedence over explicit path",
+			baseURL:      "http://localhost:3000/umicp",
+			path:         "/custom",
+			expectedURL:  "http://localhost:3000",
+			expectedPath: "/umicp",
+		},
+	}
+
+	for _, tt := range tests {
+		t.Run(tt.name, func(t *testing.T) {
+			config := ClientConfig{
+				BaseURL: tt.baseURL,
+				Path:    tt.path,
+			}
+
+			client := NewClient(config)
+
+			assert.Equal(t, tt.expectedURL, client.config.BaseURL,
+				"Base URL mismatch for test: %s", tt.name)
+			assert.Equal(t, tt.expectedPath, client.config.Path,
+				"Path mismatch for test: %s", tt.name)
+		})
+	}
+}
+
 func BenchmarkHTTPClient_Send(b *testing.B) {
 	// Setup server
 	config := ServerConfig{Addr: "127.0.0.1:18082"}
