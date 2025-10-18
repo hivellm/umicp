@@ -1,5 +1,39 @@
 # UMICP Bindings Changelog
 
+## [0.2.3] - 2025-10-17
+
+### Rust SDK Improvements
+
+**Automatic Path Detection:**
+- `HttpClient::new()` now automatically parses URLs to extract custom paths
+- URLs like `http://localhost:15002/umicp` automatically separate base URL and path
+- Maintains backward compatibility: URLs without paths default to `/message`
+- No breaking changes: `new_with_path()` method still available for explicit control
+
+**Example:**
+```rust
+// Before: Manual path separation required
+let client = HttpClient::new_with_path("http://localhost:15002", "/umicp")?;
+
+// After: Automatic path detection
+let client = HttpClient::new("http://localhost:15002/umicp")?;
+// Automatically sets: base_url="http://localhost:15002", path="/umicp"
+
+// Still works: Default behavior
+let client = HttpClient::new("http://localhost:3000")?;
+// Automatically sets: base_url="http://localhost:3000", path="/message"
+```
+
+**Tests Added:**
+- 6 comprehensive tests validating path parsing behavior
+- Tests cover: custom paths, no path, root path, with port
+- All tests passing (100%)
+
+**Implementation:**
+- Added `url` crate dependency (v2.5)
+- URL parsing in `HttpClient::new()` constructor
+- Fallback to default `/message` for URLs without paths
+
 ## [0.2.2] - 2025-10-17
 
 ### Summary

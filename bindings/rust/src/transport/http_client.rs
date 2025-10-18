@@ -64,7 +64,10 @@ pub struct HttpClient {
 
 impl HttpClient {
     /// Create new HTTP client with HTTP/2 support
-    pub fn new(base_url: impl Into<String>) -> Result<Self> {
+    ///
+    /// If the URL contains a path (e.g., "http://localhost:3000/umicp"),
+    /// it will be automatically extracted and used instead of the default "/message".
+    pub fn new(url: impl Into<String>) -> Result<Self> {
         let client = Client::builder()
             .http2_prior_knowledge()  // Force HTTP/2
             .timeout(Duration::from_secs(30))
@@ -73,9 +76,32 @@ impl HttpClient {
             .build()
             .map_err(|e| UmicpError::transport(format!("Failed to create client: {}", e)))?;
 
+        let url_str = url.into();
+
+        // Parse URL to separate base and path
+        let (base_url, path) = if let Ok(parsed) = url::Url::parse(&url_str) {
+            let base = format!("{}://{}", parsed.scheme(), parsed.host_str().unwrap_or(""));
+            let base_with_port = if let Some(port) = parsed.port() {
+                format!("{}:{}", base, port)
+            } else {
+                base
+            };
+
+            let path_str = parsed.path();
+            if path_str.is_empty() || path_str == "/" {
+                (base_with_port, "/message".to_string())
+            } else {
+                (base_with_port, path_str.to_string())
+            }
+        } else {
+            // Fallback if URL parsing fails - treat as full URL without path
+            (url_str, "/message".to_string())
+        };
+
         Ok(Self {
             config: HttpClientConfig {
-                base_url: base_url.into(),
+                base_url,
+                path,
                 ..Default::default()
             },
             client,
@@ -217,9 +243,38 @@ mod tests {
     }
 
     #[test]
+    fn test_client_with_custom_path() {
+        let client = HttpClient::new("http://localhost:3000/umicp").unwrap();
+        assert_eq!(client.config.base_url, "http://localhost:3000");
+        assert_eq!(client.config.path, "/umicp");
+    }
+
+    #[test]
+    fn test_client_without_path() {
+        let client = HttpClient::new("http://localhost:3000").unwrap();
+        assert_eq!(client.config.base_url, "http://localhost:3000");
+        assert_eq!(client.config.path, "/message");
+    }
+
+    #[test]
+    fn test_client_with_root_path() {
+        let client = HttpClient::new("http://localhost:3000/").unwrap();
+        assert_eq!(client.config.base_url, "http://localhost:3000");
+        assert_eq!(client.config.path, "/message");
+    }
+
+    #[test]
+    fn test_client_with_port_and_path() {
+        let client = HttpClient::new("http://127.0.0.1:15002/umicp").unwrap();
+        assert_eq!(client.config.base_url, "http://127.0.0.1:15002");
+        assert_eq!(client.config.path, "/umicp");
+    }
+
+    #[test]
     fn test_client_config() {
         let config = HttpClientConfig {
             base_url: "http://example.com".to_string(),
+            path: "/custom".to_string(),
             timeout: Duration::from_secs(10),
             max_retries: 5,
         };
