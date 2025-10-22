@@ -40,5 +40,8 @@
     "type": "git",
     "url": "https://github.com/hivellm/hivellm.git",
     "directory": "umicp/tomcp"
+  },
+  "publishConfig": {
+    "access": "public"
   }
 }
