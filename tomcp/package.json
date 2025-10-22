@@ -1,0 +1,43 @@
+{
+  "name": "@hivellm/umicp2mcp",
+  "version": "0.1.0",
+  "description": "MCP Bridge for UMICP - Execute UMICP calls through Model Context Protocol",
+  "type": "module",
+  "main": "dist/index.js",
+  "types": "dist/index.d.ts",
+  "bin": {
+    "umicp2mcp": "dist/index.js"
+  },
+  "scripts": {
+    "build": "tsc",
+    "dev": "tsc --watch",
+    "clean": "rm -rf dist",
+    "prepublishOnly": "npm run clean && npm run build",
+    "test": "node --test"
+  },
+  "keywords": [
+    "umicp",
+    "mcp",
+    "model-context-protocol",
+    "bridge",
+    "hivellm"
+  ],
+  "author": "HiveLLM",
+  "license": "MIT",
+  "dependencies": {
+    "@modelcontextprotocol/sdk": "^1.0.4"
+  },
+  "devDependencies": {
+    "@types/node": "^22.0.0",
+    "typescript": "^5.6.0"
+  },
+  "engines": {
+    "node": ">=18.0.0"
+  },
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/hivellm/hivellm.git",
+    "directory": "umicp/tomcp"
+  }
+}
+

@@ -1,0 +1,10 @@
+{
+  "mcpServers": {
+    "umicp": {
+      "command": "npx",
+      "args": ["@hivellm/umicp2mcp"],
+      "env": {}
+    }
+  }
+}
+
