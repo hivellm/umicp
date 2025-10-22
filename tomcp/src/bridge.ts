@@ -1,4 +1,5 @@
 import { Client } from './client.js';
+import { HttpClient } from './http-client.js';
 import type {
   UmicpServerConfig,
   UmicpCallRequest,
@@ -18,7 +19,7 @@ export class UmicpBridge {
     avgExecutionTime: 0,
   };
 
-  private clients: Map<string, Client> = new Map();
+  private clients: Map<string, Client | HttpClient> = new Map();
 
   /**
    * Execute a UMICP call
@@ -71,16 +72,33 @@ export class UmicpBridge {
   /**
    * Get or create a client for the specified server
    */
-  private async getClient(config: UmicpServerConfig): Promise<Client> {
+  private async getClient(config: UmicpServerConfig): Promise<Client | HttpClient> {
     const key = `${config.host}:${config.port}`;
 
     let client = this.clients.get(key);
     if (!client) {
-      client = new Client({
-        host: config.host,
-        port: config.port,
-        tls: config.tls || false,
-      });
+      // Detect if we should use HTTP or TCP
+      // If port is 80, 443, or in the 1xxxx range (typical HTTP ports), use HTTP client
+      const useHttp = config.port === 80 || config.port === 443 ||
+                      (config.port >= 10000 && config.port < 20000);
+
+      if (useHttp) {
+        // Use HTTP client
+        const protocol = config.tls ? 'https' : 'http';
+        const baseUrl = `${protocol}://${config.host}:${config.port}/umicp`;
+
+        client = new HttpClient({
+          baseUrl,
+          timeout: config.timeout || 30000,
+        });
+      } else {
+        // Use TCP client
+        client = new Client({
+          host: config.host,
+          port: config.port,
+          tls: config.tls || false,
+        });
+      }
 
       await client.connect();
       this.clients.set(key, client);

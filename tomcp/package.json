@@ -13,7 +13,8 @@
     "dev": "tsc --watch",
     "clean": "rm -rf dist",
     "prepublishOnly": "npm run clean && npm run build",
-    "test": "node --test"
+    "test": "node --test",
+    "publish:wsl": "export BROWSER=wslview && npm publish"
   },
   "keywords": [
     "umicp",
@@ -25,7 +26,8 @@
   "author": "HiveLLM",
   "license": "MIT",
   "dependencies": {
-    "@modelcontextprotocol/sdk": "^1.0.4"
+    "@modelcontextprotocol/sdk": "^1.0.4",
+    "@hivellm/umicp": "^0.2.2"
   },
   "devDependencies": {
     "@types/node": "^22.0.0",

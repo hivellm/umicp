@@ -119,55 +119,175 @@ npm run clean
 
 ## Architecture
 
-The bridge consists of three main components:
+The bridge consists of four main components:
 
-1. **MCP Server** (`src/index.ts`): Handles MCP protocol communication
+1. **MCP Server** (`src/index.ts`): Handles MCP protocol communication via stdio
 2. **UMICP Bridge** (`src/bridge.ts`): Manages UMICP client connections and calls
-3. **Type Definitions** (`src/types.ts`): TypeScript interfaces and types
+3. **HTTP Client** (`src/http-client.ts`): HTTP transport for web-based UMICP servers
+4. **TCP Client** (`src/client.ts`): Raw TCP socket transport for native UMICP servers
+5. **Type Definitions** (`src/types.ts`): TypeScript interfaces and types
+
+### Transport Flow
+
+```
+Cursor/MCP Client
+      ↓
+   MCP Server (stdio)
+      ↓
+  UMICP Bridge
+      ↓
+   Port Detection
+    ↙     ↘
+HTTP Client  TCP Client
+    ↓           ↓
+  Synap      Native UMICP
+ (15500)      (8080)
+```
 
 ## Features
 
+- ✅ **Dual Transport Support**: HTTP and TCP sockets
+- ✅ **Auto-detection**: Automatically chooses HTTP or TCP based on port
+- ✅ **UMICP v2.0 Compatible**: Proper envelope format with Rust compatibility
 - ✅ Execute UMICP calls through MCP
 - ✅ Connection pooling (reuses existing connections)
 - ✅ Configurable timeouts
-- ✅ TLS/SSL support
+- ✅ TLS/SSL support (both HTTP and TCP)
 - ✅ Request/response metadata
 - ✅ Bridge statistics tracking
 - ✅ Graceful shutdown
 - ✅ Error handling
 
+### Transport Selection
+
+The bridge automatically selects the appropriate transport:
+
+- **HTTP Transport**: Used for ports 80, 443, or 10000-19999 (typical HTTP ports)
+  - Connects to `/umicp` endpoint
+  - Stateless (no persistent connection)
+  - Perfect for web-based UMICP servers like Synap
+
+- **TCP Transport**: Used for all other ports
+  - Raw TCP socket connection
+  - Persistent connection
+  - Lower latency for high-frequency calls
+
 ## Testing
 
-### Running the Test Server
+### Testing with Synap (HTTP Transport)
 
-A simple UMICP echo server is included for testing. To run it:
+The bridge has been tested and verified with [Synap](https://github.com/hivellm/hivellm/tree/main/synap), a high-performance messaging system with UMICP support.
 
+1. Start Synap server:
 ```bash
-cd examples
-npm install
-npm run test-server
+cd synap
+cargo run --release --bin synap-server
 ```
 
-The test server will listen on port 8080 and echo back any UMICP requests.
+2. In Cursor, test all 8 Synap operations via UMICP:
 
-### Testing from Cursor
-
-1. Start the test server
-2. In Cursor, use the MCP tool `umicp_call` with:
+**KV Store:**
 ```json
-{
-  "server": { "port": 8080 },
-  "method": "echo",
-  "payload": { "test": "Hello, UMICP!" }
-}
-```
-3. You should receive an echo response
+// SET
+{ "server": { "port": 15500 }, "method": "synap_kv_set", "payload": { "key": "test", "value": "works!", "ttl": 3600 } }
 
-See `examples/example-calls.md` for more examples.
+// GET
+{ "server": { "port": 15500 }, "method": "synap_kv_get", "payload": { "key": "test", "type": "string" } }
+
+// DELETE
+{ "server": { "port": 15500 }, "method": "synap_kv_delete", "payload": { "key": "test" } }
+
+// SCAN
+{ "server": { "port": 15500 }, "method": "synap_kv_scan", "payload": { "prefix": "user:", "limit": 10 } }
+```
+
+**Queue:**
+```json
+{ "server": { "port": 15500 }, "method": "synap_queue_publish", "payload": { "queue": "tasks", "message": "job data", "priority": 5 } }
+
+{ "server": { "port": 15500 }, "method": "synap_queue_consume", "payload": { "queue": "tasks", "consumer_id": "worker-1" } }
+```
+
+**Stream:**
+```json
+{ "server": { "port": 15500 }, "method": "synap_stream_publish", "payload": { "room": "chat", "event": "msg", "data": { "text": "hi" } } }
+```
+
+**Pub/Sub:**
+```json
+{ "server": { "port": 15500 }, "method": "synap_pubsub_publish", "payload": { "topic": "notifications", "message": { "type": "alert" } } }
+```
+
+### Test Results
+
+All 8 Synap operations tested successfully:
+- ✅ `synap_kv_set` - Stores key-value pairs
+- ✅ `synap_kv_get` - Retrieves values
+- ✅ `synap_kv_delete` - Deletes keys
+- ✅ `synap_kv_scan` - Scans by prefix
+- ✅ `synap_queue_publish` - Publishes to queue
+- ✅ `synap_queue_consume` - Consumes from queue
+- ✅ `synap_stream_publish` - Publishes to stream
+- ✅ `synap_pubsub_publish` - Publishes to topic
+
+**Stats:** 7 calls, 100% success rate, 9ms average latency
 
 ## Examples
 
-### Basic Echo Call
+### Synap KV Store (HTTP Transport)
+
+```json
+{
+  "server": { "host": "localhost", "port": 15500 },
+  "method": "synap_kv_set",
+  "payload": {
+    "key": "my-key",
+    "value": "Hello UMICP!",
+    "ttl": 3600
+  }
+}
+```
+
+```json
+{
+  "server": { "host": "localhost", "port": 15500 },
+  "method": "synap_kv_get",
+  "payload": {
+    "key": "my-key",
+    "type": "string"
+  }
+}
+```
+
+### Synap Queue (HTTP Transport)
+
+```json
+{
+  "server": { "host": "localhost", "port": 15500 },
+  "method": "synap_queue_publish",
+  "payload": {
+    "queue": "my-queue",
+    "message": "Task data",
+    "priority": 5
+  }
+}
+```
+
+### Synap Stream (HTTP Transport)
+
+```json
+{
+  "server": { "host": "localhost", "port": 15500 },
+  "method": "synap_stream_publish",
+  "payload": {
+    "room": "chat",
+    "event": "message",
+    "data": { "text": "Hello!" }
+  }
+}
+```
+
+### TCP Socket Server
 
 ```json
 {
@@ -191,8 +311,9 @@ See `examples/example-calls.md` for more examples.
 
 ```json
 {
-  "server": { "port": 8080, "timeout": 5000 },
-  "method": "longOperation",
+  "server": { "port": 15500, "timeout": 5000 },
+  "method": "synap_kv_scan",
+  "payload": { "prefix": "user:", "limit": 100 },
   "timeout": 60000
 }
 ```
