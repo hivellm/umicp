@@ -43,6 +43,43 @@ make test
 ./examples/basic_example
 ```
 
+## 🔌 Tools & Integrations
+
+### MCP Bridge (Model Context Protocol)
+
+Test UMICP implementations directly from Cursor using the MCP bridge:
+
+```bash
+# Install globally
+npm install -g @hivellm/umicp2mcp
+
+# Or run with npx
+npx @hivellm/umicp2mcp
+```
+
+**Configure in Cursor** (`.cursor/mcp.json`):
+```json
+{
+  "mcpServers": {
+    "umicp": {
+      "command": "npx",
+      "args": ["@hivellm/umicp2mcp"]
+    }
+  }
+}
+```
+
+**Usage**: Execute UMICP calls from Cursor's AI:
+```json
+{
+  "server": { "port": 8080 },
+  "method": "echo",
+  "payload": { "message": "Hello, UMICP!" }
+}
+```
+
+See [`tomcp/README.md`](tomcp/README.md) for complete documentation and examples.
+
 ### Language Bindings
 
 ```bash

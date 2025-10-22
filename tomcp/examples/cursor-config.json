@@ -1,0 +1,11 @@
+{
+  "$comment": "Production configuration - use npx to run published package",
+  "mcpServers": {
+    "umicp": {
+      "command": "npx",
+      "args": ["@hivellm/umicp2mcp"],
+      "env": {}
+    }
+  }
+}
+
