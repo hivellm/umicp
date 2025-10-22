@@ -22,7 +22,9 @@ This will start a simple UMICP echo server on port 8080.
 
 ### 2. Configure Cursor
 
-Add the following to your Cursor MCP settings:
+#### For Production (Published Package)
+
+Add the following to your Cursor MCP settings (`~/.cursor/mcp.json`):
 
 ```json
 {
@@ -35,7 +37,30 @@ Add the following to your Cursor MCP settings:
 }
 ```
 
-Or use the local version:
+#### For Development on Windows with WSL
+
+```json
+{
+  "mcpServers": {
+    "umicp": {
+      "command": "wsl",
+      "args": [
+        "-d",
+        "Ubuntu-24.04",
+        "--",
+        "bash",
+        "-l",
+        "-c",
+        "cd /mnt/f/Node/hivellm/umicp/tomcp && node dist/index.js"
+      ]
+    }
+  }
+}
+```
+
+**Important**: Replace `/mnt/f/Node/hivellm/umicp/tomcp` with your actual project path in WSL format.
+
+#### For Development on Unix/Linux/macOS
 
 ```bash
 cd ..

@@ -2,7 +2,7 @@ import * as net from 'net';
 
 /**
  * Simple UMICP Echo Server for Testing
- * 
+ *
  * This is a minimal UMICP server implementation for testing the bridge.
  * It listens on port 8080 and echoes back any request it receives.
  */
@@ -139,4 +139,5 @@ process.on('SIGINT', () => {
     process.exit(0);
   });
 });
+
 

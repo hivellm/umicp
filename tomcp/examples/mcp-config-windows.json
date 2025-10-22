@@ -1,0 +1,19 @@
+{
+  "$comment": "Development configuration for Windows with WSL - adjust the path to match your workspace",
+  "mcpServers": {
+    "umicp": {
+      "command": "wsl",
+      "args": [
+        "-d",
+        "Ubuntu-24.04",
+        "--",
+        "bash",
+        "-l",
+        "-c",
+        "cd /mnt/f/Node/hivellm/umicp/tomcp && node dist/index.js"
+      ],
+      "env": {}
+    }
+  }
+}
+
