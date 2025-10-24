@@ -1,4 +1,4 @@
-# UMICP Java Bindings
+# UMICP Java SDK
 
 [![License: MIT](https://img.shields.io/badge/License-MIT-yellow.svg)](https://opensource.org/licenses/MIT)
 [![Java](https://img.shields.io/badge/Java-17%2B-orange.svg)](https://openjdk.org/)
@@ -236,7 +236,7 @@ public class UMICPExample {
     public static void main(String[] args) throws SerializationException {
         // Print version
         UMICP.printVersion();
-        // Output: UMICP Java Bindings v1.0.0 (Protocol: 1.0, Build: java-pure)
+        // Output: UMICP Java SDK v1.0.0 (Protocol: 1.0, Build: java-pure)
         
         // Create envelope with payload hint
         Envelope envelope = UMICP.createEnvelope(

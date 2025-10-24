@@ -1,11 +1,15 @@
 # 🌐 UMICP C# SDK
 
+[![NuGet](https://img.shields.io/nuget/v/HiveLLM.Umicp.SDK.svg)](https://www.nuget.org/packages/HiveLLM.Umicp.SDK/)
 [![License](https://img.shields.io/badge/license-MIT-blue.svg)](LICENSE)
 [![.NET](https://img.shields.io/badge/.NET-8.0-purple.svg)](https://dotnet.microsoft.com/)
-[![Version](https://img.shields.io/badge/version-0.2.2-blue.svg)](CHANGELOG.md)
+[![Version](https://img.shields.io/badge/version-0.3.0-blue.svg)](CHANGELOG.md)
 [![BIP-05](https://img.shields.io/badge/BIP--05-Implementation-green.svg)](https://github.com/hivellm/hive-gov/tree/main/bips/BIP-05)
 
-> **Production-Ready** C# bindings for the Universal Matrix Intelligent Communication Protocol (UMICP) with MCP-compatible tool discovery
+> **Production-Ready** C# SDK for the Universal Matrix Intelligent Communication Protocol (UMICP) with MCP-compatible tool discovery
+
+**Package**: HiveLLM.Umicp.SDK
+**Version**: 0.3.0
 
 ## 📋 What is UMICP?
 
@@ -20,10 +24,10 @@ UMICP enables efficient inter-model communication between AI systems with:
 
 ## 🛠️ Installation
 
-### NuGet Package (Coming Soon)
+### NuGet Package
 
 ```bash
-dotnet add package Umicp
+dotnet add package HiveLLM.Umicp.SDK
 ```
 
 ### Build from Source

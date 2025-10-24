@@ -1,4 +1,4 @@
-# UMICP Elixir Bindings
+# UMICP Elixir SDK
 
 [![Hex.pm](https://img.shields.io/hexpm/v/umicp.svg)](https://hex.pm/packages/umicp)
 [![Elixir 1.15+](https://img.shields.io/badge/Elixir-1.15+-purple.svg)](https://elixir-lang.org)
@@ -24,7 +24,7 @@ Add `umicp` to your `mix.exs` dependencies:
 ```elixir
 def deps do
   [
-    {:umicp, "~> 0.2.0"}
+    {:umicp_sdk, "~> 0.2.0"}
   ]
 end
 ```

@@ -40,14 +40,14 @@ Kotlin SDK for the Universal Matrix Intelligent Communication Protocol (UMICP), 
 ### Gradle (Kotlin DSL)
 ```kotlin
 dependencies {
-    implementation("com.hivellm:umicp-kotlin:0.1.2")
+    implementation("com.hivellm:umicp-sdk:0.1.2")
 }
 ```
 
 ### Gradle (Groovy)
 ```groovy
 dependencies {
-    implementation 'com.hivellm:umicp-kotlin:0.1.2'
+    implementation 'com.hivellm:umicp-sdk:0.1.2'
 }
 ```
 
@@ -55,7 +55,7 @@ dependencies {
 ```xml
 <dependency>
     <groupId>com.hivellm</groupId>
-    <artifactId>umicp-kotlin</artifactId>
+    <artifactId>umicp-sdk</artifactId>
     <version>0.1.2</version>
 </dependency>
 ```

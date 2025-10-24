@@ -1,7 +1,7 @@
 # UMICP Rust Bindings
 
-[![Crates.io](https://img.shields.io/crates/v/umicp-core.svg)](https://crates.io/crates/umicp-core)
-[![Documentation](https://docs.rs/umicp-core/badge.svg)](https://docs.rs/umicp-core)
+[![Crates.io](https://img.shields.io/crates/v/umicp-sdk.svg)](https://crates.io/crates/umicp-sdk)
+[![Documentation](https://docs.rs/umicp-sdk/badge.svg)](https://docs.rs/umicp-sdk)
 [![License](https://img.shields.io/badge/license-CC0--1.0-blue.svg)](../../../LICENSE)
 [![Version](https://img.shields.io/badge/version-0.2.3-green.svg)](CHANGELOG.md)
 
@@ -63,7 +63,7 @@ Add to your `Cargo.toml`:
 
 ```toml
 [dependencies]
-umicp-core = { version = "0.2.3", features = ["websocket"] }
+umicp-sdk = { version = "0.2.3", features = ["websocket"] }
 tokio = { version = "1.42", features = ["full"] }
 serde_json = "1.0"  # Required for native types
 ```
@@ -101,7 +101,7 @@ let client = HttpClient::new("http://localhost:3000")?;
 ### Basic Envelope Usage (Native Types)
 
 ```rust
-use umicp_core::{Envelope, OperationType};
+use umicp_sdk::{Envelope, OperationType};
 use serde_json::json;
 
 fn main() -> Result<(), Box<dyn std::error::Error>> {
@@ -137,7 +137,7 @@ fn main() -> Result<(), Box<dyn std::error::Error>> {
 ### WebSocket Client (Basic)
 
 ```rust
-use umicp_core::{WebSocketClient, Envelope, OperationType};
+use umicp_sdk::{WebSocketClient, Envelope, OperationType};
 
 #[tokio::main]
 async fn main() -> Result<(), Box<dyn std::error::Error>> {
@@ -174,7 +174,7 @@ async fn main() -> Result<(), Box<dyn std::error::Error>> {
 ### Matrix Operations
 
 ```rust
-use umicp_core::Matrix;
+use umicp_sdk::Matrix;
 
 fn main() -> Result<(), Box<dyn std::error::Error>> {
     let mut matrix = Matrix::new();
@@ -402,7 +402,7 @@ cargo run --features full --example event_system                  # Event system
 ### Complete Implementation
 
 ```
-umicp-core/
+umicp-sdk/
 ├── src/
 │   ├── envelope.rs              ✅ Complete (516 lines)
 │   ├── matrix.rs                ✅ Complete (517 lines)

@@ -1,9 +1,11 @@
-# UMICP TypeScript Bindings
+# UMICP TypeScript SDK
 
-[![npm version](https://badge.fury.io/js/%40hivellm%2Fumicp.svg)](https://badge.fury.io/js/%40hivellm%2Fumicp)
+[![npm version](https://badge.fury.io/js/%40hivellm%2Fumicp-sdk.svg)](https://badge.fury.io/js/%40hivellm%2Fumicp-sdk)
 [![License: MIT](https://img.shields.io/badge/License-MIT-yellow.svg)](https://opensource.org/licenses/MIT)
 
-TypeScript bindings for the Universal Matrix Inter-Communication Protocol (UMICP), providing high-performance communication and matrix operations for distributed systems, federated learning, and real-time applications.
+TypeScript SDK for the Universal Matrix Inter-Communication Protocol (UMICP), providing high-performance communication and matrix operations for distributed systems, federated learning, and real-time applications.
+
+**Version**: 0.3.0
 
 ## 🚀 Features
 
@@ -19,9 +21,9 @@ TypeScript bindings for the Universal Matrix Inter-Communication Protocol (UMICP
 ## 📦 Installation
 
 ```bash
-npm install @hivellm/umicp
+npm install @hivellm/umicp-sdk
 # or
-npm install @hivellm/umicp@0.2.2
+npm install @hivellm/umicp-sdk@0.2.2
 ```
 
 ### Prerequisites
@@ -33,7 +35,7 @@ npm install @hivellm/umicp@0.2.2
 ### Basic Envelope Usage
 
 ```typescript
-import { UMICP, OperationType } from '@hivellm/umicp';
+import { UMICP, OperationType } from '@hivellm/umicp-sdk';
 
 // Create a UMICP envelope
 const envelope = UMICP.createEnvelope({
@@ -64,7 +66,7 @@ console.log('Capabilities:', received.getCapabilities());
 The new `UMICPWebSocketPeer` enables true peer-to-peer communication where each node can simultaneously accept incoming connections AND connect to multiple remote peers.
 
 ```typescript
-import { UMICPWebSocketPeer, Envelope, OperationType } from '@hivellm/umicp';
+import { UMICPWebSocketPeer, Envelope, OperationType } from '@hivellm/umicp-sdk';
 
 // Create a multiplexed peer
 const peer = new UMICPWebSocketPeer({
@@ -139,7 +141,7 @@ console.log(`Outgoing: ${stats.outgoingConnections}`);
 ### WebSocket Transport (Legacy)
 
 ```typescript
-import { AdvancedWebSocketTransport } from '@hivellm/umicp/transport';
+import { AdvancedWebSocketTransport } from '@hivellm/umicp-sdk/transport';
 
 // Server setup
 const server = new AdvancedWebSocketTransport({
@@ -189,7 +191,7 @@ await client.send(message);
 ### Matrix Operations
 
 ```typescript
-import { Matrix } from '@hivellm/umicp';
+import { Matrix } from '@hivellm/umicp-sdk';
 
 // Create matrix instance
 const matrix = new Matrix();

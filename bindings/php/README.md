@@ -1,17 +1,17 @@
-# UMICP PHP Bindings
+# UMICP PHP SDK
 
 [![PHP](https://img.shields.io/badge/PHP-8.1%2B-777BB4.svg)](https://www.php.net/)
-[![Packagist](https://img.shields.io/packagist/v/hivellm/umicp.svg)](https://packagist.org/packages/hivellm/umicp)
-[![Downloads](https://img.shields.io/packagist/dt/hivellm/umicp.svg)](https://packagist.org/packages/hivellm/umicp)
+[![Packagist](https://img.shields.io/packagist/v/hivellm/umicp-sdk-sdk.svg)](https://packagist.org/packages/hivellm/umicp-sdk-sdk)
+[![Downloads](https://img.shields.io/packagist/dt/hivellm/umicp-sdk-sdk.svg)](https://packagist.org/packages/hivellm/umicp-sdk-sdk)
 [![License](https://img.shields.io/badge/license-MIT-blue.svg)](LICENSE)
 [![Tests](https://img.shields.io/badge/Tests-115%2B-brightgreen.svg)](tests/)
 [![Coverage](https://img.shields.io/badge/Coverage-95%25-success.svg)](docs/STATUS.md)
 
-> **High-performance PHP bindings for UMICP - 85% Complete, Production Ready**
+> **High-performance PHP SDK for UMICP - Production Ready**
 
 ## 🎯 Status
 
-**Version**: 0.2.0 | **Grade**: A+ (Excellent) | **Coverage**: 95%
+**Version**: 0.3.0 | **Grade**: A+ (Excellent) | **Coverage**: 95%
 
 ```
 ✅ Production Ready  ████████████████████ 100% ✅
@@ -27,12 +27,12 @@
 
 ```bash
 # Install via Packagist
-composer require hivellm/umicp
+composer require hivellm/umicp-sdk-sdk
 
 # Or add to composer.json
 {
     "require": {
-        "hivellm/umicp": "^0.2"
+        "hivellm/umicp-sdk-sdk": "^0.3"
     }
 }
 ```

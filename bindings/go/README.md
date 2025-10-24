@@ -1,4 +1,4 @@
-# UMICP Go Bindings
+# UMICP Go SDK
 
 [![Go Version](https://img.shields.io/badge/Go-1.21+-00ADD8?style=flat&logo=go)](https://go.dev/)
 [![License](https://img.shields.io/badge/license-MIT-blue.svg)](LICENSE)
@@ -46,7 +46,7 @@ UMICP enables efficient inter-model communication between AI systems with:
 ### Install via Go Modules
 
 ```bash
-go get github.com/hivellm/umicp-go
+go get github.com/hivellm/umicp-sdk
 ```
 
 ### Build from Source
@@ -80,7 +80,7 @@ package main
 import (
     "fmt"
     
-    "github.com/hivellm/umicp-go/pkg/umicp"
+    "github.com/hivellm/umicp-sdk/pkg/umicp"
 )
 
 func main() {
@@ -127,8 +127,8 @@ import (
     "fmt"
     "time"
     
-    "github.com/hivellm/umicp-go/pkg/transport/websocket"
-    "github.com/hivellm/umicp-go/pkg/umicp"
+    "github.com/hivellm/umicp-sdk/pkg/transport/websocket"
+    "github.com/hivellm/umicp-sdk/pkg/umicp"
 )
 
 func main() {
@@ -177,8 +177,8 @@ import (
     "context"
     "fmt"
     
-    httpTransport "github.com/hivellm/umicp-go/pkg/transport/http"
-    "github.com/hivellm/umicp-go/pkg/umicp"
+    httpTransport "github.com/hivellm/umicp-sdk/pkg/transport/http"
+    "github.com/hivellm/umicp-sdk/pkg/umicp"
 )
 
 func main() {
@@ -222,8 +222,8 @@ import (
     "fmt"
     "time"
     
-    "github.com/hivellm/umicp-go/pkg/peer"
-    "github.com/hivellm/umicp-go/pkg/umicp"
+    "github.com/hivellm/umicp-sdk/pkg/peer"
+    "github.com/hivellm/umicp-sdk/pkg/umicp"
 )
 
 func main() {
