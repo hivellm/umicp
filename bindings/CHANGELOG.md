@@ -1,5 +1,115 @@
 # UMICP Bindings Changelog
 
+## [0.3.2] - 2025-10-24
+
+### Python SDK v0.3.2 - Published to PyPI ✅
+
+**Package Name Standardization:**
+- ✅ Published to PyPI: https://pypi.org/project/umicp-sdk/0.3.2/
+- Package: `umicp_sdk` (PEP 625 compliant)
+- Installation: `pip install umicp-sdk`
+- Import: `from umicp_sdk import Envelope`
+
+## [0.3.1] - 2025-10-24
+
+### Version Bumps for Republishing
+
+**Version Updates:**
+- Python: 0.3.1 → 0.3.2
+- Rust: 0.3.0 → 0.3.1
+- TypeScript: 0.3.0 → 0.3.1
+
+**Documentation:**
+- ✅ All READMEs updated with standardized package names
+- ✅ Installation instructions corrected
+- ✅ Version references updated
+
+## [0.3.0] - 2025-10-24
+
+### BREAKING CHANGE: Package Name Standardization
+
+**All SDKs renamed to follow `umicp-sdk` convention:**
+
+| SDK | Old Name | New Name | Version |
+|-----|----------|----------|---------|
+| **Python** | `umicp-python` | `umicp_sdk` | 0.3.1 |
+| **Rust** | `umicp-core` | `umicp-sdk` | 0.3.0 |
+| **TypeScript** | `@hivellm/umicp` | `@hivellm/umicp-sdk` | 0.3.0 |
+| **Go** | `umicp-go` | `github.com/hivellm/umicp-sdk` | 0.3.0 |
+| **C#** | `HiveLLM.Umicp` | `HiveLLM.Umicp.SDK` | 0.3.0 |
+| **PHP** | `hivellm/umicp` | `hivellm/umicp-sdk` | 0.3.0 |
+| **Swift** | `UMICP` | `UMICP-SDK` | 0.3.0 |
+| **Kotlin** | `umicp-kotlin` | `umicp-sdk` | 0.3.0 |
+| **Elixir** | `umicp` | `umicp_sdk` | 0.3.0 |
+| **Java** | `umicp-java-parent` | `umicp-sdk` | 0.3.0 |
+
+### Migration Guide
+
+**Python:**
+```bash
+# Old
+pip install umicp-python
+from umicp import Envelope
+
+# New
+pip install umicp-sdk
+from umicp_sdk import Envelope
+```
+
+**Rust:**
+```toml
+# Old
+[dependencies]
+umicp-core = "0.2.3"
+
+# New
+[dependencies]
+umicp-sdk = "0.3.1"
+```
+
+**TypeScript:**
+```bash
+# Old
+npm install @hivellm/umicp
+
+# New
+npm install @hivellm/umicp-sdk
+```
+
+**C#:**
+```bash
+# Old
+dotnet add package HiveLLM.Umicp
+
+# New
+dotnet add package HiveLLM.Umicp.SDK
+```
+
+**PHP:**
+```bash
+# Old
+composer require hivellm/umicp
+
+# New
+composer require hivellm/umicp-sdk
+```
+
+### Why This Change
+
+- **Consistency**: All SDKs now use `-sdk` suffix for clarity
+- **PEP 625**: Python and Elixir use underscores (language convention)
+- **Discoverability**: SDK suffix makes package purpose clear
+- **Maintainability**: Easier to manage multiple language bindings
+
+### Compatibility
+
+- ✅ All APIs remain identical (only import/package names changed)
+- ✅ All features from v0.2.x preserved
+- ✅ No functionality removed
+- ❌ Old package names deprecated
+
+---
+
 ## [0.2.3] - 2025-10-17
 
 ### SDK Improvements - Automatic URL Path Detection

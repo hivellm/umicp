@@ -1,88 +1,121 @@
-# UMICP Language Bindings - Complete Overview
+# UMICP Language SDKs - Complete Overview
 
-**Last Updated**: 2025-10-18  
-**Project Status**: ✅ **Production Ready - 7 SDKs at v0.2.2+**  
-**Current Version**: v0.2.3 (Rust/Go) / v0.2.2 (Others)  
-**Latest**: ⭐ v0.2.3 - Automatic URL Path Detection (Rust/Go)
+**Last Updated**: 2025-10-24  
+**Project Status**: ✅ **Production Ready - 10 SDKs Standardized**  
+**Current Version**: v0.3.x (All SDKs Standardized)  
+**Latest**: ⭐ v0.3.2 - Python SDK Published to PyPI
+
+## 🎯 Major Update: Package Name Standardization (v0.3.0)
+
+**BREAKING CHANGE**: All SDKs renamed to follow `umicp-sdk` convention
+
+All packages now use standardized naming:
+- Python: `umicp_sdk` ✅ **Published to PyPI**
+- Rust: `umicp-sdk`
+- TypeScript: `@hivellm/umicp-sdk`
+- Go: `github.com/hivellm/umicp-sdk`
+- C#: `HiveLLM.Umicp.SDK`
+- PHP: `hivellm/umicp-sdk`
+- Swift: `UMICP-SDK`
+- Kotlin: `umicp-sdk`
+- Elixir: `umicp_sdk`
+- Java: `umicp-sdk`
 
 ---
 
-## 📊 Quick Status Overview (v0.2.2 - v0.2.3)
+## 📊 Quick Status Overview (v0.3.x - Standardized)
 
-| SDK | Version | Tests | Custom Endpoint | Auto Path Detection | Status |
-|-----|---------|-------|----------------|---------------------|--------|
-| **C++** | 0.2.2 | 138/138 (100%) | 9 tests ✅ | - | ✅ Tested |
-| **Rust** | **0.2.3** | 108/108 (100%) | 16 tests ✅ | ✅ 6 tests | ✅ **Latest** |
-| **Python** | 0.2.2 | 162/162 (100%) | 15 tests ✅ | - | ✅ Tested |
-| **C#** | 0.2.2 | 146/146 (100%) | 18 tests ✅ | - | ✅ Tested |
-| **Go** | **0.2.3** | All Passing | 16 tests ✅ | ✅ 6 tests | ✅ **Latest** |
-| **PHP** | 0.2.2 | 17/17 HTTP | 13 tests ✅ | - | ✅ Tested |
-| **TypeScript** | 0.2.2 | 64/64 | 23 custom tests ✅ | - | ✅ Tested |
-| **Java** | 0.2.2 | 290/290 Core (100%) | ✅ Method param | - | ✅ Tested |
-| **Kotlin** | 0.1.2 | 140+ (100%) | ✅ Method param | - | ✅ Complete |
-| **Elixir** | 0.2.0 | 100+ (100%) | - | - | ✅ Tested |
-| **Swift** | 0.2.0 | 100+ (100%) | - | - | ✅ Tested |
+| SDK | Package Name | Version | Status | Published |
+|-----|--------------|---------|--------|-----------|
+| **Python** | `umicp_sdk` | **0.3.2** | ✅ Tested | ✅ **PyPI** |
+| **Rust** | `umicp-sdk` | **0.3.1** | ✅ Ready | 📦 To publish |
+| **TypeScript** | `@hivellm/umicp-sdk` | **0.3.1** | ✅ Ready | 📦 To publish |
+| **Go** | `github.com/hivellm/umicp-sdk` | **0.3.0** | ✅ Ready | Auto-indexed |
+| **C#** | `HiveLLM.Umicp.SDK` | **0.3.0** | ✅ Ready | 📦 NuGet package ready |
+| **PHP** | `hivellm/umicp-sdk` | **0.3.0** | ✅ Ready | 📦 To publish |
+| **Swift** | `UMICP-SDK` | **0.3.0** | ✅ Ready | SPM |
+| **Kotlin** | `umicp-sdk` | **0.3.0** | ✅ Ready | 📦 To publish |
+| **Elixir** | `umicp_sdk` | **0.3.0** | ✅ Ready | 📦 To publish |
+| **Java** | `umicp-sdk` | **0.3.0** | ✅ Ready | 📦 To publish |
 
-**Production Ready:** 11/11 SDKs (100%)  
-**Latest Features:** Rust & Go v0.2.3 with automatic URL path detection  
-**Custom Endpoint Tests:** 98+ tests (100% passing)  
-**Latest Update:** ✅ v0.2.3 - Automatic URL path parsing (Rust/Go)
+**Production Ready:** 10/10 SDKs (100%)  
+**Standardized Naming:** ✅ All SDKs use `umicp-sdk` convention  
+**Published:** Python v0.3.2 on PyPI ✅  
+**Latest Update:** ✅ v0.3.2 - Package name standardization complete
 
 ---
 
 ## 🚀 Installation
 
-### TypeScript / Node.js
+### Python (Published to PyPI ✅)
 ```bash
-npm install @hivellm/umicp@0.2.2
+pip install umicp-sdk
+# or specific version
+pip install umicp-sdk==0.3.2
 ```
 
-### Python
-```bash
-pip install umicp-python==0.2.2
-```
-
-### Rust (Latest)
+### Rust
 ```toml
 [dependencies]
-umicp-core = "0.2.3"  # Latest with auto URL path detection
-# or
-umicp-core = "0.2.2"  # Stable with custom endpoint support
+umicp-sdk = "0.3.1"
+```
+
+### TypeScript / Node.js
+```bash
+npm install @hivellm/umicp-sdk
+# or specific version
+npm install @hivellm/umicp-sdk@0.3.1
+```
+
+### Go
+```bash
+go get github.com/hivellm/umicp-sdk@v0.3.0
+```
+
+### C# (NuGet Package Ready)
+```bash
+dotnet add package HiveLLM.Umicp.SDK
+# or specific version
+dotnet add package HiveLLM.Umicp.SDK --version 0.3.0
+```
+
+### PHP
+```bash
+composer require hivellm/umicp-sdk
+# or specific version
+composer require hivellm/umicp-sdk:^0.3.0
 ```
 
 ### Java
 ```xml
 <dependency>
     <groupId>com.hivellm</groupId>
-    <artifactId>umicp-core</artifactId>
-    <version>0.2.2</version>
+    <artifactId>umicp-sdk</artifactId>
+    <version>0.3.0</version>
 </dependency>
 ```
 
 ### Kotlin
 ```kotlin
 dependencies {
-    implementation("com.hivellm.org:umicp:0.2.2")
+    implementation("com.hivellm:umicp-sdk:0.3.0")
 }
 ```
 
-### C#
-```bash
-dotnet add package HiveLLM.Umicp --version 0.2.2
+### Swift
+```swift
+dependencies: [
+    .package(url: "https://github.com/hivellm/umicp.git", from: "0.3.0")
+]
 ```
 
-See `VERSION.md` for all installation methods.
-
-### Go (Latest)
-```bash
-go get github.com/hivellm/umicp-go@v0.2.3  # Latest with auto URL path detection
-# or
-go get github.com/hivellm/umicp-go@v0.1.2  # Stable
-```
-
-### PHP
-```bash
-composer require hivellm/umicp:0.2.2
+### Elixir
+```elixir
+def deps do
+  [
+    {:umicp_sdk, "~> 0.3.0"}
+  ]
+end
 ```
 
 ---
@@ -607,7 +640,7 @@ All bindings support the same core concepts:
 
 ```javascript
 // TypeScript/JavaScript
-import { Envelope, OperationType } from '@hivellm/umicp';
+import { Envelope, OperationType } from '@hivellm/umicp-sdk';
 
 const envelope = new Envelope({
   from: "client-001",
@@ -618,7 +651,7 @@ const envelope = new Envelope({
 
 ```python
 # Python
-from umicp import Envelope, OperationType
+from umicp_sdk import Envelope, OperationType
 
 envelope = Envelope(
     from_id="client-001",
@@ -629,13 +662,25 @@ envelope = Envelope(
 
 ```rust
 // Rust
-use umicp_core::{Envelope, OperationType};
+use umicp_sdk::{Envelope, OperationType};
 
 let envelope = Envelope::builder()
     .from("client-001")
     .to("server-001")
     .operation(OperationType::Data)
     .build()?;
+```
+
+```csharp
+// C#
+using Umicp.SDK;
+
+var envelope = new Envelope
+{
+    FromId = "client-001",
+    ToId = "server-001",
+    Operation = OperationType.DATA
+};
 ```
 
 ### 4. Explore Examples
@@ -725,12 +770,15 @@ MIT License - See [LICENSE](../LICENSE) file for details.
 
 ---
 
-**Status**: ✅ **ALL 11 BINDINGS PRODUCTION READY** (Kotlin is Most Feature-Complete 🏆)
+**Status**: ✅ **ALL 10 SDKs PRODUCTION READY & STANDARDIZED**
+
+**Latest Version**: v0.3.x (Package Standardization Release)  
+**Python on PyPI**: https://pypi.org/project/umicp-sdk/ ✅  
+**C# on NuGet**: Package ready for publication  
 
 **Project**: HiveLLM UMICP  
 **Maintained by**: HiveLLM AI Collaborative Team  
 **Repository**: https://github.com/hivellm/umicp  
-**Python on PyPI**: https://pypi.org/project/umicp-python/
 
-*Last updated: 2025-10-18*
+*Last updated: 2025-10-24*
 
