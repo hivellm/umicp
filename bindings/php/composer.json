@@ -1,5 +1,6 @@
 {
   "name": "hivellm/umicp-sdk",
+  "version": "0.3.0",
   "description": "UMICP PHP Bindings - High-performance inter-model communication protocol for AI systems",
   "type": "library",
   "keywords": [
