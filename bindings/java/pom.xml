@@ -7,7 +7,7 @@
 
     <groupId>com.hivellm</groupId>
     <artifactId>umicp-sdk</artifactId>
-    <version>0.2.2</version>
+    <version>0.3.0</version>
     <packaging>pom</packaging>
 
     <name>UMICP Java Bindings</name>
