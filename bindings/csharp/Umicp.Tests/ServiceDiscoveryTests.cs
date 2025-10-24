@@ -1,6 +1,6 @@
 using Xunit;
-using Umicp.Core.Discovery;
-using Umicp.Core.Events;
+using Umicp.SDK.Discovery;
+using Umicp.SDK.Events;
 
 namespace Umicp.Tests;
 

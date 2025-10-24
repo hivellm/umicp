@@ -2,11 +2,11 @@ using System.Collections.Concurrent;
 using System.Net;
 using System.Text;
 using System.Text.Json;
-using Umicp.Core.Events;
-using Umicp.Core.Types;
-using Umicp.Core.Exceptions;
+using Umicp.SDK.Events;
+using Umicp.SDK.Types;
+using Umicp.SDK.Exceptions;
 
-namespace Umicp.Core.Transport;
+namespace Umicp.SDK.Transport;
 
 /// <summary>
 /// HTTP server transport for UMICP

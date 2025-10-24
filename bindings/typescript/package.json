@@ -1,5 +1,5 @@
 {
-  "name": "@hivellm/umicp",
+  "name": "@hivellm/umicp-sdk",
   "version": "0.2.2",
   "description": "UMICP TypeScript/JavaScript bindings with native types and MCP-compatible tool discovery",
   "main": "dist/cjs/index.js",

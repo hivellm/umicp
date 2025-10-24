@@ -1,5 +1,5 @@
-using Umicp.Core.Transport;
-using Umicp.Core.Events;
+using Umicp.SDK.Transport;
+using Umicp.SDK.Events;
 
 namespace Umicp.Examples;
 

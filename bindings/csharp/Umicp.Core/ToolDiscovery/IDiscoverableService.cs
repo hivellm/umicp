@@ -1,6 +1,6 @@
 using System.Text.Json;
 
-namespace Umicp.Core.ToolDiscovery;
+namespace Umicp.SDK.ToolDiscovery;
 
 /// <summary>
 /// Interface for services that support tool discovery

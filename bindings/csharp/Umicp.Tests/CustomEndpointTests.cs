@@ -6,8 +6,8 @@
  * (e.g., Vectorizer uses /umicp, standard servers use /message)
  */
 
-using Umicp.Core.Transport;
-using Umicp.Core.Types;
+using Umicp.SDK.Transport;
+using Umicp.SDK.Types;
 using Xunit;
 using UmicpHttpClient = Umicp.Core.Transport.HttpClient;
 

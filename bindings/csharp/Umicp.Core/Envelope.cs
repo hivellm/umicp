@@ -2,10 +2,10 @@ using System.Security.Cryptography;
 using System.Text;
 using System.Text.Json;
 using System.Text.Json.Serialization;
-using Umicp.Core.Types;
-using Umicp.Core.Exceptions;
+using Umicp.SDK.Types;
+using Umicp.SDK.Exceptions;
 
-namespace Umicp.Core;
+namespace Umicp.SDK;
 
 /// <summary>
 /// UMICP message envelope

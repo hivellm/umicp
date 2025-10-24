@@ -1,9 +1,9 @@
 using System.Collections.Concurrent;
-using Umicp.Core.Transport;
-using Umicp.Core.Events;
-using Umicp.Core.Exceptions;
+using Umicp.SDK.Transport;
+using Umicp.SDK.Events;
+using Umicp.SDK.Exceptions;
 
-namespace Umicp.Core.Pool;
+namespace Umicp.SDK.Pool;
 
 /// <summary>
 /// Connection pool for managing UMICP transports

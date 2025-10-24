@@ -1,9 +1,9 @@
 using System.Collections.Concurrent;
-using Umicp.Core.Types;
-using Umicp.Core.Events;
-using Umicp.Core.Exceptions;
+using Umicp.SDK.Types;
+using Umicp.SDK.Events;
+using Umicp.SDK.Exceptions;
 
-namespace Umicp.Core.Peer;
+namespace Umicp.SDK.Peer;
 
 /// <summary>
 /// Multiplexed peer - acts as both client and server

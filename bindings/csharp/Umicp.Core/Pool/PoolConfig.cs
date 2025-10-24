@@ -1,4 +1,4 @@
-namespace Umicp.Core.Pool;
+namespace Umicp.SDK.Pool;
 
 /// <summary>
 /// Configuration for connection pool

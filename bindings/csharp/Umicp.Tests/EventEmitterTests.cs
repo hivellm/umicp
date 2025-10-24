@@ -1,5 +1,5 @@
 using Xunit;
-using Umicp.Core.Events;
+using Umicp.SDK.Events;
 
 namespace Umicp.Tests;
 

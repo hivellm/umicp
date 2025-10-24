@@ -6,7 +6,7 @@ defmodule UMICP.MixProject do
 
   def project do
     [
-      app: :umicp,
+      app: :umicp_sdk,
       version: @version,
       elixir: "~> 1.14",
       start_permanent: Mix.env() == :prod,

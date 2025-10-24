@@ -1,7 +1,7 @@
 using System.Text.Json;
 using System.Text.Json.Serialization;
 
-namespace Umicp.Core.Types;
+namespace Umicp.SDK.Types;
 
 /// <summary>
 /// Payload metadata hints for UMICP messages

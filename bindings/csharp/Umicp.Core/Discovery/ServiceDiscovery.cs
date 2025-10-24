@@ -1,7 +1,7 @@
 using System.Collections.Concurrent;
-using Umicp.Core.Events;
+using Umicp.SDK.Events;
 
-namespace Umicp.Core.Discovery;
+namespace Umicp.SDK.Discovery;
 
 /// <summary>
 /// Service discovery for UMICP

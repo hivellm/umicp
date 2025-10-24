@@ -1,11 +1,11 @@
 using System.Net.Http.Json;
 using System.Text;
 using System.Text.Json;
-using Umicp.Core.Types;
-using Umicp.Core.Events;
-using Umicp.Core.Exceptions;
+using Umicp.SDK.Types;
+using Umicp.SDK.Events;
+using Umicp.SDK.Exceptions;
 
-namespace Umicp.Core.Transport;
+namespace Umicp.SDK.Transport;
 
 /// <summary>
 /// HTTP client transport for UMICP

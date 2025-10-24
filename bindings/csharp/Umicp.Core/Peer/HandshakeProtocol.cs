@@ -1,6 +1,6 @@
-using Umicp.Core.Types;
+using Umicp.SDK.Types;
 
-namespace Umicp.Core.Peer;
+namespace Umicp.SDK.Peer;
 
 /// <summary>
 /// Handshake protocol for peer connections

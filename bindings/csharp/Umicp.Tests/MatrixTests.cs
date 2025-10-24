@@ -1,6 +1,6 @@
 using Xunit;
-using Umicp.Core;
-using Umicp.Core.Exceptions;
+using Umicp.SDK;
+using Umicp.SDK.Exceptions;
 
 namespace Umicp.Tests;
 

@@ -1,5 +1,5 @@
 using Xunit;
-using Umicp.Core.Types;
+using Umicp.SDK.Types;
 
 namespace Umicp.Tests;
 

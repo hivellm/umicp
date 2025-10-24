@@ -1,4 +1,4 @@
-namespace Umicp.Core.Exceptions;
+namespace Umicp.SDK.Exceptions;
 
 /// <summary>
 /// Base exception for UMICP errors

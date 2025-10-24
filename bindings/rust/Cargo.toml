@@ -1,5 +1,5 @@
 [package]
-name = "umicp-core"
+name = "umicp-sdk"
 version = "0.2.3"
 edition = "2024"
 description = "UMICP Rust bindings for high-performance communication and matrix operations with tool discovery"
@@ -7,12 +7,12 @@ license = "MIT"
 authors = ["HiveLLM AI Collaborative Team"]
 repository = "https://github.com/hivellm/umicp"
 homepage = "https://github.com/hivellm/umicp"
-documentation = "https://docs.rs/umicp-core"
+documentation = "https://docs.rs/umicp-sdk"
 keywords = ["umicp", "communication", "matrix", "federated-learning", "ai"]
 categories = ["api-bindings", "science", "network-programming"]
 
 [lib]
-name = "umicp_core"
+name = "umicp_sdk"
 crate-type = ["cdylib", "lib"]
 
 [dependencies]

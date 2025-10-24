@@ -1,8 +1,8 @@
-using Umicp.Core.Types;
-using Umicp.Core.Transport;
-using Umicp.Core.Events;
+using Umicp.SDK.Types;
+using Umicp.SDK.Transport;
+using Umicp.SDK.Events;
 
-namespace Umicp.Core.Peer;
+namespace Umicp.SDK.Peer;
 
 /// <summary>
 /// Represents a connection to a peer

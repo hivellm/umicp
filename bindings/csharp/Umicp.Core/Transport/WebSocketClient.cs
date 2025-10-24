@@ -1,10 +1,10 @@
 using System.Net.WebSockets;
 using System.Text;
-using Umicp.Core.Types;
-using Umicp.Core.Events;
-using Umicp.Core.Exceptions;
+using Umicp.SDK.Types;
+using Umicp.SDK.Events;
+using Umicp.SDK.Exceptions;
 
-namespace Umicp.Core.Transport;
+namespace Umicp.SDK.Transport;
 
 /// <summary>
 /// WebSocket client transport for UMICP

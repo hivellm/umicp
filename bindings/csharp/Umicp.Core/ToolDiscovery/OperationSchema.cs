@@ -1,7 +1,7 @@
 using System.Text.Json;
 using System.Text.Json.Serialization;
 
-namespace Umicp.Core.ToolDiscovery;
+namespace Umicp.SDK.ToolDiscovery;
 
 /// <summary>
 /// Operation schema compatible with MCP JSON Schema

@@ -1,6 +1,6 @@
 using System.Text.Json.Serialization;
 
-namespace Umicp.Core.Types;
+namespace Umicp.SDK.Types;
 
 /// <summary>
 /// Connection state for UMICP transports

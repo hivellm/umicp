@@ -1,8 +1,8 @@
 using Xunit;
-using Umicp.Core;
-using Umicp.Core.Types;
-using Umicp.Core.Peer;
-using Umicp.Core.Events;
+using Umicp.SDK;
+using Umicp.SDK.Types;
+using Umicp.SDK.Peer;
+using Umicp.SDK.Events;
 
 namespace Umicp.Tests;
 

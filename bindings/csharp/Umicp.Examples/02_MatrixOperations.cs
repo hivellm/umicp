@@ -1,4 +1,4 @@
-using Umicp.Core;
+using Umicp.SDK;
 
 namespace Umicp.Examples;
 

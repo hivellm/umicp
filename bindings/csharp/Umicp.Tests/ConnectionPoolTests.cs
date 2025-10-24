@@ -1,5 +1,5 @@
 using Xunit;
-using Umicp.Core.Pool;
+using Umicp.SDK.Pool;
 
 namespace Umicp.Tests;
 

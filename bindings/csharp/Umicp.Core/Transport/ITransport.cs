@@ -1,7 +1,7 @@
-using Umicp.Core.Types;
-using Umicp.Core.Events;
+using Umicp.SDK.Types;
+using Umicp.SDK.Events;
 
-namespace Umicp.Core.Transport;
+namespace Umicp.SDK.Transport;
 
 /// <summary>
 /// Base interface for UMICP transports

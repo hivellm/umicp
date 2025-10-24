@@ -1,7 +1,7 @@
 using System.Numerics;
-using Umicp.Core.Exceptions;
+using Umicp.SDK.Exceptions;
 
-namespace Umicp.Core;
+namespace Umicp.SDK;
 
 /// <summary>
 /// Result of matrix operations

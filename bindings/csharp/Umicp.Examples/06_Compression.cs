@@ -1,4 +1,4 @@
-using Umicp.Core.Compression;
+using Umicp.SDK.Compression;
 using System.Text;
 
 namespace Umicp.Examples;

@@ -1,6 +1,6 @@
 using System.Text.Json;
 using Xunit;
-using Umicp.Core.ToolDiscovery;
+using Umicp.SDK.ToolDiscovery;
 
 namespace Umicp.Tests;
 

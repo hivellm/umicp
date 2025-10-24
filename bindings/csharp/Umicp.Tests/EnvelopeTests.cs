@@ -1,7 +1,7 @@
 using Xunit;
-using Umicp.Core;
-using Umicp.Core.Types;
-using Umicp.Core.Exceptions;
+using Umicp.SDK;
+using Umicp.SDK.Types;
+using Umicp.SDK.Exceptions;
 
 namespace Umicp.Tests;
 

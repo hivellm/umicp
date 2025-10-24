@@ -1,5 +1,5 @@
 using Xunit;
-using Umicp.Core.Exceptions;
+using Umicp.SDK.Exceptions;
 
 namespace Umicp.Tests;
 

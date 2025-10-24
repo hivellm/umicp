@@ -4,7 +4,7 @@
 import PackageDescription
 
 let package = Package(
-    name: "UMICP",
+    name: "UMICP-SDK",
     platforms: [
         .macOS(.v12),
         .iOS(.v15),
@@ -12,19 +12,19 @@ let package = Package(
     ],
     products: [
         .library(
-            name: "UMICP",
-            targets: ["UMICP"]),
+            name: "UMICP-SDK",
+            targets: ["UMICP-SDK"]),
     ],
     dependencies: [],
     targets: [
         .target(
-            name: "UMICP",
+            name: "UMICP-SDK",
             dependencies: [],
             path: "Sources/UMICP"
         ),
         .testTarget(
             name: "UMICPTests",
-            dependencies: ["UMICP"],
+            dependencies: ["UMICP-SDK"],
             path: "Tests/UMICPTests"
         ),
     ]

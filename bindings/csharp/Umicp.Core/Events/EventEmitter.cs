@@ -1,4 +1,4 @@
-namespace Umicp.Core.Events;
+namespace Umicp.SDK.Events;
 
 /// <summary>
 /// Event types for UMICP

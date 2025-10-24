@@ -1,6 +1,6 @@
 using System.Text.Json.Serialization;
 
-namespace Umicp.Core.Discovery;
+namespace Umicp.SDK.Discovery;
 
 /// <summary>
 /// Service information for discovery

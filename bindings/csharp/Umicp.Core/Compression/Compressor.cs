@@ -1,7 +1,7 @@
 using System.IO.Compression;
-using Umicp.Core.Exceptions;
+using Umicp.SDK.Exceptions;
 
-namespace Umicp.Core.Compression;
+namespace Umicp.SDK.Compression;
 
 /// <summary>
 /// Compression and decompression utilities for UMICP

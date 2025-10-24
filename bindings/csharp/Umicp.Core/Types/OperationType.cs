@@ -1,6 +1,6 @@
 using System.Text.Json.Serialization;
 
-namespace Umicp.Core.Types;
+namespace Umicp.SDK.Types;
 
 /// <summary>
 /// Message operation types for UMICP protocol

@@ -6,7 +6,7 @@
     <modelVersion>4.0.0</modelVersion>
 
     <groupId>com.hivellm</groupId>
-    <artifactId>umicp-java-parent</artifactId>
+    <artifactId>umicp-sdk</artifactId>
     <version>0.2.2</version>
     <packaging>pom</packaging>
 

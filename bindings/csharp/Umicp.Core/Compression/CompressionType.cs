@@ -1,6 +1,6 @@
 using System.Text.Json.Serialization;
 
-namespace Umicp.Core.Compression;
+namespace Umicp.SDK.Compression;
 
 /// <summary>
 /// Compression algorithms supported by UMICP

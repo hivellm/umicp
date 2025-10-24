@@ -1,6 +1,6 @@
 using System.Text.Json.Serialization;
 
-namespace Umicp.Core.Peer;
+namespace Umicp.SDK.Peer;
 
 /// <summary>
 /// Information about a peer in the UMICP network

@@ -1,4 +1,4 @@
-module github.com/hivellm/umicp-go
+module github.com/hivellm/umicp-sdk
 
 go 1.21
 

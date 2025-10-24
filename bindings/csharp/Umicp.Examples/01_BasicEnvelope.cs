@@ -1,5 +1,5 @@
-using Umicp.Core;
-using Umicp.Core.Types;
+using Umicp.SDK;
+using Umicp.SDK.Types;
 
 namespace Umicp.Examples;
 

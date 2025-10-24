@@ -21,7 +21,7 @@
   </ItemGroup>
 
   <ItemGroup>
-    <ProjectReference Include="..\Umicp.Core\Umicp.Core.csproj" />
+    <ProjectReference Include="..\Umicp.SDK\Umicp.SDK.csproj" />
   </ItemGroup>
 
 </Project>
