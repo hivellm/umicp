@@ -6,8 +6,8 @@
     <Nullable>enable</Nullable>
 
     <!-- Package Metadata -->
-    <PackageId>HiveLLM.Umicp</PackageId>
-    <Version>0.2.2</Version>
+    <PackageId>HiveLLM.Umicp.SDK</PackageId>
+    <Version>0.3.0</Version>
     <Authors>HiveLLM Team</Authors>
     <Company>HiveLLM</Company>
     <Product>UMICP C# SDK</Product>
@@ -20,7 +20,7 @@
     <PackageTags>umicp;ai;communication;protocol;websocket;matrix;simd;compression;p2p;hivellm;machine-learning;interoperability</PackageTags>
     <PackageReadmeFile>README.md</PackageReadmeFile>
     <PackageIcon>icon.png</PackageIcon>
-    <PackageReleaseNotes>v0.2.2: Custom Endpoint Support. Features: Configurable endpoint paths for compatibility with different servers (e.g., Vectorizer uses /umicp). All SDKs updated to 0.2.2. No breaking changes - backward compatible with defaults.</PackageReleaseNotes>
+    <PackageReleaseNotes>v0.3.0: Package Standardization. BREAKING CHANGE: PackageId changed from HiveLLM.Umicp to HiveLLM.Umicp.SDK. Namespace changed from Umicp.Core to Umicp.SDK. All functionality preserved. Migration: Update using statements from 'using Umicp.Core' to 'using Umicp.SDK'.</PackageReleaseNotes>
 
     <!-- Documentation -->
     <GenerateDocumentationFile>true</GenerateDocumentationFile>

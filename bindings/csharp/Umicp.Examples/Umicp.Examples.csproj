@@ -1,7 +1,7 @@
 ﻿<Project Sdk="Microsoft.NET.Sdk">
 
   <ItemGroup>
-    <ProjectReference Include="..\Umicp.SDK\Umicp.SDK.csproj" />
+    <ProjectReference Include="..\Umicp.Core\Umicp.Core.csproj" />
   </ItemGroup>
 
   <PropertyGroup>
