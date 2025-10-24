@@ -23,7 +23,7 @@ TypeScript SDK for the Universal Matrix Inter-Communication Protocol (UMICP), pr
 ```bash
 npm install @hivellm/umicp-sdk
 # or
-npm install @hivellm/umicp-sdk@0.2.2
+npm install @hivellm/umicp-sdk@0.3.1
 ```
 
 ### Prerequisites
