@@ -2,7 +2,7 @@
 """WebSocket client example."""
 
 import asyncio
-from umicp import WebSocketClient, EnvelopeBuilder, OperationType
+from umicp_sdk import WebSocketClient, EnvelopeBuilder, OperationType
 
 
 async def main():

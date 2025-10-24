@@ -3,7 +3,7 @@
 import pytest
 import asyncio
 
-from umicp import (
+from umicp_sdk import (
     WebSocketClient,
     TransportError,
     ConnectionState,
@@ -47,7 +47,7 @@ class TestWebSocketClient:
     @pytest.mark.asyncio
     async def test_send_without_connection(self):
         """Test sending without connection."""
-        from umicp import EnvelopeBuilder, OperationType
+        from umicp_sdk import EnvelopeBuilder, OperationType
 
         client = WebSocketClient("ws://localhost:8080")
         envelope = EnvelopeBuilder() \

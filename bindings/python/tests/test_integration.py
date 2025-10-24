@@ -4,7 +4,7 @@ import pytest
 import asyncio
 import numpy as np
 
-from umicp import (
+from umicp_sdk import (
     Envelope,
     EnvelopeBuilder,
     OperationType,

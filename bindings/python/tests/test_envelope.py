@@ -3,7 +3,7 @@
 import pytest
 from datetime import datetime
 
-from umicp import Envelope, EnvelopeBuilder, OperationType, ValidationError, SerializationError
+from umicp_sdk import Envelope, EnvelopeBuilder, OperationType, ValidationError, SerializationError
 
 
 class TestEnvelope:

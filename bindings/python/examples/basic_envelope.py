@@ -1,7 +1,7 @@
 #!/usr/bin/env python3
 """Basic envelope usage example."""
 
-from umicp import Envelope, EnvelopeBuilder, OperationType
+from umicp_sdk import Envelope, EnvelopeBuilder, OperationType
 
 
 def main():

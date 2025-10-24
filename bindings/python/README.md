@@ -1,12 +1,12 @@
-# UMICP Python Bindings
+# UMICP Python SDK
 
-[![PyPI version](https://badge.fury.io/py/umicp-python.svg)](https://pypi.org/project/umicp-python/)
-[![Python Versions](https://img.shields.io/pypi/pyversions/umicp-python.svg)](https://pypi.org/project/umicp-python/)
+[![PyPI version](https://badge.fury.io/py/umicp-sdk.svg)](https://pypi.org/project/umicp-sdk/)
+[![Python Versions](https://img.shields.io/pypi/pyversions/umicp-sdk.svg)](https://pypi.org/project/umicp-sdk/)
 [![License](https://img.shields.io/badge/license-MIT-blue.svg)](LICENSE)
 
-High-performance Python bindings for the Universal Matrix Inter-Communication Protocol (UMICP).
+High-performance Python SDK for the Universal Matrix Inter-Communication Protocol (UMICP).
 
-## 🚀 Status: **Production Release** (v0.2.2)
+## 🚀 Status: **Production Release** (v0.3.0)
 
 | Component | Status | Description |
 |-----------|--------|-------------|
@@ -32,10 +32,10 @@ High-performance Python bindings for the Universal Matrix Inter-Communication Pr
 
 ```bash
 # Install from PyPI (recommended)
-pip install umicp-python
+pip install umicp-sdk
 
 # Or install specific version
-pip install umicp-python==0.2.2
+pip install umicp-sdk==0.3.0
 
 # Install from source
 git clone https://github.com/hivellm/umicp
@@ -46,7 +46,9 @@ pip install -e .
 pip install -e ".[dev]"
 ```
 
-**PyPI Package**: [https://pypi.org/project/umicp-python/](https://pypi.org/project/umicp-python/)
+**PyPI Package**: [https://pypi.org/project/umicp-sdk/](https://pypi.org/project/umicp-sdk/)
+
+**Note**: Package name follows PEP 625 (normalized as `umicp_sdk` internally)
 
 ### Requirements
 
@@ -63,7 +65,7 @@ pip install -e ".[dev]"
 ### Basic Envelope Usage
 
 ```python
-from umicp import Envelope, EnvelopeBuilder, OperationType
+from umicp_sdk import Envelope, EnvelopeBuilder, OperationType
 
 # Create envelope
 envelope = EnvelopeBuilder() \
@@ -86,7 +88,7 @@ print(f"From: {received.from_id}, To: {received.to_id}")
 
 ```python
 import numpy as np
-from umicp import Matrix
+from umicp_sdk import Matrix
 
 matrix = Matrix()
 
@@ -114,7 +116,7 @@ print(f"Product:\n{result.result}")
 
 ```python
 import asyncio
-from umicp import WebSocketClient, Envelope, OperationType, EnvelopeBuilder
+from umicp_sdk import WebSocketClient, Envelope, OperationType, EnvelopeBuilder
 
 async def main():
     # Create client
@@ -150,7 +152,7 @@ asyncio.run(main())
 
 ```python
 import asyncio
-from umicp import WebSocketPeer, EnvelopeBuilder, OperationType
+from umicp_sdk import WebSocketPeer, EnvelopeBuilder, OperationType
 
 async def main():
     # Create peer
@@ -186,7 +188,7 @@ asyncio.run(main())
 
 ```python
 import asyncio
-from umicp import ServiceDiscovery, ServiceInfo
+from umicp_sdk import ServiceDiscovery, ServiceInfo
 
 async def main():
     discovery = ServiceDiscovery()
@@ -215,7 +217,7 @@ asyncio.run(main())
 ### Compression
 
 ```python
-from umicp import Compression, CompressionType
+from umicp_sdk import Compression, CompressionType
 
 # Compress data
 data = b"Hello, UMICP! " * 100
@@ -469,7 +471,7 @@ Contributions are welcome! Please see [CONTRIBUTING.md](../../CONTRIBUTING.md) f
 ## 🆕 Custom Endpoint Support (v0.2.2)
 
 ```python
-from umicp import HttpClient
+from umicp_sdk import HttpClient
 
 # Method 1: Default endpoint (/message)
 client = HttpClient("http://localhost:8000")

@@ -5,10 +5,10 @@ from typing import Optional
 import websockets
 from websockets.client import WebSocketClientProtocol
 
-from umicp.envelope import Envelope
-from umicp.types import ConnectionState, TransportStats
-from umicp.error import TransportError
-from umicp.events import EventEmitter
+from umicp_sdk.envelope import Envelope
+from umicp_sdk.types import ConnectionState, TransportStats
+from umicp_sdk.error import TransportError
+from umicp_sdk.events import EventEmitter
 
 
 class WebSocketClient:

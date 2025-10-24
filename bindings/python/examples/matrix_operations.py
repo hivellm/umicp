@@ -2,7 +2,7 @@
 """Matrix operations example."""
 
 import numpy as np
-from umicp import Matrix
+from umicp_sdk import Matrix
 
 
 def main():

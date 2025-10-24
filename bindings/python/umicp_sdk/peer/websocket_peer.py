@@ -1,11 +1,11 @@
 """Multiplexed WebSocket peer implementation."""
 
 from typing import Dict, List, Optional
-from umicp.transport.websocket_server import WebSocketServer
-from umicp.transport.websocket_client import WebSocketClient
-from umicp.envelope import Envelope
-from umicp.events import EventEmitter
-from umicp.peer.info import PeerInfo
+from umicp_sdk.transport.websocket_server import WebSocketServer
+from umicp_sdk.transport.websocket_client import WebSocketClient
+from umicp_sdk.envelope import Envelope
+from umicp_sdk.events import EventEmitter
+from umicp_sdk.peer.info import PeerInfo
 
 
 class WebSocketPeer:

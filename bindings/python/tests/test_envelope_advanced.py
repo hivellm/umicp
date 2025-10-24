@@ -3,7 +3,7 @@
 import pytest
 from datetime import datetime
 
-from umicp import (
+from umicp_sdk import (
     Envelope,
     EnvelopeBuilder,
     OperationType,

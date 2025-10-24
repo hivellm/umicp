@@ -2,7 +2,7 @@
 
 from typing import Optional
 from datetime import datetime
-from umicp.types import ConnectionState
+from umicp_sdk.types import ConnectionState
 
 
 class PeerConnection:

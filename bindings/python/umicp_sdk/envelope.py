@@ -6,8 +6,8 @@ from typing import Dict, Any, Optional, List
 from datetime import datetime
 from uuid import uuid4
 
-from umicp.types import OperationType, PayloadHint
-from umicp.error import ValidationError, SerializationError
+from umicp_sdk.types import OperationType, PayloadHint
+from umicp_sdk.error import ValidationError, SerializationError
 
 
 class Envelope:

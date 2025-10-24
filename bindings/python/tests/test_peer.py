@@ -2,7 +2,7 @@
 
 import pytest
 
-from umicp import (
+from umicp_sdk import (
     PeerInfo,
     PeerConnection,
     HandshakeProtocol,

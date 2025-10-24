@@ -3,7 +3,7 @@
 import pytest
 import numpy as np
 
-from umicp import Matrix, MatrixOperationError
+from umicp_sdk import Matrix, MatrixOperationError
 
 
 class TestMatrixAdvanced:

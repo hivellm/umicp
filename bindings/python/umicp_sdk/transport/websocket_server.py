@@ -8,10 +8,10 @@ import websockets
 from websockets.server import WebSocketServerProtocol
 from datetime import datetime
 
-from umicp.envelope import Envelope
-from umicp.types import TransportStats
-from umicp.error import TransportError
-from umicp.events import EventEmitter
+from umicp_sdk.envelope import Envelope
+from umicp_sdk.types import TransportStats
+from umicp_sdk.error import TransportError
+from umicp_sdk.events import EventEmitter
 
 
 class ClientConnection:

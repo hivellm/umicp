@@ -1,7 +1,7 @@
 """Handshake protocol implementation."""
 
-from umicp.envelope import Envelope, EnvelopeBuilder
-from umicp.types import OperationType
+from umicp_sdk.envelope import Envelope, EnvelopeBuilder
+from umicp_sdk.types import OperationType
 
 
 class HandshakeProtocol:

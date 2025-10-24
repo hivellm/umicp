@@ -4,7 +4,7 @@ from typing import List, Union, Optional
 from dataclasses import dataclass
 import numpy as np
 
-from umicp.error import MatrixOperationError
+from umicp_sdk.error import MatrixOperationError
 
 
 @dataclass

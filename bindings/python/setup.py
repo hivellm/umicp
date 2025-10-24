@@ -1,12 +1,12 @@
 #!/usr/bin/env python3
-"""Setup script for UMICP Python bindings."""
+"""Setup script for UMICP Python SDK."""
 
 from setuptools import setup, find_packages
 
 setup(
-    packages=find_packages(include=["umicp", "umicp.*"]),
+    packages=find_packages(include=["umicp_sdk", "umicp_sdk.*"]),
     package_data={
-        "umicp": ["py.typed"],
+        "umicp_sdk": ["py.typed"],
     },
 )
 

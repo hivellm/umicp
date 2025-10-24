@@ -1,8 +1,8 @@
 """HTTP/2 client implementation."""
 
 import httpx
-from umicp.envelope import Envelope
-from umicp.types import TransportStats
+from umicp_sdk.envelope import Envelope
+from umicp_sdk.types import TransportStats
 
 
 class HttpClient:

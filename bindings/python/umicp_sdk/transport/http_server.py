@@ -6,10 +6,10 @@ from datetime import datetime
 from aiohttp import web
 from aiohttp.web import middleware
 
-from umicp.envelope import Envelope
-from umicp.types import TransportStats
-from umicp.events import EventEmitter
-from umicp.error import TransportError
+from umicp_sdk.envelope import Envelope
+from umicp_sdk.types import TransportStats
+from umicp_sdk.events import EventEmitter
+from umicp_sdk.error import TransportError
 
 
 class HttpServer:
