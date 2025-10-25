@@ -4,6 +4,36 @@ All notable changes to UMICP will be documented in this file.
 
 This is the **BIP-05 implementation** for HiveLLM's standardized inter-model communication protocol.
 
+## [0.3.0] - 2025-10-25
+
+### 📦 SDK Publications - Package Standardization
+
+**6 SDKs Published (60% of total):**
+
+#### Elixir SDK v0.3.0 - Published to Hex.pm ✅
+- **Published**: https://hex.pm/packages/umicp
+- **Documentation**: https://hexdocs.pm/umicp
+- **Installation**: `{:umicp, "~> 0.3.0"}`
+- **Package Name**: Standardized to `umicp`
+- **Features**: Native Elixir terms, OTP integration, GenServer transport, pipe-friendly API
+- **Tests**: 100+ ExUnit tests (100% passing)
+- **Platform**: Elixir 1.15+, OTP 25+
+
+#### Previously Published SDKs
+- ✅ **Python v0.3.2** → PyPI (https://pypi.org/project/umicp-sdk/)
+- ✅ **Rust v0.3.1** → crates.io (https://crates.io/crates/umicp-sdk)
+- ✅ **TypeScript v0.3.1** → npm (https://www.npmjs.com/package/@hivellm/umicp-sdk)
+- ✅ **C# v0.3.0** → NuGet (https://www.nuget.org/packages/HiveLLM.Umicp.SDK)
+- ✅ **PHP v0.3.0** → Packagist (https://packagist.org/packages/hivellm/umicp-sdk)
+
+### Summary
+- **Total SDKs**: 10 production-ready
+- **Published**: 6/10 (60%)
+- **Total Tests**: 1,500+ across all SDKs
+- **Status**: All production-ready with comprehensive test coverage
+
+---
+
 ## [0.2.3] - 2025-10-17
 
 ### 🔄 SDK Improvements - Automatic URL Path Detection

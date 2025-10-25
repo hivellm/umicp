@@ -9,7 +9,7 @@
 > **BIP-05 Implementation** - High-performance communication protocol for AI model interoperability
 
 **Latest Version**: v0.3.x (Package Standardization Release)  
-**Python SDK**: Published to PyPI ✅  
+**Published SDKs**: 6/10 (Python, Rust, TypeScript, C#, PHP, Elixir) ✅  
 **Status**: All 10 SDKs Standardized & Production Ready
 
 ## 📋 What is UMICP?
@@ -114,8 +114,9 @@ composer require hivellm/umicp-sdk
 # Kotlin
 # implementation("com.hivellm:umicp-sdk:0.3.0")
 
-# Elixir
-# {:umicp_sdk, "~> 0.3.0"}
+# Elixir (Published to Hex.pm ✅)
+# Add to mix.exs:
+# {:umicp, "~> 0.3.0"}
 
 # Java
 # <artifactId>umicp-sdk</artifactId> <version>0.3.0</version>
@@ -150,17 +151,17 @@ cd bindings/php && composer install && ./vendor/bin/phpunit
 | Language | Package Name | Version | Published | Production Ready |
 |----------|--------------|---------|-----------|------------------|
 | **Python** | `umicp_sdk` | **0.3.2** | ✅ **PyPI** | ✅ YES |
-| **Rust** | `umicp-sdk` | **0.3.1** | 📦 To publish | ✅ YES |
-| **TypeScript** | `@hivellm/umicp-sdk` | **0.3.1** | 📦 To publish | ✅ YES |
+| **Rust** | `umicp-sdk` | **0.3.1** | ✅ **crates.io** | ✅ YES |
+| **TypeScript** | `@hivellm/umicp-sdk` | **0.3.1** | ✅ **npm** | ✅ YES |
+| **C#** | `HiveLLM.Umicp.SDK` | **0.3.0** | ✅ **NuGet** | ✅ YES |
+| **PHP** | `hivellm/umicp-sdk` | **0.3.0** | ✅ **Packagist** | ✅ YES |
+| **Elixir** | `umicp` | **0.3.0** | ✅ **Hex.pm** | ✅ YES |
 | **Go** | `github.com/hivellm/umicp-sdk` | **0.3.0** | Auto-indexed | ✅ YES |
-| **C#** | `HiveLLM.Umicp.SDK` | **0.3.0** | 📦 NuGet ready | ✅ YES |
-| **PHP** | `hivellm/umicp-sdk` | **0.3.0** | 📦 To publish | ✅ YES |
 | **Swift** | `UMICP-SDK` | **0.3.0** | SPM | ✅ YES |
 | **Kotlin** | `umicp-sdk` | **0.3.0** | 📦 To publish | ✅ YES |
-| **Elixir** | `umicp_sdk` | **0.3.0** | 📦 To publish | ✅ YES |
 | **Java** | `umicp-sdk` | **0.3.0** | 📦 To publish | ✅ YES |
 
-**Summary**: 10/10 SDKs production-ready & standardized (100%) | **Latest**: v0.3.2 Python on PyPI ✅
+**Summary**: 10/10 SDKs production-ready & standardized (100%) | **Published**: 6/10 (Python, Rust, TypeScript, C#, PHP, Elixir) ✅
 
 **v0.3.0 Major Update**: Package name standardization across all SDKs
 
@@ -358,11 +359,15 @@ cd bindings/php && composer install && ./vendor/bin/phpunit
 - **Use Case**: iOS/macOS applications, server-side Swift, cross-platform tools
 - **Swift**: 5.9+ required
 
-#### Elixir (Production Ready) 🆕
+#### Elixir (Published to Hex.pm ✅)
 - **Status**: ✅ Complete & Production-ready
+- **Package**: `umicp`
+- **Version**: **v0.3.0**
+- **Hex.pm**: https://hex.pm/packages/umicp
+- **Documentation**: https://hexdocs.pm/umicp
+- **Installation**: `{:umicp, "~> 0.3.0"}`
 - **Tests**: 100+ tests (100% passing)
 - **Coverage**: 100%
-- **Version**: v0.2.0
 - **Platform**: Elixir 1.15+, OTP 25+
 - **Features**:
   - ✅ Native Elixir terms (no wrappers needed)
@@ -371,7 +376,7 @@ cd bindings/php && composer install && ./vendor/bin/phpunit
   - ✅ Pure Elixir matrix operations
   - ✅ OTP integration (supervision, behaviors)
   - ✅ Pipe-friendly API
-  - ✅ Hex package ready
+  - ✅ Published to Hex.pm
   - ✅ Fault-tolerant design
   - ✅ Type specs (@type, @spec)
 - **Use Case**: Distributed systems, Phoenix applications, real-time apps, fault-tolerant services
@@ -405,15 +410,19 @@ cd bindings/php && composer install && ./vendor/bin/phpunit
 
 ### ✅ **Production Ready SDKs**
 All 10 standardized SDKs (v0.3.x):
-- **Python**: `umicp_sdk` v0.3.2 - Published to PyPI ✅
-- **Rust**: `umicp-sdk` v0.3.1 - Zero-copy, High-performance
-- **TypeScript**: `@hivellm/umicp-sdk` v0.3.1 - Node.js/Deno, WebSocket
+
+**Published (6/10):**
+- **Python**: `umicp_sdk` v0.3.2 → [PyPI](https://pypi.org/project/umicp-sdk/) ✅
+- **Rust**: `umicp-sdk` v0.3.1 → [crates.io](https://crates.io/crates/umicp-sdk) ✅
+- **TypeScript**: `@hivellm/umicp-sdk` v0.3.1 → [npm](https://www.npmjs.com/package/@hivellm/umicp-sdk) ✅
+- **C#**: `HiveLLM.Umicp.SDK` v0.3.0 → [NuGet](https://www.nuget.org/packages/HiveLLM.Umicp.SDK) ✅
+- **PHP**: `hivellm/umicp-sdk` v0.3.0 → [Packagist](https://packagist.org/packages/hivellm/umicp-sdk) ✅
+- **Elixir**: `umicp` v0.3.0 → [Hex.pm](https://hex.pm/packages/umicp) ✅
+
+**Ready to Publish (4/10):**
 - **Go**: `github.com/hivellm/umicp-sdk` v0.3.0 - Cloud-native, Microservices
-- **C#**: `HiveLLM.Umicp.SDK` v0.3.0 - NuGet ready, .NET 8.0, SIMD
-- **PHP**: `hivellm/umicp-sdk` v0.3.0 - Laravel/Symfony/WordPress
 - **Swift**: `UMICP-SDK` v0.3.0 - iOS/macOS/Linux, Accelerate SIMD
 - **Kotlin**: `umicp-sdk` v0.3.0 - JVM, Coroutines, HTTP/2, LZ4
-- **Elixir**: `umicp_sdk` v0.3.0 - OTP, Phoenix, Fault-tolerant
 - **Java**: `umicp-sdk` v0.3.0 - Enterprise, Spring ecosystem
 
 ### 📋 **Planned Features**
@@ -426,15 +435,15 @@ All 10 standardized SDKs (v0.3.x):
 ## 🧪 Testing
 
 ### Test Coverage (v0.3.x)
-- **Python**: 100% coverage (162+ tests) - Published to PyPI ✅
-- **Rust**: 100% coverage (123+ tests) - Package standardized
-- **TypeScript**: 100% coverage (209+ tests) - Package standardized
+- **Python**: 100% coverage (162+ tests) - ✅ Published to PyPI
+- **Rust**: 100% coverage (123+ tests) - ✅ Published to crates.io
+- **TypeScript**: 100% coverage (209+ tests) - ✅ Published to npm
+- **C#**: 100% coverage (128+ tests) - ✅ Published to NuGet
+- **PHP**: 95% coverage (145+ tests) - ✅ Published to Packagist
+- **Elixir**: 100% coverage (100+ tests) - ✅ Published to Hex.pm
 - **Go**: 90%+ coverage (85+ tests) - Package standardized
-- **C#**: 100% coverage (128+ tests) - NuGet ready
-- **PHP**: 95% coverage (145+ tests) - Package standardized
 - **Swift**: 100% coverage (100+ tests) - Package standardized
 - **Kotlin**: 96% coverage (140+ tests) - Package standardized
-- **Elixir**: 100% coverage (100+ tests) - Package standardized
 - **Java**: 97% coverage (380+ tests) - Package standardized
 
 **Total**: 1,500+ tests across all SDKs | **Status**: All passing ✅
