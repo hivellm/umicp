@@ -1,0 +1,440 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8">
+    <meta http-equiv="x-ua-compatible" content="ie=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="generator" content="ExDoc v0.38.4">
+    <meta name="project" content="UMICP v0.3.0">
+
+
+    <title>UMICP.Matrix.Operations — UMICP v0.3.0</title>
+
+    <link rel="stylesheet" href="dist/html-elixir-RLZO5U2C.css" />
+
+    <script defer src="dist/sidebar_items-6A919FCD.js"></script>
+    <script defer src="docs_config.js"></script>
+    <script defer src="dist/html-Y223O6DN.js"></script>
+
+  </head>
+  <body>
+    <script>(()=>{var t="ex_doc:settings",e="dark";var o="dark",s="light";var E="sidebar_state",n="closed";var r="sidebar_width";var a="sidebar-open";var i=new URLSearchParams(window.location.search),S=i.get("theme")||JSON.parse(localStorage.getItem(t)||"{}").theme;(S===o||S!==s&&window.matchMedia("(prefers-color-scheme: dark)").matches)&&document.body.classList.add(e);var d=sessionStorage.getItem(E),A=d!==n&&!window.matchMedia(`screen and (max-width: ${768}px)`).matches;document.body.classList.toggle(a,A);var c=sessionStorage.getItem(r);c&&document.body.style.setProperty("--sidebarWidth",`${c}px`);var p=/(Macintosh|iPhone|iPad|iPod)/.test(window.navigator.userAgent);document.documentElement.classList.toggle("apple-os",p);})();
+</script>
+
+<div class="body-wrapper">
+
+<button id="sidebar-menu" class="sidebar-button sidebar-toggle" aria-label="toggle sidebar" aria-controls="sidebar">
+  <i class="ri-menu-line ri-lg" title="Collapse/expand sidebar"></i>
+</button>
+
+<nav id="sidebar" class="sidebar">
+
+  <div class="sidebar-header">
+    <div class="sidebar-projectInfo">
+
+      <div>
+        <a href="https://github.com/hivellm/umicp" class="sidebar-projectName" translate="no">
+UMICP
+        </a>
+        <div class="sidebar-projectVersion" translate="no">
+          v0.3.0
+        </div>
+      </div>
+    </div>
+    <ul id="sidebar-list-nav" class="sidebar-list-nav" role="tablist" data-extras=""></ul>
+  </div>
+</nav>
+
+<output role="status" id="toast"></output>
+
+<main class="content page-module" id="main" data-type="modules">
+  <div id="content" class="content-inner">
+    <div class="top-search">
+      <div class="search-settings">
+        <form class="search-bar" action="search.html">
+          <label class="search-label">
+            <span class="sr-only">Search documentation of UMICP</span>
+            <input name="q" type="text" class="search-input" placeholder="Press / to search" autocomplete="off" autocorrect="off" autocapitalize="off" spellcheck="false" />
+          </label>
+          <button type="submit" class="search-button" aria-label="Submit Search" tabindex="-1">
+            <i class="ri-search-2-line ri-lg" aria-hidden="true"></i>
+          </button>
+          <button type="button" tabindex="-1" class="search-close-button" aria-hidden="true">
+            <i class="ri-close-line ri-lg" title="Cancel search"></i>
+          </button>
+        </form>
+        <div class="autocomplete">
+        </div>
+        <button class="icon-settings display-settings">
+          <i class="ri-settings-3-line"></i>
+          <span class="sr-only">Settings</span>
+        </button>
+      </div>
+    </div>
+
+<div id="top-content">
+  <div class="heading-with-actions top-heading">
+    <h1>
+      <span translate="no">UMICP.Matrix.Operations</span> 
+      <small class="app-vsn" translate="no">(UMICP v0.3.0)</small>
+
+    </h1>
+
+      <a href="https://github.com/hivellm/umicp/blob/v0.3.0/lib/umicp/matrix/operations.ex#L1" title="View Source" class="icon-action" rel="help">
+        <i class="ri-code-s-slash-line" aria-hidden="true"></i>
+        <span class="sr-only">View Source</span>
+      </a>
+
+  </div>
+
+
+    <section id="moduledoc">
+<p>Matrix and vector operations for UMICP.</p><p>Provides high-performance matrix operations using either Nx (Numerical Elixir)
+when available, or pure Elixir fallback implementations.</p>
+    </section>
+
+</div>
+
+  <section id="summary" class="details-list">
+    <h1 class="section-heading">
+      <a class="hover-link" href="#summary">
+        <i class="ri-link-m" aria-hidden="true"></i>
+      </a>
+      <span class="text">Summary</span>
+    </h1>
+<div class="summary-functions summary">
+  <h2>
+    <a href="#functions">Functions</a>
+  </h2>
+
+    <div class="summary-row">
+      <div class="summary-signature">
+        <a href="#dot_product/2" data-no-tooltip="" translate="no">dot_product(a, b)</a>
+
+      </div>
+
+        <div class="summary-synopsis"><p>Calculate dot product of two vectors.</p></div>
+
+    </div>
+
+    <div class="summary-row">
+      <div class="summary-signature">
+        <a href="#matrix_multiply/5" data-no-tooltip="" translate="no">matrix_multiply(a, b, rows, cols, k)</a>
+
+      </div>
+
+        <div class="summary-synopsis"><p>Multiply two matrices.</p></div>
+
+    </div>
+
+    <div class="summary-row">
+      <div class="summary-signature">
+        <a href="#vector_add/2" data-no-tooltip="" translate="no">vector_add(a, b)</a>
+
+      </div>
+
+        <div class="summary-synopsis"><p>Add two vectors.</p></div>
+
+    </div>
+
+    <div class="summary-row">
+      <div class="summary-signature">
+        <a href="#vector_magnitude/1" data-no-tooltip="" translate="no">vector_magnitude(vector)</a>
+
+      </div>
+
+        <div class="summary-synopsis"><p>Calculate vector magnitude (Euclidean norm).</p></div>
+
+    </div>
+
+    <div class="summary-row">
+      <div class="summary-signature">
+        <a href="#vector_normalize/1" data-no-tooltip="" translate="no">vector_normalize(vector)</a>
+
+      </div>
+
+        <div class="summary-synopsis"><p>Normalize vector to unit length.</p></div>
+
+    </div>
+
+    <div class="summary-row">
+      <div class="summary-signature">
+        <a href="#vector_scale/2" data-no-tooltip="" translate="no">vector_scale(vector, scalar)</a>
+
+      </div>
+
+        <div class="summary-synopsis"><p>Multiply vector by scalar.</p></div>
+
+    </div>
+
+    <div class="summary-row">
+      <div class="summary-signature">
+        <a href="#vector_subtract/2" data-no-tooltip="" translate="no">vector_subtract(a, b)</a>
+
+      </div>
+
+        <div class="summary-synopsis"><p>Subtract two vectors.</p></div>
+
+    </div>
+
+</div>
+
+  </section>
+
+
+  <section id="functions" class="details-list">
+    <h1 class="section-heading">
+      <a class="hover-link" href="#functions">
+        <i class="ri-link-m" aria-hidden="true"></i>
+      </a>
+      <span class="text">Functions</span>
+    </h1>
+
+    <div class="functions-list">
+<section class="detail" id="dot_product/2">
+
+  <div class="detail-header">
+    <a href="#dot_product/2" class="detail-link" data-no-tooltip="" aria-label="Link to this function">
+      <i class="ri-link-m" aria-hidden="true"></i>
+    </a>
+    <div class="heading-with-actions">
+      <h1 class="signature" translate="no">dot_product(a, b)</h1>
+
+
+        <a href="https://github.com/hivellm/umicp/blob/v0.3.0/lib/umicp/matrix/operations.ex#L57" class="icon-action" rel="help" aria-label="View Source">
+          <i class="ri-code-s-slash-line" aria-hidden="true"></i>
+        </a>
+
+    </div>
+  </div>
+
+  <section class="docstring">
+
+      <div class="specs">
+
+          <pre translate="no"><span class="attribute">@spec</span> dot_product([<a href="https://hexdocs.pm/elixir/typespecs.html#basic-types">float</a>()], [<a href="https://hexdocs.pm/elixir/typespecs.html#basic-types">float</a>()]) :: {:ok, <a href="https://hexdocs.pm/elixir/typespecs.html#basic-types">float</a>()} | {:error, <a href="https://hexdocs.pm/elixir/typespecs.html#built-in-types">term</a>()}</pre>
+
+      </div>
+
+<p>Calculate dot product of two vectors.</p><h2 id="dot_product/2-examples" class="section-heading"><a href="#dot_product/2-examples" class="hover-link"><i class="ri-link-m" aria-hidden="true"></i></a><span class="text">Examples</span></h2><pre><code class="makeup elixir" translate="no"><span class="gp unselectable">iex&gt; </span><span class="nc">UMICP.Matrix.Operations</span><span class="o">.</span><span class="n">dot_product</span><span class="p" data-group-id="2903112970-1">(</span><span class="p" data-group-id="2903112970-2">[</span><span class="mf">1.0</span><span class="p">,</span><span class="w"> </span><span class="mf">2.0</span><span class="p">,</span><span class="w"> </span><span class="mf">3.0</span><span class="p" data-group-id="2903112970-2">]</span><span class="p">,</span><span class="w"> </span><span class="p" data-group-id="2903112970-3">[</span><span class="mf">4.0</span><span class="p">,</span><span class="w"> </span><span class="mf">5.0</span><span class="p">,</span><span class="w"> </span><span class="mf">6.0</span><span class="p" data-group-id="2903112970-3">]</span><span class="p" data-group-id="2903112970-1">)</span><span class="w">
+</span><span class="p" data-group-id="2903112970-4">{</span><span class="ss">:ok</span><span class="p">,</span><span class="w"> </span><span class="mf">32.0</span><span class="p" data-group-id="2903112970-4">}</span></code></pre>
+  </section>
+</section>
+<section class="detail" id="matrix_multiply/5">
+
+  <div class="detail-header">
+    <a href="#matrix_multiply/5" class="detail-link" data-no-tooltip="" aria-label="Link to this function">
+      <i class="ri-link-m" aria-hidden="true"></i>
+    </a>
+    <div class="heading-with-actions">
+      <h1 class="signature" translate="no">matrix_multiply(a, b, rows, cols, k)</h1>
+
+
+        <a href="https://github.com/hivellm/umicp/blob/v0.3.0/lib/umicp/matrix/operations.ex#L90" class="icon-action" rel="help" aria-label="View Source">
+          <i class="ri-code-s-slash-line" aria-hidden="true"></i>
+        </a>
+
+    </div>
+  </div>
+
+  <section class="docstring">
+
+      <div class="specs">
+
+          <pre translate="no"><span class="attribute">@spec</span> matrix_multiply(
+  [<a href="https://hexdocs.pm/elixir/typespecs.html#basic-types">float</a>()],
+  [<a href="https://hexdocs.pm/elixir/typespecs.html#basic-types">float</a>()],
+  <a href="https://hexdocs.pm/elixir/typespecs.html#basic-types">pos_integer</a>(),
+  <a href="https://hexdocs.pm/elixir/typespecs.html#basic-types">pos_integer</a>(),
+  <a href="https://hexdocs.pm/elixir/typespecs.html#basic-types">pos_integer</a>()
+) ::
+  {:ok, [<a href="https://hexdocs.pm/elixir/typespecs.html#basic-types">float</a>()]} | {:error, <a href="https://hexdocs.pm/elixir/typespecs.html#built-in-types">term</a>()}</pre>
+
+      </div>
+
+<p>Multiply two matrices.</p><h2 id="matrix_multiply/5-parameters" class="section-heading"><a href="#matrix_multiply/5-parameters" class="hover-link"><i class="ri-link-m" aria-hidden="true"></i></a><span class="text">Parameters</span></h2><ul><li><code class="inline">a</code>: First matrix (rows x cols) as flat list</li><li><code class="inline">b</code>: Second matrix (cols x k) as flat list</li><li><code class="inline">rows</code>: Number of rows in matrix A</li><li><code class="inline">cols</code>: Number of columns in A / rows in B</li><li><code class="inline">k</code>: Number of columns in matrix B</li></ul><h2 id="matrix_multiply/5-examples" class="section-heading"><a href="#matrix_multiply/5-examples" class="hover-link"><i class="ri-link-m" aria-hidden="true"></i></a><span class="text">Examples</span></h2><pre><code class="makeup elixir" translate="no"><span class="gp unselectable">iex&gt; </span><span class="nc">UMICP.Matrix.Operations</span><span class="o">.</span><span class="n">matrix_multiply</span><span class="p" data-group-id="3996827748-1">(</span><span class="w">
+</span><span class="gp unselectable">...&gt; </span><span class="w">  </span><span class="p" data-group-id="3996827748-2">[</span><span class="mf">1.0</span><span class="p">,</span><span class="w"> </span><span class="mf">2.0</span><span class="p">,</span><span class="w"> </span><span class="mf">3.0</span><span class="p">,</span><span class="w"> </span><span class="mf">4.0</span><span class="p" data-group-id="3996827748-2">]</span><span class="p">,</span><span class="w">
+</span><span class="gp unselectable">...&gt; </span><span class="w">  </span><span class="p" data-group-id="3996827748-3">[</span><span class="mf">5.0</span><span class="p">,</span><span class="w"> </span><span class="mf">6.0</span><span class="p">,</span><span class="w"> </span><span class="mf">7.0</span><span class="p">,</span><span class="w"> </span><span class="mf">8.0</span><span class="p" data-group-id="3996827748-3">]</span><span class="p">,</span><span class="w">
+</span><span class="gp unselectable">...&gt; </span><span class="w">  </span><span class="mi">2</span><span class="p">,</span><span class="w"> </span><span class="mi">2</span><span class="p">,</span><span class="w"> </span><span class="mi">2</span><span class="w">
+</span><span class="gp unselectable">...&gt; </span><span class="p" data-group-id="3996827748-1">)</span><span class="w">
+</span><span class="p" data-group-id="3996827748-4">{</span><span class="ss">:ok</span><span class="p">,</span><span class="w"> </span><span class="p" data-group-id="3996827748-5">[</span><span class="mf">19.0</span><span class="p">,</span><span class="w"> </span><span class="mf">22.0</span><span class="p">,</span><span class="w"> </span><span class="mf">43.0</span><span class="p">,</span><span class="w"> </span><span class="mf">50.0</span><span class="p" data-group-id="3996827748-5">]</span><span class="p" data-group-id="3996827748-4">}</span></code></pre>
+  </section>
+</section>
+<section class="detail" id="vector_add/2">
+
+  <div class="detail-header">
+    <a href="#vector_add/2" class="detail-link" data-no-tooltip="" aria-label="Link to this function">
+      <i class="ri-link-m" aria-hidden="true"></i>
+    </a>
+    <div class="heading-with-actions">
+      <h1 class="signature" translate="no">vector_add(a, b)</h1>
+
+
+        <a href="https://github.com/hivellm/umicp/blob/v0.3.0/lib/umicp/matrix/operations.ex#L18" class="icon-action" rel="help" aria-label="View Source">
+          <i class="ri-code-s-slash-line" aria-hidden="true"></i>
+        </a>
+
+    </div>
+  </div>
+
+  <section class="docstring">
+
+      <div class="specs">
+
+          <pre translate="no"><span class="attribute">@spec</span> vector_add([<a href="https://hexdocs.pm/elixir/typespecs.html#basic-types">float</a>()], [<a href="https://hexdocs.pm/elixir/typespecs.html#basic-types">float</a>()]) :: {:ok, [<a href="https://hexdocs.pm/elixir/typespecs.html#basic-types">float</a>()]} | {:error, <a href="https://hexdocs.pm/elixir/typespecs.html#built-in-types">term</a>()}</pre>
+
+      </div>
+
+<p>Add two vectors.</p><h2 id="vector_add/2-examples" class="section-heading"><a href="#vector_add/2-examples" class="hover-link"><i class="ri-link-m" aria-hidden="true"></i></a><span class="text">Examples</span></h2><pre><code class="makeup elixir" translate="no"><span class="gp unselectable">iex&gt; </span><span class="nc">UMICP.Matrix.Operations</span><span class="o">.</span><span class="n">vector_add</span><span class="p" data-group-id="7402024851-1">(</span><span class="p" data-group-id="7402024851-2">[</span><span class="mf">1.0</span><span class="p">,</span><span class="w"> </span><span class="mf">2.0</span><span class="p" data-group-id="7402024851-2">]</span><span class="p">,</span><span class="w"> </span><span class="p" data-group-id="7402024851-3">[</span><span class="mf">3.0</span><span class="p">,</span><span class="w"> </span><span class="mf">4.0</span><span class="p" data-group-id="7402024851-3">]</span><span class="p" data-group-id="7402024851-1">)</span><span class="w">
+</span><span class="p" data-group-id="7402024851-4">{</span><span class="ss">:ok</span><span class="p">,</span><span class="w"> </span><span class="p" data-group-id="7402024851-5">[</span><span class="mf">4.0</span><span class="p">,</span><span class="w"> </span><span class="mf">6.0</span><span class="p" data-group-id="7402024851-5">]</span><span class="p" data-group-id="7402024851-4">}</span></code></pre>
+  </section>
+</section>
+<section class="detail" id="vector_magnitude/1">
+
+  <div class="detail-header">
+    <a href="#vector_magnitude/1" class="detail-link" data-no-tooltip="" aria-label="Link to this function">
+      <i class="ri-link-m" aria-hidden="true"></i>
+    </a>
+    <div class="heading-with-actions">
+      <h1 class="signature" translate="no">vector_magnitude(vector)</h1>
+
+
+        <a href="https://github.com/hivellm/umicp/blob/v0.3.0/lib/umicp/matrix/operations.ex#L119" class="icon-action" rel="help" aria-label="View Source">
+          <i class="ri-code-s-slash-line" aria-hidden="true"></i>
+        </a>
+
+    </div>
+  </div>
+
+  <section class="docstring">
+
+      <div class="specs">
+
+          <pre translate="no"><span class="attribute">@spec</span> vector_magnitude([<a href="https://hexdocs.pm/elixir/typespecs.html#basic-types">float</a>()]) :: <a href="https://hexdocs.pm/elixir/typespecs.html#basic-types">float</a>()</pre>
+
+      </div>
+
+<p>Calculate vector magnitude (Euclidean norm).</p>
+  </section>
+</section>
+<section class="detail" id="vector_normalize/1">
+
+  <div class="detail-header">
+    <a href="#vector_normalize/1" class="detail-link" data-no-tooltip="" aria-label="Link to this function">
+      <i class="ri-link-m" aria-hidden="true"></i>
+    </a>
+    <div class="heading-with-actions">
+      <h1 class="signature" translate="no">vector_normalize(vector)</h1>
+
+
+        <a href="https://github.com/hivellm/umicp/blob/v0.3.0/lib/umicp/matrix/operations.ex#L130" class="icon-action" rel="help" aria-label="View Source">
+          <i class="ri-code-s-slash-line" aria-hidden="true"></i>
+        </a>
+
+    </div>
+  </div>
+
+  <section class="docstring">
+
+      <div class="specs">
+
+          <pre translate="no"><span class="attribute">@spec</span> vector_normalize([<a href="https://hexdocs.pm/elixir/typespecs.html#basic-types">float</a>()]) :: {:ok, [<a href="https://hexdocs.pm/elixir/typespecs.html#basic-types">float</a>()]} | {:error, <a href="https://hexdocs.pm/elixir/typespecs.html#built-in-types">term</a>()}</pre>
+
+      </div>
+
+<p>Normalize vector to unit length.</p>
+  </section>
+</section>
+<section class="detail" id="vector_scale/2">
+
+  <div class="detail-header">
+    <a href="#vector_scale/2" class="detail-link" data-no-tooltip="" aria-label="Link to this function">
+      <i class="ri-link-m" aria-hidden="true"></i>
+    </a>
+    <div class="heading-with-actions">
+      <h1 class="signature" translate="no">vector_scale(vector, scalar)</h1>
+
+
+        <a href="https://github.com/hivellm/umicp/blob/v0.3.0/lib/umicp/matrix/operations.ex#L44" class="icon-action" rel="help" aria-label="View Source">
+          <i class="ri-code-s-slash-line" aria-hidden="true"></i>
+        </a>
+
+    </div>
+  </div>
+
+  <section class="docstring">
+
+      <div class="specs">
+
+          <pre translate="no"><span class="attribute">@spec</span> vector_scale([<a href="https://hexdocs.pm/elixir/typespecs.html#basic-types">float</a>()], <a href="https://hexdocs.pm/elixir/typespecs.html#basic-types">float</a>()) :: [<a href="https://hexdocs.pm/elixir/typespecs.html#basic-types">float</a>()]</pre>
+
+      </div>
+
+<p>Multiply vector by scalar.</p>
+  </section>
+</section>
+<section class="detail" id="vector_subtract/2">
+
+  <div class="detail-header">
+    <a href="#vector_subtract/2" class="detail-link" data-no-tooltip="" aria-label="Link to this function">
+      <i class="ri-link-m" aria-hidden="true"></i>
+    </a>
+    <div class="heading-with-actions">
+      <h1 class="signature" translate="no">vector_subtract(a, b)</h1>
+
+
+        <a href="https://github.com/hivellm/umicp/blob/v0.3.0/lib/umicp/matrix/operations.ex#L31" class="icon-action" rel="help" aria-label="View Source">
+          <i class="ri-code-s-slash-line" aria-hidden="true"></i>
+        </a>
+
+    </div>
+  </div>
+
+  <section class="docstring">
+
+      <div class="specs">
+
+          <pre translate="no"><span class="attribute">@spec</span> vector_subtract([<a href="https://hexdocs.pm/elixir/typespecs.html#basic-types">float</a>()], [<a href="https://hexdocs.pm/elixir/typespecs.html#basic-types">float</a>()]) :: {:ok, [<a href="https://hexdocs.pm/elixir/typespecs.html#basic-types">float</a>()]} | {:error, <a href="https://hexdocs.pm/elixir/typespecs.html#built-in-types">term</a>()}</pre>
+
+      </div>
+
+<p>Subtract two vectors.</p>
+  </section>
+</section>
+
+    </div>
+  </section>
+
+    <footer class="footer">
+      <p>
+
+          <span class="line">
+            <a href="https://hex.pm/packages/umicp/0.3.0" class="footer-hex-package">Hex Package</a>
+
+            <a href="https://preview.hex.pm/preview/umicp/0.3.0">Hex Preview</a>
+
+          </span>
+
+        <span class="line">
+          <button class="a-main footer-button display-quick-switch" title="Search HexDocs packages">
+            Search HexDocs
+          </button>
+
+        </span>
+      </p>
+
+      <p class="built-using">
+        Built using
+        <a href="https://github.com/elixir-lang/ex_doc" title="ExDoc" target="_blank" rel="help noopener" translate="no">ExDoc</a> (v0.38.4) for the
+
+          <a href="https://elixir-lang.org" title="Elixir" target="_blank" translate="no">Elixir programming language</a>
+
+      </p>
+
+    </footer>
+  </div>
+</main>
+</div>
+
+  </body>
+</html>
