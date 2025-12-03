@@ -1,0 +1,48 @@
+# Elixir - Build artifacts
+_build/
+deps/
+*.beam
+*.ez
+erl_crash.dump
+
+# Elixir Language Server
+.elixir_ls/
+
+# Documentation
+doc/
+cover/
+
+# Mix artifacts
+.fetch
+*.tar
+
+# Test artifacts
+test-results/
+*.cover
+
+# Credo
+.credo/
+
+# Dialyzer
+.plt
+dialyxir_erlang-*.plt
+dialyxir_elixir-*.plt
+
+# Environment variables
+.env
+.env.local
+
+# IDE
+.vscode/
+.idea/
+*.swp
+*.swo
+*~
+
+# OS
+.DS_Store
+Thumbs.db
+
+# Logs
+*.log
+

@@ -56,10 +56,10 @@ Test UMICP implementations directly from Cursor using the MCP bridge:
 
 ```bash
 # Install globally
-npm install -g @hivellm/umicp2mcp
+npm install -g @hivehub/umicp2mcp
 
 # Or run with npx
-npx @hivellm/umicp2mcp
+npx @hivehub/umicp2mcp
 ```
 
 **Configure in Cursor** (`.cursor/mcp.json`):
@@ -68,7 +68,7 @@ npx @hivellm/umicp2mcp
   "mcpServers": {
     "umicp": {
       "command": "npx",
-      "args": ["@hivellm/umicp2mcp"]
+      "args": ["@hivehub/umicp2mcp"]
     }
   }
 }
@@ -97,16 +97,16 @@ pip install umicp-sdk
 cargo add umicp-sdk
 
 # TypeScript
-npm install @hivellm/umicp-sdk
+npm install @hivehub/umicp-sdk
 
 # Go
-go get github.com/hivellm/umicp-sdk
+go get github.com/hivehub/umicp-sdk
 
 # C# (NuGet package ready)
 dotnet add package HiveLLM.Umicp.SDK
 
 # PHP
-composer require hivellm/umicp-sdk
+composer require hivehub/umicp-sdk
 
 # Swift
 # Add to Package.swift: .package(url: "https://github.com/hivellm/umicp.git", from: "0.3.0")

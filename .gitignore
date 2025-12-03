@@ -44,8 +44,10 @@ docs/build/
 *.exe
 *.dll
 *.so
+*.so.*
 *.dylib
 *.a
+*.lib
 
 # CMake
 CMakeCache.txt
@@ -53,6 +55,9 @@ CMakeFiles/
 cmake_install.cmake
 CTestTestfile.cmake
 Makefile
+cpp/build/
+cpp/build-ffi/
+cpp/build-test/
 
 # Rust
 Cargo.lock
@@ -88,6 +93,18 @@ test-results/
 *.pem
 *.crt
 secrets/
+
+# Elixir
+_build/
+deps/
+*.beam
+*.ez
+erl_crash.dump
+.elixir_ls/
+doc/
+cover/
+.fetch
+*.tar
 
 # UMICP specific
 *.umicp
