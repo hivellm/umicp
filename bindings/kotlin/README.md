@@ -40,21 +40,21 @@ Kotlin SDK for the Universal Matrix Intelligent Communication Protocol (UMICP), 
 ### Gradle (Kotlin DSL)
 ```kotlin
 dependencies {
-    implementation("com.hivellm:umicp-sdk:0.1.2")
+    implementation("com.HiveHub:umicp-sdk:0.1.2")
 }
 ```
 
 ### Gradle (Groovy)
 ```groovy
 dependencies {
-    implementation 'com.hivellm:umicp-sdk:0.1.2'
+    implementation 'com.HiveHub:umicp-sdk:0.1.2'
 }
 ```
 
 ### Maven
 ```xml
 <dependency>
-    <groupId>com.hivellm</groupId>
+    <groupId>com.HiveHub</groupId>
     <artifactId>umicp-sdk</artifactId>
     <version>0.1.2</version>
 </dependency>
@@ -70,8 +70,8 @@ dependencies {
 ### Basic Envelope Usage
 
 ```kotlin
-import com.hivellm.umicp.core.*
-import com.hivellm.umicp.types.*
+import com.HiveHub.umicp.core.*
+import com.HiveHub.umicp.types.*
 
 // Create envelope with DSL
 val envelope = Envelope.build {
@@ -100,7 +100,7 @@ val hash = envelope.hash()
 ### Matrix Operations
 
 ```kotlin
-import com.hivellm.umicp.core.*
+import com.HiveHub.umicp.core.*
 
 // Using extension functions
 val a = floatArrayOf(1f, 2f, 3f)
@@ -131,7 +131,7 @@ val result = Matrix.matrixMultiply(matA, matB, 2, 2, 2)
 ### WebSocket Communication
 
 ```kotlin
-import com.hivellm.umicp.transport.*
+import com.HiveHub.umicp.transport.*
 import kotlinx.coroutines.runBlocking
 
 runBlocking {
@@ -168,7 +168,7 @@ runBlocking {
 ### Service Discovery
 
 ```kotlin
-import com.hivellm.umicp.discovery.*
+import com.HiveHub.umicp.discovery.*
 import kotlinx.coroutines.runBlocking
 
 runBlocking {
@@ -193,7 +193,7 @@ runBlocking {
 ### Connection Pool
 
 ```kotlin
-import com.hivellm.umicp.pool.*
+import com.HiveHub.umicp.pool.*
 import kotlinx.coroutines.runBlocking
 
 runBlocking {
@@ -224,7 +224,7 @@ runBlocking {
 ### HTTP/2 Client
 
 ```kotlin
-import com.hivellm.umicp.transport.*
+import com.HiveHub.umicp.transport.*
 import kotlinx.coroutines.runBlocking
 
 runBlocking {
@@ -246,7 +246,7 @@ runBlocking {
 ### HTTP/2 Server
 
 ```kotlin
-import com.hivellm.umicp.transport.*
+import com.HiveHub.umicp.transport.*
 import kotlinx.coroutines.runBlocking
 
 runBlocking {
@@ -273,7 +273,7 @@ runBlocking {
 ### Compression (GZIP/DEFLATE/LZ4)
 
 ```kotlin
-import com.hivellm.umicp.compression.*
+import com.HiveHub.umicp.compression.*
 
 // GZIP compression
 val gzip = data.compress(CompressionAlgorithm.GZIP)
@@ -459,7 +459,7 @@ runBlocking {
 ./gradlew test jacocoTestReport
 
 # Run specific test class
-./gradlew test --tests "com.hivellm.umicp.core.EnvelopeTest"
+./gradlew test --tests "com.HiveHub.umicp.core.EnvelopeTest"
 ```
 
 ### Test Coverage
@@ -482,7 +482,7 @@ Pure Kotlin implementation:
 
 ```bash
 # Clone repository
-git clone https://github.com/hivellm/umicp.git
+git clone https://github.com/HiveHub/umicp.git
 cd umicp/bindings/kotlin
 
 # Build
@@ -512,7 +512,7 @@ The SDK includes comprehensive examples:
 
 Run examples:
 ```bash
-./gradlew run --args="com.hivellm.umicp.examples.BasicExample"
+./gradlew run --args="com.HiveHub.umicp.examples.BasicExample"
 ```
 
 ## 🗺️ Roadmap

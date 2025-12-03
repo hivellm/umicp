@@ -9,13 +9,13 @@ This package provides a bridge between the Model Context Protocol (MCP) and UMIC
 ## Installation
 
 ```bash
-npm install -g @hivellm/umicp2mcp
+npm install -g @hivehub/umicp2mcp
 ```
 
 Or run directly with npx:
 
 ```bash
-npx @hivellm/umicp2mcp
+npx @hivehub/umicp2mcp
 ```
 
 ## Usage
@@ -25,7 +25,7 @@ npx @hivellm/umicp2mcp
 Start the bridge server:
 
 ```bash
-npx @hivellm/umicp2mcp
+npx @hivehub/umicp2mcp
 ```
 
 ### Configure in Cursor
@@ -37,7 +37,7 @@ Add to your MCP settings (`.cursor/mcp.json` or similar):
   "mcpServers": {
     "umicp": {
       "command": "npx",
-      "args": ["@hivellm/umicp2mcp"]
+      "args": ["@hivehub/umicp2mcp"]
     }
   }
 }

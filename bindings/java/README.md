@@ -62,7 +62,7 @@ See [IMPLEMENTATION_STATUS_UPDATE.md](./docs/IMPLEMENTATION_STATUS_UPDATE.md) fo
 ### Maven
 ```xml
 <dependency>
-    <groupId>com.hivellm</groupId>
+    <groupId>com.HiveHub</groupId>
     <artifactId>umicp-core</artifactId>
     <version>0.1.3</version>
 </dependency>
@@ -70,7 +70,7 @@ See [IMPLEMENTATION_STATUS_UPDATE.md](./docs/IMPLEMENTATION_STATUS_UPDATE.md) fo
 
 ### Gradle
 ```gradle
-implementation 'com.hivellm:umicp-core:0.1.3'
+implementation 'com.HiveHub:umicp-core:0.1.3'
 ```
 
 ### Prerequisites
@@ -82,8 +82,8 @@ implementation 'com.hivellm:umicp-core:0.1.3'
 ### Basic Envelope Usage
 
 ```java
-import com.hivellm.umicp.core.*;
-import com.hivellm.umicp.types.*;
+import com.HiveHub.umicp.core.*;
+import com.HiveHub.umicp.types.*;
 import java.util.UUID;
 
 // Create envelope using fluent API
@@ -116,7 +116,7 @@ String hash = UMICP.hash(envelope);
 ### Matrix Operations
 
 ```java
-import com.hivellm.umicp.core.*;
+import com.HiveHub.umicp.core.*;
 
 try (Matrix matrix = UMICP.createMatrix()) {
     // Vector operations
@@ -148,7 +148,7 @@ try (Matrix matrix = UMICP.createMatrix()) {
 ### Service Discovery Example
 
 ```java
-import com.hivellm.umicp.discovery.*;
+import com.HiveHub.umicp.discovery.*;
 
 // Create service discovery manager
 ServiceDiscovery discovery = new ServiceDiscovery();
@@ -192,7 +192,7 @@ int removed = discovery.cleanupStaleServices();
 ### Connection Pool Example
 
 ```java
-import com.hivellm.umicp.transport.pool.*;
+import com.HiveHub.umicp.transport.pool.*;
 
 // Create pool configuration
 PoolConfig config = new PoolConfig()
@@ -469,7 +469,7 @@ JNI implementation (planned):
 
 ```bash
 # Clone repository
-git clone https://github.com/hivellm/umicp.git
+git clone https://github.com/HiveHub/umicp.git
 cd umicp/bindings/java
 
 # Build with Maven

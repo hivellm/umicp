@@ -346,14 +346,14 @@ Contributions are welcome! Please see [CONTRIBUTING.md](CONTRIBUTING.md) for gui
 
 ## 🔗 Related Projects
 
-- **UMICP Core (C++)**: https://github.com/hivellm/umicp/tree/main/cpp
-- **UMICP Rust**: https://github.com/hivellm/umicp/tree/main/bindings/rust
-- **UMICP Swift**: https://github.com/hivellm/umicp/tree/main/bindings/swift
-- **UMICP TypeScript**: https://github.com/hivellm/umicp/tree/main/bindings/typescript
+- **UMICP Core (C++)**: https://github.com/HiveHub/umicp/tree/main/cpp
+- **UMICP Rust**: https://github.com/HiveHub/umicp/tree/main/bindings/rust
+- **UMICP Swift**: https://github.com/HiveHub/umicp/tree/main/bindings/swift
+- **UMICP TypeScript**: https://github.com/HiveHub/umicp/tree/main/bindings/typescript
 
 ---
 
 **UMICP Elixir v0.2.0** - Universal Matrix Inter-Communication Protocol for Elixir
 
-Built with ❤️ by the HiveLLM AI Collaborative Team
+Built with ❤️ by the HiveHub AI Collaborative Team
 

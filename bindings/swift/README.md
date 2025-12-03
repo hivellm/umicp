@@ -420,5 +420,5 @@ Contributions are welcome! Please see [CONTRIBUTING.md](CONTRIBUTING.md) for gui
 
 **UMICP Swift v0.2.0** - Universal Matrix Inter-Communication Protocol for Swift
 
-Built with ❤️ by the HiveLLM AI Collaborative Team
+Built with ❤️ by the HiveHub AI Collaborative Team
 

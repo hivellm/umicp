@@ -103,7 +103,7 @@ npm install @hivehub/umicp-sdk
 go get github.com/hivehub/umicp-sdk
 
 # C# (NuGet package ready)
-dotnet add package HiveLLM.Umicp.SDK
+dotnet add package HiveHub.Umicp.SDK
 
 # PHP
 composer require hivehub/umicp-sdk
@@ -112,7 +112,7 @@ composer require hivehub/umicp-sdk
 # Add to Package.swift: .package(url: "https://github.com/hivellm/umicp.git", from: "0.3.0")
 
 # Kotlin
-# implementation("com.hivellm:umicp-sdk:0.3.0")
+# implementation("com.hivehub:umicp-sdk:0.3.0")
 
 # Elixir (Published to Hex.pm ✅)
 # Add to mix.exs:
@@ -152,11 +152,11 @@ cd bindings/php && composer install && ./vendor/bin/phpunit
 |----------|--------------|---------|-----------|------------------|
 | **Python** | `umicp_sdk` | **0.3.2** | ✅ **PyPI** | ✅ YES |
 | **Rust** | `umicp-sdk` | **0.3.1** | ✅ **crates.io** | ✅ YES |
-| **TypeScript** | `@hivellm/umicp-sdk` | **0.3.1** | ✅ **npm** | ✅ YES |
-| **C#** | `HiveLLM.Umicp.SDK` | **0.3.0** | ✅ **NuGet** | ✅ YES |
-| **PHP** | `hivellm/umicp-sdk` | **0.3.0** | ✅ **Packagist** | ✅ YES |
+| **TypeScript** | `@hivehub/umicp-sdk` | **0.3.1** | ✅ **npm** | ✅ YES |
+| **C#** | `HiveHub.Umicp.SDK` | **0.3.0** | ✅ **NuGet** | ✅ YES |
+| **PHP** | `hivehub/umicp-sdk` | **0.3.0** | ✅ **Packagist** | ✅ YES |
 | **Elixir** | `umicp` | **0.3.0** | ✅ **Hex.pm** | ✅ YES |
-| **Go** | `github.com/hivellm/umicp-sdk` | **0.3.0** | Auto-indexed | ✅ YES |
+| **Go** | `github.com/hivehub/umicp-sdk` | **0.3.0** | Auto-indexed | ✅ YES |
 | **Swift** | `UMICP-SDK` | **0.3.0** | SPM | ✅ YES |
 | **Kotlin** | `umicp-sdk` | **0.3.0** | 📦 To publish | ✅ YES |
 | **Java** | `umicp-sdk` | **0.3.0** | 📦 To publish | ✅ YES |
@@ -316,10 +316,10 @@ cd bindings/php && composer install && ./vendor/bin/phpunit
 
 #### C# (NuGet Package Ready)
 - **Status**: ✅ Complete & Production-ready
-- **Package**: `HiveLLM.Umicp.SDK`
+- **Package**: `HiveHub.Umicp.SDK`
 - **Version**: **v0.3.0**
 - **NuGet**: Package ready for publication
-- **Installation**: `dotnet add package HiveLLM.Umicp.SDK`
+- **Installation**: `dotnet add package HiveHub.Umicp.SDK`
 - **Namespace**: `using Umicp.SDK;`
 - **Tests**: 128/128 tests (100% passing)
 - **Coverage**: 100%
@@ -414,9 +414,9 @@ All 10 standardized SDKs (v0.3.x):
 **Published (6/10):**
 - **Python**: `umicp_sdk` v0.3.2 → [PyPI](https://pypi.org/project/umicp-sdk/) ✅
 - **Rust**: `umicp-sdk` v0.3.1 → [crates.io](https://crates.io/crates/umicp-sdk) ✅
-- **TypeScript**: `@hivellm/umicp-sdk` v0.3.1 → [npm](https://www.npmjs.com/package/@hivellm/umicp-sdk) ✅
-- **C#**: `HiveLLM.Umicp.SDK` v0.3.0 → [NuGet](https://www.nuget.org/packages/HiveLLM.Umicp.SDK) ✅
-- **PHP**: `hivellm/umicp-sdk` v0.3.0 → [Packagist](https://packagist.org/packages/hivellm/umicp-sdk) ✅
+- **TypeScript**: `@hivehub/umicp-sdk` v0.3.1 → [npm](https://www.npmjs.com/package/@hivehub/umicp-sdk) ✅
+- **C#**: `HiveHub.Umicp.SDK` v0.3.0 → [NuGet](https://www.nuget.org/packages/HiveHub.Umicp.SDK) ✅
+- **PHP**: `hivehub/umicp-sdk` v0.3.0 → [Packagist](https://packagist.org/packages/hivehub/umicp-sdk) ✅
 - **Elixir**: `umicp` v0.3.0 → [Hex.pm](https://hex.pm/packages/umicp) ✅
 
 **Ready to Publish (4/10):**
@@ -485,9 +485,9 @@ All 10 standardized SDKs (v0.3.x):
 ### Bindings Overview
 - **Complete Overview**: [bindings/README.md](./bindings/README.md) - Consolidated guide for all language bindings
 
-## 🔗 Part of HiveLLM Ecosystem
+## 🔗 Part of HiveHub Ecosystem
 
-UMICP is a core component of the **HiveLLM ecosystem**, providing high-performance binary protocol for agent-to-agent communication:
+UMICP is a core component of the **HiveHub ecosystem**, providing high-performance binary protocol for agent-to-agent communication:
 
 - **Vectorizer**: Semantic search and vector database (uses UMICP for agent integration)
 - **Task Queue**: Workflow orchestration (uses UMICP for distributed task coordination)
@@ -496,7 +496,7 @@ UMICP is a core component of the **HiveLLM ecosystem**, providing high-performan
 
 **Use Case**: UMICP enables >10,000 msg/sec agent-to-agent communication with sub-millisecond latency, perfect for real-time multi-agent coordination, federated learning, and distributed AI systems.
 
-See the [HiveLLM paper](../gov/papers/vectorizer_paper.md) for comprehensive ecosystem documentation.
+See the [HiveHub paper](../gov/papers/vectorizer_paper.md) for comprehensive ecosystem documentation.
 
 ## 📄 License
 
@@ -506,4 +506,4 @@ MIT License - See [LICENSE](LICENSE) file for details.
 
 **BIP**: BIP-05 - Universal Matrix Intelligent Communication Protocol  
 **Status**: ✅ Core Features Complete  
-**Repository**: HiveLLM UMICP Implementation
+**Repository**: HiveHub UMICP Implementation

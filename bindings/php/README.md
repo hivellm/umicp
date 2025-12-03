@@ -27,12 +27,12 @@
 
 ```bash
 # Install via Packagist
-composer require hivellm/umicp-sdk
+composer require hivehub/umicp-sdk
 
 # Or add to composer.json
 {
     "require": {
-        "hivellm/umicp-sdk": "^0.3"
+        "hivehub/umicp-sdk": "^0.3"
     }
 }
 ```

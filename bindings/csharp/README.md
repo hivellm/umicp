@@ -1,14 +1,14 @@
 # 🌐 UMICP C# SDK
 
-[![NuGet](https://img.shields.io/nuget/v/HiveLLM.Umicp.SDK.svg)](https://www.nuget.org/packages/HiveLLM.Umicp.SDK/)
+[![NuGet](https://img.shields.io/nuget/v/HiveHub.Umicp.SDK.svg)](https://www.nuget.org/packages/HiveHub.Umicp.SDK/)
 [![License](https://img.shields.io/badge/license-MIT-blue.svg)](LICENSE)
 [![.NET](https://img.shields.io/badge/.NET-8.0-purple.svg)](https://dotnet.microsoft.com/)
 [![Version](https://img.shields.io/badge/version-0.3.0-blue.svg)](CHANGELOG.md)
-[![BIP-05](https://img.shields.io/badge/BIP--05-Implementation-green.svg)](https://github.com/hivellm/hive-gov/tree/main/bips/BIP-05)
+[![BIP-05](https://img.shields.io/badge/BIP--05-Implementation-green.svg)](https://github.com/HiveHub/hive-gov/tree/main/bips/BIP-05)
 
 > **Production-Ready** C# SDK for the Universal Matrix Intelligent Communication Protocol (UMICP) with MCP-compatible tool discovery
 
-**Package**: HiveLLM.Umicp.SDK
+**Package**: HiveHub.Umicp.SDK
 **Version**: 0.3.0
 
 ## 📋 What is UMICP?
@@ -27,13 +27,13 @@ UMICP enables efficient inter-model communication between AI systems with:
 ### NuGet Package
 
 ```bash
-dotnet add package HiveLLM.Umicp.SDK
+dotnet add package HiveHub.Umicp.SDK
 ```
 
 ### Build from Source
 
 ```bash
-git clone https://github.com/hivellm/umicp.git
+git clone https://github.com/HiveHub/umicp.git
 cd umicp/bindings/csharp
 dotnet build
 dotnet test
@@ -388,9 +388,9 @@ Umicp.Core/
 └── Matrix.cs           # Matrix operations
 ```
 
-## 🔗 Part of HiveLLM Ecosystem
+## 🔗 Part of HiveHub Ecosystem
 
-UMICP is a core component of the **HiveLLM ecosystem**, providing high-performance binary protocol for agent-to-agent communication:
+UMICP is a core component of the **HiveHub ecosystem**, providing high-performance binary protocol for agent-to-agent communication:
 
 - **Vectorizer**: Semantic search and vector database
 - **Task Queue**: Workflow orchestration
@@ -407,22 +407,22 @@ MIT License - See [LICENSE](LICENSE) file for details.
 
 ## 🔗 Links
 
-- **Main Repository**: https://github.com/hivellm/umicp
-- **Documentation**: https://github.com/hivellm/umicp/tree/main/docs
-- **BIP-05 Specification**: https://github.com/hivellm/hive-gov/tree/main/bips/BIP-05
-- **Issues**: https://github.com/hivellm/umicp/issues
+- **Main Repository**: https://github.com/HiveHub/umicp
+- **Documentation**: https://github.com/HiveHub/umicp/tree/main/docs
+- **BIP-05 Specification**: https://github.com/HiveHub/hive-gov/tree/main/bips/BIP-05
+- **Issues**: https://github.com/HiveHub/umicp/issues
 
 ## 📞 Support
 
 - Open an issue on GitHub
 - Join our Discord community
-- Email: team@hivellm.org
+- Email: team@HiveHub.org
 
 ---
 
 **BIP**: BIP-05 - Universal Matrix Intelligent Communication Protocol
 **Status**: ✅ Production Ready (C# v0.2.2)
-**Repository**: HiveLLM UMICP C# Implementation
+**Repository**: HiveHub UMICP C# Implementation
 
 ## 📝 Version 0.2.2 Release Notes
 

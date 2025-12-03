@@ -438,9 +438,9 @@ ruff check umicp/
 
 ---
 
-## 🔗 Part of HiveLLM Ecosystem
+## 🔗 Part of HiveHub Ecosystem
 
-UMICP Python bindings integrate with the HiveLLM ecosystem:
+UMICP Python bindings integrate with the HiveHub ecosystem:
 
 - **Vectorizer**: Semantic search with UMICP communication
 - **Task Queue**: Workflow orchestration
