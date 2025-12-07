@@ -27,7 +27,7 @@
   "license": "MIT",
   "dependencies": {
     "@modelcontextprotocol/sdk": "^1.0.4",
-    "@hivellm/umicp": "^0.2.2"
+    "@hivehub/umicp-sdk": "^0.3.2"
   },
   "devDependencies": {
     "@types/node": "^22.0.0",

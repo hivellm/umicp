@@ -8,9 +8,9 @@ importers:
 
   .:
     dependencies:
-      '@hivellm/umicp':
-        specifier: ^0.2.2
-        version: 0.2.2
+      '@hivehub/umicp-sdk':
+        specifier: ^0.3.2
+        version: 0.3.2
       '@modelcontextprotocol/sdk':
         specifier: ^1.0.4
         version: 1.20.1
@@ -24,8 +24,8 @@ importers:
 
 packages:
 
-  '@hivellm/umicp@0.2.2':
-    resolution: {integrity: sha512-cii1S+9VAXU+TlszfGe0OpD7Z9XRHGQFKoUNN58Iyl4mhu3ABjOesy+godMq/WyOoJaBXS1bz1+S9/6g4BSO3Q==}
+  '@hivehub/umicp-sdk@0.3.2':
+    resolution: {integrity: sha512-mtC7udyE6Kigr0uT81IZ6EL3hGGLkIYePJR4NovNPpu2JiV5g90GjpEBUmpuZMGT8u04XXFK7CE3kKWVL4xDvA==}
     engines: {node: '>=16.0.0'}
     cpu: [x64, arm64]
     os: [linux, darwin, win32]
@@ -412,7 +412,7 @@ packages:
 
 snapshots:
 
-  '@hivellm/umicp@0.2.2':
+  '@hivehub/umicp-sdk@0.3.2':
     dependencies:
       node-addon-api: 7.1.1
       ws: 8.18.3

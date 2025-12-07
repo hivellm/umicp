@@ -1,2 +1,3 @@
 onlyBuiltDependencies:
+  - '@hivehub/umicp-sdk'
   - '@hivellm/umicp'
