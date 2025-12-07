@@ -1,6 +1,6 @@
 {
   "name": "@hivehub/umicp2mcp",
-  "version": "0.1.2",
+  "version": "0.1.3",
   "description": "MCP Bridge for UMICP - Execute UMICP calls through Model Context Protocol",
   "type": "module",
   "main": "dist/index.js",
