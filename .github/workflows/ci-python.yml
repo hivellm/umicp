@@ -1,0 +1,52 @@
+name: CI • Python
+
+on:
+  push:
+    branches: [main]
+    paths:
+      - "bindings/python/**"
+      - ".github/workflows/ci-python.yml"
+  pull_request:
+    paths:
+      - "bindings/python/**"
+      - ".github/workflows/ci-python.yml"
+  workflow_dispatch:
+
+defaults:
+  run:
+    working-directory: bindings/python
+
+jobs:
+  test:
+    name: lint & test (py${{ matrix.python-version }})
+    runs-on: ubuntu-latest
+    strategy:
+      fail-fast: false
+      matrix:
+        python-version: ["3.9", "3.11", "3.12"]
+    steps:
+      - uses: actions/checkout@v4
+
+      - name: Set up Python
+        uses: actions/setup-python@v5
+        with:
+          python-version: ${{ matrix.python-version }}
+          cache: pip
+
+      - name: Install dependencies
+        run: |
+          python -m pip install --upgrade pip
+          pip install -e ".[dev]"
+
+      - name: Ruff (lint)
+        run: ruff check .
+
+      - name: Black (format check)
+        run: black --check .
+
+      - name: Mypy (types)
+        run: mypy umicp_sdk
+        continue-on-error: true
+
+      - name: Pytest
+        run: pytest

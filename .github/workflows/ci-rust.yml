@@ -1,0 +1,47 @@
+name: CI • Rust
+
+on:
+  push:
+    branches: [main]
+    paths:
+      - "bindings/rust/**"
+      - ".github/workflows/ci-rust.yml"
+  pull_request:
+    paths:
+      - "bindings/rust/**"
+      - ".github/workflows/ci-rust.yml"
+  workflow_dispatch:
+
+defaults:
+  run:
+    working-directory: bindings/rust
+
+env:
+  CARGO_TERM_COLOR: always
+
+jobs:
+  test:
+    name: fmt, clippy & test
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+
+      - name: Install Rust toolchain
+        uses: dtolnay/rust-toolchain@stable
+        with:
+          components: rustfmt, clippy
+
+      - name: Cache cargo
+        uses: Swatinem/rust-cache@v2
+        with:
+          workspaces: bindings/rust
+
+      - name: Format check
+        run: cargo fmt --all -- --check
+
+      - name: Clippy
+        run: cargo clippy --all-targets --all-features -- -D warnings
+        continue-on-error: true
+
+      - name: Test
+        run: cargo test --all-features

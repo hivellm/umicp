@@ -1,0 +1,51 @@
+name: Publish • Elixir (Hex.pm)
+
+# Hex.pm does NOT support OIDC trusted publishing — API key based.
+# Requires repo secret: HEX_API_KEY  (mix hex.user key generate --permission api:write)
+#
+# Release trigger: GitHub Release with tag `elixir-v<version>` (e.g. elixir-v0.3.0).
+
+on:
+  release:
+    types: [published]
+  workflow_dispatch:
+    inputs:
+      dry_run:
+        description: "Build docs/package only, do not publish"
+        type: boolean
+        default: false
+
+defaults:
+  run:
+    working-directory: bindings/elixir
+
+jobs:
+  publish:
+    name: publish to Hex.pm
+    runs-on: ubuntu-latest
+    if: >-
+      github.event_name == 'workflow_dispatch' ||
+      startsWith(github.event.release.tag_name, 'elixir-v')
+    steps:
+      - uses: actions/checkout@v4
+
+      - name: Set up Elixir/OTP
+        uses: erlef/setup-beam@v1
+        with:
+          elixir-version: "1.16"
+          otp-version: "26"
+
+      - name: Install deps
+        run: mix deps.get
+
+      - name: Test
+        run: mix test
+
+      - name: Build package
+        run: mix hex.build
+
+      - name: Publish to Hex
+        if: github.event_name == 'release' || inputs.dry_run == false
+        run: mix hex.publish --yes
+        env:
+          HEX_API_KEY: ${{ secrets.HEX_API_KEY }}
