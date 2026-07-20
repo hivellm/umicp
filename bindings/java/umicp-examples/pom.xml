@@ -7,8 +7,9 @@
 
     <parent>
         <groupId>com.hivellm</groupId>
-        <artifactId>umicp-java-parent</artifactId>
-        <version>0.2.2</version>
+        <artifactId>umicp-sdk</artifactId>
+        <version>0.3.0</version>
+        <relativePath>../pom.xml</relativePath>
     </parent>
 
     <artifactId>umicp-examples</artifactId>

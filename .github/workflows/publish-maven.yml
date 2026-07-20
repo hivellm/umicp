@@ -82,6 +82,13 @@ jobs:
         if: steps.target.outputs.module == 'kotlin'
         uses: gradle/actions/setup-gradle@v4
 
+      - name: Normalize gradlew (strip CRLF, make executable)
+        if: steps.target.outputs.module == 'kotlin'
+        working-directory: bindings/kotlin
+        run: |
+          sed -i 's/\r$//' gradlew
+          chmod +x gradlew
+
       - name: Publish Kotlin to Central
         if: steps.target.outputs.module == 'kotlin' && inputs.dry_run != true
         working-directory: bindings/kotlin
