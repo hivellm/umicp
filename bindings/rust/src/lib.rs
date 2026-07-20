@@ -21,7 +21,7 @@ and real-time applications with built-in matrix operations and type-safe messagi
 ### Basic Envelope Usage
 
 ```rust,no_run
-use umicp_core::{Envelope, OperationType};
+use umicp_sdk::{Envelope, OperationType};
 
 # fn example() -> Result<(), Box<dyn std::error::Error>> {
 // Create a UMICP envelope
@@ -45,7 +45,7 @@ let received = Envelope::deserialize(&serialized)?;
 ### WebSocket Transport
 
 ```rust,no_run
-use umicp_core::{WebSocketTransport, Envelope, OperationType};
+use umicp_sdk::{WebSocketTransport, Envelope, OperationType};
 
 # fn example() -> Result<(), Box<dyn std::error::Error>> {
 // Server setup (requires websocket feature)
@@ -90,7 +90,7 @@ client.send(message, "")?;
 ### Matrix Operations
 
 ```rust,no_run
-use umicp_core::Matrix;
+use umicp_sdk::Matrix;
 
 # fn example() -> Result<(), Box<dyn std::error::Error>> {
 // Create matrix instance
