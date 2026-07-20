@@ -9,7 +9,7 @@
 using Umicp.SDK.Transport;
 using Umicp.SDK.Types;
 using Xunit;
-using UmicpHttpClient = Umicp.Core.Transport.HttpClient;
+using UmicpHttpClient = Umicp.SDK.Transport.HttpClient;
 
 namespace Umicp.Tests;
 

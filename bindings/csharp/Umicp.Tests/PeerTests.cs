@@ -246,7 +246,7 @@ public class PeerTests
         await peer.AddPeerAsync(peerInfo);
 
         // Act & Assert
-        await Assert.ThrowsAsync<Umicp.Core.Exceptions.TransportException>(
+        await Assert.ThrowsAsync<Umicp.SDK.Exceptions.TransportException>(
             async () => await peer.AddPeerAsync(peerInfo)
         );
     }
