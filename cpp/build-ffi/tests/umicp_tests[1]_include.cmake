@@ -1,5 +1,0 @@
-if(EXISTS "/mnt/f/Node/hivellm/umicp/cpp/build-ffi/tests/umicp_tests[1]_tests.cmake")
-  include("/mnt/f/Node/hivellm/umicp/cpp/build-ffi/tests/umicp_tests[1]_tests.cmake")
-else()
-  add_test(umicp_tests_NOT_BUILT umicp_tests_NOT_BUILT)
-endif()
