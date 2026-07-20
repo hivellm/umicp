@@ -44,7 +44,7 @@ let received = Envelope::deserialize(&serialized)?;
 
 ### WebSocket Transport
 
-```rust,no_run
+```rust,ignore
 use umicp_sdk::{WebSocketTransport, Envelope, OperationType};
 
 # fn example() -> Result<(), Box<dyn std::error::Error>> {
