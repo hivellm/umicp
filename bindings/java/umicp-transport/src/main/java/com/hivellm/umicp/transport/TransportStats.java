@@ -34,6 +34,8 @@ public class TransportStats {
     private final AtomicLong bytesSent = new AtomicLong(0);
     private final AtomicLong bytesReceived = new AtomicLong(0);
     private final AtomicLong errorCount = new AtomicLong(0);
+    private final AtomicLong activeConnections = new AtomicLong(0);
+    private final AtomicLong totalConnections = new AtomicLong(0);
     private final Instant startTime;
 
     // Latency tracking
@@ -82,6 +84,49 @@ public class TransportStats {
     public void recordLatency(long latencyMs) {
         totalLatencyMs.addAndGet(latencyMs);
         latencyMeasurements.incrementAndGet();
+    }
+
+    // ---- Fine-grained counters used by the transport layer ----
+
+    /** Increments the sent-message counter by one. */
+    public void incrementMessagesSent() {
+        messagesSent.incrementAndGet();
+    }
+
+    /** Increments the received-message counter by one. */
+    public void incrementMessagesReceived() {
+        messagesReceived.incrementAndGet();
+    }
+
+    /** Adds to the sent-bytes counter. */
+    public void addBytesSent(long bytes) {
+        bytesSent.addAndGet(bytes);
+    }
+
+    /** Adds to the received-bytes counter. */
+    public void addBytesReceived(long bytes) {
+        bytesReceived.addAndGet(bytes);
+    }
+
+    /** Registers a new connection (increments active and total). */
+    public void connectionOpened() {
+        activeConnections.incrementAndGet();
+        totalConnections.incrementAndGet();
+    }
+
+    /** Registers a closed connection (decrements active). */
+    public void connectionClosed() {
+        activeConnections.updateAndGet(v -> v > 0 ? v - 1 : 0);
+    }
+
+    /** @return the number of currently active connections. */
+    public long getActiveConnections() {
+        return activeConnections.get();
+    }
+
+    /** @return the total number of connections seen. */
+    public long getTotalConnections() {
+        return totalConnections.get();
     }
 
     /**

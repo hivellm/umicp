@@ -352,6 +352,18 @@ public class Envelope implements AutoCloseable {
         }
     }
 
+    /** Alias for {@link #serialize()} kept for the transport layer. */
+    @NotNull
+    public String toJson() throws SerializationException {
+        return serialize();
+    }
+
+    /** Alias for {@link #deserialize(String)} kept for the transport layer. */
+    @NotNull
+    public static Envelope fromJson(@NotNull String json) throws SerializationException {
+        return deserialize(json);
+    }
+
     /**
      * Validates this envelope.
      *

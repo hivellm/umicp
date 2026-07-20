@@ -43,6 +43,13 @@ public interface ServerEventListener {
     }
 
     /**
+     * Called when the server is stopped.
+     */
+    default void onServerStopped() {
+        // Default implementation does nothing
+    }
+
+    /**
      * Called when a client connects.
      *
      * @param client the connected client
