@@ -1,0 +1,38 @@
+name: Publish • Swift (SwiftPM tag)
+
+# Swift Package Manager has no central registry — consumers depend on the git tag
+# directly. This workflow validates the package on release and verifies the tag
+# follows the `swift-v<version>` convention. No secrets required.
+
+on:
+  release:
+    types: [published]
+  workflow_dispatch:
+
+defaults:
+  run:
+    working-directory: bindings/swift
+
+jobs:
+  validate:
+    name: validate package
+    runs-on: macos-latest
+    if: >-
+      github.event_name == 'workflow_dispatch' ||
+      startsWith(github.event.release.tag_name, 'swift-v')
+    steps:
+      - uses: actions/checkout@v4
+
+      - name: Build
+        run: swift build -v
+
+      - name: Test
+        run: swift test -v
+
+      - name: Summary
+        run: |
+          echo "Swift package validated." >> "$GITHUB_STEP_SUMMARY"
+          echo "Consumers add it via:" >> "$GITHUB_STEP_SUMMARY"
+          echo '```swift' >> "$GITHUB_STEP_SUMMARY"
+          echo '.package(url: "https://github.com/hivellm/umicp.git", from: "0.3.0")' >> "$GITHUB_STEP_SUMMARY"
+          echo '```' >> "$GITHUB_STEP_SUMMARY"

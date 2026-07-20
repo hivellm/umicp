@@ -1,0 +1,42 @@
+name: CI • C#
+
+on:
+  push:
+    branches: [main]
+    paths:
+      - "bindings/csharp/**"
+      - ".github/workflows/ci-csharp.yml"
+  pull_request:
+    paths:
+      - "bindings/csharp/**"
+      - ".github/workflows/ci-csharp.yml"
+  workflow_dispatch:
+
+defaults:
+  run:
+    working-directory: bindings/csharp
+
+jobs:
+  test:
+    name: build, format & test
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+
+      - name: Set up .NET
+        uses: actions/setup-dotnet@v4
+        with:
+          dotnet-version: "8.0.x"
+
+      - name: Restore
+        run: dotnet restore Umicp.sln
+
+      - name: Format check
+        run: dotnet format Umicp.sln --verify-no-changes --no-restore
+        continue-on-error: true
+
+      - name: Build
+        run: dotnet build Umicp.sln --configuration Release --no-restore
+
+      - name: Test
+        run: dotnet test Umicp.Tests/Umicp.Tests.csproj --configuration Release --no-build --verbosity normal

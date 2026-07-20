@@ -1,0 +1,36 @@
+name: CI • Kotlin
+
+on:
+  push:
+    branches: [main]
+    paths:
+      - "bindings/kotlin/**"
+      - ".github/workflows/ci-kotlin.yml"
+  pull_request:
+    paths:
+      - "bindings/kotlin/**"
+      - ".github/workflows/ci-kotlin.yml"
+  workflow_dispatch:
+
+defaults:
+  run:
+    working-directory: bindings/kotlin
+
+jobs:
+  test:
+    name: build & test
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+
+      - name: Set up JDK
+        uses: actions/setup-java@v4
+        with:
+          distribution: temurin
+          java-version: "17"
+
+      - name: Set up Gradle
+        uses: gradle/actions/setup-gradle@v4
+
+      - name: Build & test
+        run: ./gradlew build --no-daemon --stacktrace

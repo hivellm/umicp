@@ -1,0 +1,68 @@
+name: Publish • C# (NuGet)
+
+# Trusted Publishing (OIDC) — exchanges the GitHub OIDC token for a short-lived
+# NuGet API key via NuGet/login, so no long-lived NUGET_API_KEY secret is stored.
+# One-time setup on nuget.org: Account -> Trusted Publishing -> add a policy
+#   Package: HiveLLM.Umicp.SDK | Owner: hivellm | Repo: umicp | Workflow: publish-nuget.yml
+#   Copy the generated "user" value into the NUGET_USER variable (repo Variables).
+#
+# Release trigger: GitHub Release with tag `csharp-v<version>` (e.g. csharp-v0.3.0).
+
+on:
+  release:
+    types: [published]
+  workflow_dispatch:
+    inputs:
+      dry_run:
+        description: "Pack only, do not push"
+        type: boolean
+        default: false
+
+defaults:
+  run:
+    working-directory: bindings/csharp
+
+jobs:
+  publish:
+    name: publish to NuGet.org
+    runs-on: ubuntu-latest
+    if: >-
+      github.event_name == 'workflow_dispatch' ||
+      startsWith(github.event.release.tag_name, 'csharp-v')
+    permissions:
+      id-token: write # required for NuGet Trusted Publishing
+      contents: read
+    steps:
+      - uses: actions/checkout@v4
+
+      - name: Set up .NET
+        uses: actions/setup-dotnet@v4
+        with:
+          dotnet-version: "8.0.x"
+
+      - name: Restore
+        run: dotnet restore Umicp.sln
+
+      - name: Build
+        run: dotnet build Umicp.Core/Umicp.Core.csproj --configuration Release --no-restore
+
+      - name: Test
+        run: dotnet test Umicp.Tests/Umicp.Tests.csproj --configuration Release
+
+      - name: Pack
+        run: dotnet pack Umicp.Core/Umicp.Core.csproj --configuration Release --no-build --output ${{ github.workspace }}/nupkgs
+
+      - name: NuGet login (OIDC -> short-lived API key)
+        if: github.event_name == 'release' || inputs.dry_run == false
+        uses: NuGet/login@v1
+        id: login
+        with:
+          user: ${{ vars.NUGET_USER }}
+
+      - name: Push
+        if: github.event_name == 'release' || inputs.dry_run == false
+        run: >-
+          dotnet nuget push "${{ github.workspace }}/nupkgs/*.nupkg"
+          --source https://api.nuget.org/v3/index.json
+          --api-key "${{ steps.login.outputs.NUGET_API_KEY }}"
+          --skip-duplicate
