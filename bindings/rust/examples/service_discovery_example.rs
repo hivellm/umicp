@@ -4,7 +4,7 @@
 Demonstrates automatic service discovery in a peer network.
 */
 
-use umicp_core::{Envelope, OperationType, ServiceDiscovery, ServiceInfo};
+use umicp_sdk::{Envelope, OperationType, ServiceDiscovery, ServiceInfo};
 
 fn main() -> Result<(), Box<dyn std::error::Error>> {
     println!("=== UMICP Service Discovery Example ===\n");

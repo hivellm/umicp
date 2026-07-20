@@ -2,7 +2,7 @@
 # Tests for UMICP Envelope functionality
 */
 
-use umicp_core::{Envelope, OperationType, PayloadType, EncodingType, PayloadHint};
+use umicp_sdk::{Envelope, OperationType, PayloadType, EncodingType, PayloadHint};
 
 #[test]
 fn test_create_envelope_with_default_values() {

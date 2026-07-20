@@ -2,7 +2,7 @@
 # Tests for UMICP Matrix operations
 */
 
-use umicp_core::Matrix;
+use umicp_sdk::Matrix;
 
 #[test]
 fn test_create_matrix_instance() {

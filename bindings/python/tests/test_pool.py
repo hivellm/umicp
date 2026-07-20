@@ -3,7 +3,7 @@
 import pytest
 import asyncio
 
-from umicp.pool import ConnectionPool, PoolConfig
+from umicp_sdk.pool import ConnectionPool, PoolConfig
 
 
 class TestPoolConfig:

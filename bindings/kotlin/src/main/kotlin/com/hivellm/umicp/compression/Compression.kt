@@ -167,15 +167,13 @@ object Compression {
 
     private fun compressGzip(data: ByteArray, level: Int): ByteArray {
         val output = ByteArrayOutputStream()
-        GZIPOutputStream(output).use { gzip ->
-            // Set compression level via reflection (GZIPOutputStream uses Deflater internally)
-            val defField = GZIPOutputStream::class.java.getDeclaredField("def")
-            defField.isAccessible = true
-            val deflater = defField.get(gzip) as Deflater
-            deflater.setLevel(level)
-
-            gzip.write(data)
+        // `def` is the protected Deflater declared on DeflaterOutputStream (the
+        // superclass), so it is reachable from an anonymous subclass without the
+        // reflection that used to fail with NoSuchFieldException on newer JDKs.
+        val gzip = object : GZIPOutputStream(output) {
+            init { def.setLevel(level) }
         }
+        gzip.use { it.write(data) }
         return output.toByteArray()
     }
 

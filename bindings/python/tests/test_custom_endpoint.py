@@ -7,9 +7,9 @@ custom endpoint paths for compatibility with different servers
 """
 
 import pytest
-from umicp.transport.http_client import HttpClient
-from umicp.envelope import Envelope
-from umicp.types import OperationType
+from umicp_sdk.transport.http_client import HttpClient
+from umicp_sdk.envelope import Envelope
+from umicp_sdk.types import OperationType
 
 
 class TestCustomEndpoint:

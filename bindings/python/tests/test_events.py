@@ -3,7 +3,7 @@
 import pytest
 import asyncio
 
-from umicp.events import EventEmitter, Event, EventType
+from umicp_sdk.events import EventEmitter, Event, EventType
 
 
 class TestEvent:

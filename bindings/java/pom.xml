@@ -254,6 +254,8 @@
                         <encoding>${project.build.sourceEncoding}</encoding>
                         <show>protected</show>
                         <failOnError>false</failOnError>
+                        <failOnWarnings>false</failOnWarnings>
+                        <doclint>none</doclint>
                     </configuration>
                     <executions>
                         <execution>

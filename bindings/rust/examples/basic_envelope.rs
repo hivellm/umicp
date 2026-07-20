@@ -5,7 +5,7 @@ This example demonstrates basic usage of UMICP envelopes for message creation,
 serialization, and deserialization.
 */
 
-use umicp_core::{Envelope, OperationType};
+use umicp_sdk::{Envelope, OperationType};
 use uuid;
 
 fn main() -> Result<(), Box<dyn std::error::Error>> {

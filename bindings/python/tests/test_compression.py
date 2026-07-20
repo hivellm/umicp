@@ -3,7 +3,7 @@ Tests for UMICP Compression module
 """
 
 import pytest
-from umicp.compression import Compression, CompressionType, CompressionError
+from umicp_sdk.compression import Compression, CompressionType, CompressionError
 
 
 class TestCompressionType:

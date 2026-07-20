@@ -6,7 +6,7 @@ in the UMICP Rust bindings, including basic arithmetic, linear algebra,
 and similarity calculations.
 */
 
-use umicp_core::Matrix;
+use umicp_sdk::Matrix;
 
 fn main() -> Result<(), Box<dyn std::error::Error>> {
     println!("UMICP Rust Bindings - Matrix Operations Example");

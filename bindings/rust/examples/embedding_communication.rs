@@ -5,7 +5,7 @@ This example demonstrates efficient AI model communication using UMICP
 for embeddings, transformer states, and distributed model coordination.
 */
 
-use umicp_core::{Envelope, Matrix, OperationType};
+use umicp_sdk::{Envelope, Matrix, OperationType};
 use serde::{Serialize, Deserialize};
 use serde_json::json;
 use std::collections::HashMap;

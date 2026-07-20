@@ -4,7 +4,7 @@ import pytest
 import asyncio
 from datetime import datetime
 
-from umicp.discovery import ServiceDiscovery, ServiceInfo
+from umicp_sdk.discovery import ServiceDiscovery, ServiceInfo
 
 
 class TestServiceInfo:

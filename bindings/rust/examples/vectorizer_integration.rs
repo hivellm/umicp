@@ -9,8 +9,8 @@
 #[cfg(all(feature = "http2", feature = "tokio"))]
 fn main() -> Result<(), Box<dyn std::error::Error>> {
     use std::collections::HashMap;
-    use umicp_core::{Envelope, OperationType};
-    use umicp_core::transport::http_client::{HttpClient, HttpClientConfig};
+    use umicp_sdk::{Envelope, OperationType};
+    use umicp_sdk::transport::http_client::{HttpClient, HttpClientConfig};
     use std::time::Duration;
 
     println!("Note: This example requires async runtime.");

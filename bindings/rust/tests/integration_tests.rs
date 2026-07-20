@@ -4,7 +4,7 @@
 Comprehensive integration tests for the UMICP protocol implementation.
 */
 
-use umicp_core::*;
+use umicp_sdk::*;
 
 #[cfg(test)]
 mod tests {

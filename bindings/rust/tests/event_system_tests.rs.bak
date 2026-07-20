@@ -5,7 +5,7 @@
 use parking_lot::RwLock;
 use std::sync::Arc;
 use tokio::time::{sleep, Duration};
-use umicp_core::{Envelope, EventData, EventEmitter, EventType, OperationType, PeerInfo};
+use umicp_sdk::{Envelope, EventData, EventEmitter, EventType, OperationType, PeerInfo};
 
 #[tokio::test]
 async fn test_event_emitter_multiple_listeners() {

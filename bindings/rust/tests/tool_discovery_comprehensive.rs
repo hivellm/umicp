@@ -2,7 +2,7 @@
 Comprehensive tests for Rust binding v0.2.0 tool discovery
 */
 
-use umicp_core::{DiscoverableService, OperationSchema, ServerInfo};
+use umicp_sdk::{DiscoverableService, OperationSchema, ServerInfo};
 use serde_json::json;
 
 // Example service for testing

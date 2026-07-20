@@ -7,7 +7,7 @@
 use parking_lot::RwLock;
 use std::sync::Arc;
 use tokio::time::{sleep, Duration};
-use umicp_core::{
+use umicp_sdk::{
     ConnectionState, Envelope, HandshakeMessage, HandshakeProtocol, HandshakeType,
     OperationType, PeerConnection, PeerInfo, PeerType, WebSocketPeer, WebSocketPeerConfig,
 };

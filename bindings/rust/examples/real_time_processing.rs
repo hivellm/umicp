@@ -5,7 +5,7 @@ This example demonstrates real-time data processing patterns using UMICP
 envelopes, including streaming data, buffering, and performance optimization.
 */
 
-use umicp_core::{Envelope, Matrix, OperationType};
+use umicp_sdk::{Envelope, Matrix, OperationType};
 use serde_json::json;
 use std::collections::{HashMap, VecDeque};
 use std::sync::{Arc, Mutex};

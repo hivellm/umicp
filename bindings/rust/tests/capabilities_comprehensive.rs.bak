@@ -1,5 +1,5 @@
 use serde_json::{json, Value};
-use umicp_core::{Envelope, EnvelopeBuilder, OperationType};
+use umicp_sdk::{Envelope, EnvelopeBuilder, OperationType};
 
 // ============================================================================
 // CAPABILITIES COMPREHENSIVE TESTS (Rust v0.2.0)

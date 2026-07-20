@@ -2,7 +2,7 @@
 
 import pytest
 
-from umicp.error import (
+from umicp_sdk.error import (
     UmicpError,
     ValidationError,
     SerializationError,

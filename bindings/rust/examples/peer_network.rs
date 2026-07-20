@@ -9,7 +9,7 @@ use std::sync::Arc;
 #[cfg(feature = "websocket")]
 use tokio::time::{sleep, Duration};
 #[cfg(feature = "websocket")]
-use umicp_core::{Envelope, OperationType, WebSocketPeer, WebSocketPeerConfig};
+use umicp_sdk::{Envelope, OperationType, WebSocketPeer, WebSocketPeerConfig};
 #[cfg(feature = "websocket")]
 use serde_json::json;
 

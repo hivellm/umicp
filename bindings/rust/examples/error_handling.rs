@@ -5,7 +5,7 @@ This example demonstrates comprehensive error handling patterns and recovery
 strategies using the UMICP Rust bindings with proper error propagation.
 */
 
-use umicp_core::{Envelope, Matrix, OperationType, UmicpError};
+use umicp_sdk::{Envelope, Matrix, OperationType, UmicpError};
 
 /// Comprehensive error handling demonstration
 fn main() -> Result<(), Box<dyn std::error::Error>> {

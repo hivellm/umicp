@@ -1,7 +1,7 @@
 """Tests for UMICP tool discovery (v0.2.0)."""
 
 import pytest
-from umicp.tool_discovery import (
+from umicp_sdk.tool_discovery import (
     OperationSchema,
     ServerInfo,
     DiscoverableService,

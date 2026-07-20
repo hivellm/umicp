@@ -4,7 +4,7 @@
 
 #![cfg(feature = "websocket")]
 
-use umicp_core::{Envelope, OperationType, WebSocketClient, WebSocketServer};
+use umicp_sdk::{Envelope, OperationType, WebSocketClient, WebSocketServer};
 use std::time::Duration;
 use tokio::time::{sleep, timeout};
 use serde_json::json;

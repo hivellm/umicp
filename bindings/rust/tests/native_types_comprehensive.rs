@@ -2,7 +2,7 @@
 Comprehensive tests for Rust binding v0.2.0 native type support
 */
 
-use umicp_core::{Envelope, OperationType, Capabilities};
+use umicp_sdk::{Envelope, OperationType, Capabilities};
 use serde_json::json;
 
 #[test]

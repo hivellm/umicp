@@ -9,7 +9,7 @@ use std::sync::Arc;
 #[cfg(feature = "http2")]
 use tokio::time::{sleep, Duration};
 #[cfg(feature = "http2")]
-use umicp_core::{Envelope, HttpClient, HttpServer, OperationType};
+use umicp_sdk::{Envelope, HttpClient, HttpServer, OperationType};
 #[cfg(feature = "http2")]
 use serde_json::json;
 

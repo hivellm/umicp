@@ -5,7 +5,7 @@ Demonstrates connection pooling for efficient resource management.
 */
 
 #[cfg(feature = "websocket")]
-use umicp_core::{ConnectionPool, PoolConfig};
+use umicp_sdk::{ConnectionPool, PoolConfig};
 #[cfg(feature = "websocket")]
 use std::time::Duration;
 

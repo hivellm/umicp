@@ -12,18 +12,18 @@ let package = Package(
     products: [
         .library(
             name: "UMICP-SDK",
-            targets: ["UMICP-SDK"]),
+            targets: ["UMICP"]),
     ],
     dependencies: [],
     targets: [
         .target(
-            name: "UMICP-SDK",
+            name: "UMICP",
             dependencies: [],
             path: "Sources/UMICP"
         ),
         .testTarget(
             name: "UMICPTests",
-            dependencies: ["UMICP-SDK"],
+            dependencies: ["UMICP"],
             path: "Tests/UMICPTests"
         ),
     ]

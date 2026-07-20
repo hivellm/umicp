@@ -5,7 +5,7 @@ This example demonstrates advanced matrix operations and linear algebra
 computations using the UMICP Rust bindings with high-performance implementations.
 */
 
-use umicp_core::Matrix;
+use umicp_sdk::Matrix;
 use std::time::Instant;
 
 /// Advanced matrix operations demonstration

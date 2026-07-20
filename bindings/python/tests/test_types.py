@@ -3,7 +3,7 @@
 import pytest
 from datetime import datetime
 
-from umicp.types import (
+from umicp_sdk.types import (
     OperationType,
     PayloadType,
     EncodingType,

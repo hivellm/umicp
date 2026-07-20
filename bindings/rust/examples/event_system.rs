@@ -11,7 +11,7 @@ use parking_lot::RwLock;
 #[cfg(feature = "websocket")]
 use tokio::time::{sleep, Duration};
 #[cfg(feature = "websocket")]
-use umicp_core::{EventEmitter, EventType, EventData, Envelope, OperationType, PeerInfo};
+use umicp_sdk::{EventEmitter, EventType, EventData, Envelope, OperationType, PeerInfo};
 #[cfg(feature = "websocket")]
 use serde_json::json;
 

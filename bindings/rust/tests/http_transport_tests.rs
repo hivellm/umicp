@@ -4,7 +4,7 @@
 
 #![cfg(feature = "http2")]
 
-use umicp_core::{Envelope, OperationType};
+use umicp_sdk::{Envelope, OperationType};
 use serde_json::json;
 
 #[tokio::test]
@@ -88,7 +88,7 @@ async fn test_http_envelope_with_message_id() {
 
 #[tokio::test]
 async fn test_http_envelope_with_capabilities() {
-    use umicp_core::Capabilities;
+    use umicp_sdk::Capabilities;
 
     let mut caps = Capabilities::new();
     caps.insert("http_version".to_string(), json!("2"));

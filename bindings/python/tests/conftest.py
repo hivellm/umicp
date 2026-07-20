@@ -31,7 +31,7 @@ def sample_envelope_data():
 @pytest.fixture
 def sample_service_info():
     """Sample service info for testing."""
-    from umicp.discovery import ServiceInfo
+    from umicp_sdk.discovery import ServiceInfo
     return ServiceInfo(
         id="test-service",
         name="TestService",

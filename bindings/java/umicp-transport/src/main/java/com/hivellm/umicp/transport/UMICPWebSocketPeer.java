@@ -304,7 +304,7 @@ public class UMICPWebSocketPeer implements AutoCloseable {
     // ==================== Handshake Protocol ====================
 
     private void sendHello(PeerConnection peer) {
-        Map<String, String> caps = new HashMap<>();
+        Map<String, Object> caps = new HashMap<>();
         caps.put("type", "hello");
         caps.put("peer_id", peerId);
         caps.put("version", "1.0");
@@ -321,8 +321,17 @@ public class UMICPWebSocketPeer implements AutoCloseable {
         scheduleHandshakeTimeout(peer);
     }
 
+    /** Envelope capabilities are Map&lt;String,Object&gt;; PeerInfo/handshake use Map&lt;String,String&gt;. */
+    private static Map<String, String> toStringMap(Map<String, Object> source) {
+        Map<String, String> result = new HashMap<>();
+        if (source != null) {
+            source.forEach((k, v) -> result.put(k, v == null ? null : String.valueOf(v)));
+        }
+        return result;
+    }
+
     private void handleHello(Envelope envelope, PeerConnection peer) {
-        Map<String, String> caps = envelope.getCapabilities();
+        Map<String, String> caps = toStringMap(envelope.getCapabilities());
         String remotePeerId = caps.get("peer_id");
 
         PeerInfo info = new PeerInfo(remotePeerId, new HashMap<>(caps), caps, Instant.now());
@@ -330,7 +339,7 @@ public class UMICPWebSocketPeer implements AutoCloseable {
         peer.setHandshakeComplete(true);
 
         // Send ACK
-        Map<String, String> ackCaps = new HashMap<>();
+        Map<String, Object> ackCaps = new HashMap<>();
         ackCaps.put("type", "ack");
         ackCaps.put("peer_id", peerId);
         ackCaps.put("version", "1.0");
@@ -347,7 +356,7 @@ public class UMICPWebSocketPeer implements AutoCloseable {
     }
 
     private void handleAck(Envelope envelope, PeerConnection peer) {
-        Map<String, String> caps = envelope.getCapabilities();
+        Map<String, String> caps = toStringMap(envelope.getCapabilities());
         String remotePeerId = caps.get("peer_id");
 
         PeerInfo info = new PeerInfo(remotePeerId, new HashMap<>(caps), caps, Instant.now());
@@ -401,7 +410,7 @@ public class UMICPWebSocketPeer implements AutoCloseable {
         emitMessage(envelope, peer);
 
         if (envelope.getOperation() == OperationType.CONTROL) {
-            String type = envelope.getCapabilities().get("type");
+            String type = (String) envelope.getCapabilities().get("type");
             if ("hello".equals(type)) {
                 handleHello(envelope, peer);
             } else if ("ack".equals(type)) {
@@ -439,7 +448,7 @@ public class UMICPWebSocketPeer implements AutoCloseable {
         emitMessage(envelope, peer);
 
         if (envelope.getOperation() == OperationType.CONTROL) {
-            String type = envelope.getCapabilities().get("type");
+            String type = (String) envelope.getCapabilities().get("type");
             if ("hello".equals(type)) {
                 handleHello(envelope, peer);
             } else if ("ack".equals(type)) {

@@ -7,7 +7,7 @@
  */
 
 #[cfg(feature = "http2")]
-use umicp_core::transport::http_client::{HttpClient, HttpClientConfig};
+use umicp_sdk::transport::http_client::{HttpClient, HttpClientConfig};
 use std::time::Duration;
 
 #[test]
